@@ -1,3 +1,23 @@
-<p>
-  registro-mascota works!
-</p>
+<!-- <app-menu paginaTitulo="Mis Mascotas" [menuCliente]="verMC"></app-menu> -->
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="Volver" defaultHref="/perfil-mascota" color="primary"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col>
+        <h3>Registro de mascotas</h3>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <app-formulario [registroPet]="registroPet"></app-formulario>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

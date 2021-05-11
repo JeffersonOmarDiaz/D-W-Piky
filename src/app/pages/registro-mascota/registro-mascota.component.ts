@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FirestoreService } from 'src/app/services/firestore.service';
 
 @Component({
   selector: 'app-registro-mascota',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegistroMascotaComponent implements OnInit {
 
-  
-  constructor() { }
+  verMC = true;
+  registroPet = true;
+  constructor(public firestoreService:FirestoreService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    
+  }
 
 }

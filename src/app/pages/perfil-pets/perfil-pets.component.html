@@ -1,19 +1,38 @@
+<app-menu paginaTitulo="Mis Mascotas" [menuCliente]="verMC"></app-menu>
+
 <ion-content>
-  <app-menu paginaTitulo="Mis Mascotas" [menuCliente]="verMC"></app-menu>
-  <ion-grid fixed>
-    <ion-row>
-      <!-- <ion-col>
-        <h1>Este es el perfil de mascotas</h1>
-      </ion-col>
-      <ion-col>
-        ion-col
-      </ion-col>
-      <ion-col>
-        ion-col
-      </ion-col> -->
-      <ion-col>
-        <app-formulario [registroPet]="registroPet"></app-formulario>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+    <ion-grid fixed>
+        <ion-row>
+            <ion-col>
+                <h2>Estas son sus mascotas</h2>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-card>
+                    <ion-item *ngFor="let mascota of mascotas">
+                        <ion-label>{{mascota.nombre}}</ion-label>
+                        <ion-label>{{mascota.edad}}</ion-label>
+                        <ion-buttons>
+                            <ion-button routerLink="/registro-mascota" routerDirection="root" (click)="editMascota(mascota)">
+                                <ion-icon slot="icon-only" name="create-sharp"></ion-icon>
+                            </ion-button>
+                            <ion-button (click)="deleteMascota(mascota)">
+                                <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
+                              </ion-button>
+                        </ion-buttons>
+                  
+                    </ion-item>
+                </ion-card>
+            </ion-col>
+        </ion-row>
+        <ion-row class="ion-justify-content-center">
+            <ion-col size="6">
+                <ion-button shape="round" expand="full" (click)="limpiarCampos()" routerLink="/registro-mascota"  routerDirection="root">Registrar Mascota
+                </ion-button>
+            </ion-col>
+        </ion-row>
+
+        
+    </ion-grid>
 </ion-content>

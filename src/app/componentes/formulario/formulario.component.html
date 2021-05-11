@@ -1,194 +1,264 @@
-<!-- <ion-content> -->
+<div *ngIf="registroPet">
+  <ion-card>
+    <ion-grid>
 
-  <div *ngIf="registroPet">
-    <div>Iconos diseñados por <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.es/" title="Flaticon">www.flaticon.es</a></div>
-    <h3 class="subtitulo p-10 encabezado">Registro de Mascotas</h3>
-    <ion-item>
-      <ion-label class="normal">Foto: </ion-label>
-      <ion-buttons slot="end">
-        <ion-button>
-          <label for="file-upload">
-            <ion-icon slot="icon-only" name="images-outline"></ion-icon>
-          </label>
-          <!--  PARA Q ACEPTE CUALQUIER TIPO DE IMAGEN -->
-          <!-- <input (change)="nuevaImagenUpload($event)" id="file-upload" style="display: none" type="file"
-              accept="image/*"> -->
-          <input>
-        </ion-button>
-      </ion-buttons>
-    </ion-item>
-
-    <ion-item>
-      <img class="image"> <!-- [src]="newMascota.foto"> -->
-    </ion-item>
-
-    <ion-item>
-      <div class="container">
-        <div class="row">
-          <div class="col">
-
-          </div>
-          <div class="col-8">
-            <ion-label class="normal" position="floating">Nombre:</ion-label>
-            <ion-input class="normal" type="text" inputmode="text" ng-required>
-            </ion-input>
-          </div>
-          <div class="col">
-
-          </div>
-        </div>
-      </div>
-
-    </ion-item>
-
-    <ion-item>
-      <div class="container">
-        <div class="row">
-          <div class="col">
-          </div>
-          <div class="col-8">
-            <ion-label class="normal" position="floating">Edad:</ion-label>
-            <ion-input slot="end" class="normal" type="number" color="initial">
-            </ion-input>
-          </div>
-          <div class="col">
-          </div>
-        </div>
-      </div>
-    </ion-item>
-
-    <ion-item>
-      <div class="container">
-        <div class="row">
-          <div class="col">
-
-          </div>
-          <div class="col-8">
+      <ion-row>
+        <ion-card>
+          <ion-col>
+            <h3 class="subtitulo p-10 encabezado">Registro de Mascotas</h3>
+            <ion-item>
+              <ion-label class="normal">Foto: </ion-label>
+              <ion-buttons slot="end">
+                <ion-button>
+                  <label for="file-upload">
+                    <ion-icon slot="icon-only" name="images"></ion-icon>
+                  </label>
+                  <!--  PARA Q ACEPTE CUALQUIER TIPO DE IMAGEN -->
+                  <input (change)="newImageUpload($event)" id="file-upload" style="display: none" type="file" accept="image/*">
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+            <ion-item>
+              <img class="image" [src]="newMascota.foto">
+            </ion-item>
+            <!-- <ion-item>
+              <img class="image" [src]="newImage"> 
+            </ion-item> -->
+          </ion-col>
+        </ion-card>
+      </ion-row>
+  
+      <!-- <ion-row>
+        <ion-col>
+          <ion-item>
+            <img class="image" [src]="newImage"> 
+          </ion-item>
+        </ion-col>
+      </ion-row> -->
+  
+      <ion-card>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label class="normal" position="floating">Nombre:</ion-label>
+              <ion-input [(ngModel)]="newMascota.nombre" class="normal" type="text" color="initial"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+    
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label class="normal" position="floating">Edad (Años):</ion-label>
+              <ion-input [(ngModel)]="newMascota.edad" class="normal" type="number" color="initial"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+      
+  
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="8">
+  
+          <ion-card>
             <ion-list>
-              <ion-radio-group>
+              <ion-radio-group [(ngModel)]="newMascota.sexo">
                 <ion-list-header>
                   <ion-label>Sexo:</ion-label>
                 </ion-list-header>
-
-                <ion-item>
-                  <ion-label>Hembra</ion-label>
-                  <ion-radio slot="start" value="hembra"></ion-radio>
-                </ion-item>
-
+    
                 <ion-item>
                   <ion-label>Macho</ion-label>
                   <ion-radio slot="start" value="macho"></ion-radio>
                 </ion-item>
-
+    
+                <ion-item>
+                  <ion-label>Hembra</ion-label>
+                  <ion-radio slot="start" value="hembra"></ion-radio>
+                </ion-item>
+    
               </ion-radio-group>
             </ion-list>
-          </div>
-          <div class="col">
-
-          </div>
-        </div>
-      </div>
-    </ion-item>
-
-    <ion-item>
-      <div class="container">
-        <div class="row">
-          <div class="col">
-
-          </div>
-          <div class="col-8">
+          </ion-card>
+  
+        </ion-col>
+      </ion-row>
+  
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="8">
+  
+          <ion-card>
             <ion-list>
-              <ion-radio-group>
+              <ion-radio-group [(ngModel)]="newMascota.tamanio">
                 <ion-list-header>
-                  <ion-label>Raza:</ion-label>
+                  <ion-label>Tamaño:</ion-label>
                 </ion-list-header>
-
+    
                 <ion-item>
                   <ion-label>Grande</ion-label>
                   <ion-radio slot="start" value="grande" color="danger"></ion-radio>
                 </ion-item>
-
+    
                 <ion-item>
                   <ion-label>Mediano</ion-label>
                   <ion-radio slot="start" value="mediano" color="warning"></ion-radio>
                 </ion-item>
-
+    
                 <ion-item>
                   <ion-label>Pequeño</ion-label>
-                  <ion-radio slot="start" value="pequeño" color="success"></ion-radio>
+                  <ion-radio slot="start" value="pequenio" color="success"></ion-radio>
                 </ion-item>
-
+    
               </ion-radio-group>
             </ion-list>
-
-          </div>
-          <div class="col">
-
-          </div>
-        </div>
-      </div>
-    </ion-item>
-
-    <ion-item>
-      <div class="container">
-        <div class="row">
-          <div class="col">
-
-          </div>
-          <div class="col-8">
-            <ion-list>
-              <ion-radio-group>
-                <ion-list-header>
-                  <ion-label>Agresivo:</ion-label>
-                </ion-list-header>
-
-                <ion-item>
-                  <ion-label>Si</ion-label>
-                  <ion-radio slot="start" value="si" color="danger"></ion-radio>
-                </ion-item>
-
-                <ion-item>
-                  <ion-label>No</ion-label>
-                  <ion-radio slot="start" value="no" color="success"></ion-radio>
-                </ion-item>
-
-              </ion-radio-group>
-            </ion-list>
-          </div>
-          <div class="col">
-
-          </div>
-        </div>
-      </div>
-
-    </ion-item>
-
-    <ion-item>
-      <ion-label class="normal" position="floating">Observaciones</ion-label>
-      <ion-input class="normal" type="text" inputmode="text">
-      </ion-input>
-    </ion-item>
-    <ion-button style="margin: 20px;" expand="block">Guardar</ion-button>
-
-    <!--</ion-card>-->
-
-    <!-- <ion-card>
+          </ion-card>
   
-      <h3 class="subtitulo p-3 encabezado">Mis Mascotas</h3>
+        </ion-col>
+      </ion-row>
   
-      <ion-item *ngFor="let mascota of mascotas">
-        <img src="{{mascota.foto}}" class="imgRedonda">
-        <ion-label class="normal">{{mascota.nombre}}</ion-label>
-        <ion-buttons slot="end">
-          <ion-button (click)="newMascota = mascota; mostrarMascota(mascota); enableNewMascota = true; ">
-            <ion-icon slot="icon-only" name="create-sharp"></ion-icon>
-          </ion-button>
-          <ion-button (click)="eliminarMascota(mascota)">
-            <ion-icon slot="icon-only" name="trash-bin-outline" color="danger"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-item>
-    </ion-card> -->
-  </div>
+      
+  
+      <ion-card>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label class="normal" position="floating">Observaciones:</ion-label>
+              <ion-input [(ngModel)]="newMascota.observaciones" class="normal" type="text" inputmode="text">
+              </ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+  
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="6">
+          <ion-button shape="round" expand="full" (click)="guardarMascota()">Guardar</ion-button>
+        </ion-col>
+      </ion-row>
+  
+    </ion-grid>
+  </ion-card>
+</div>
 
-<!-- </ion-content> -->
+
+<!-- REGISTRO DE PERSONAS -->
+<div *ngIf="registroPeople">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <h3 class="subtitulo p-10 encabezado">Registro</h3>
+        <ion-item>
+          <ion-label class="normal">Foto: </ion-label>
+          <ion-buttons slot="end">
+            <ion-button>
+              <label for="file-upload">
+                <ion-icon slot="icon-only" name="images-outline"></ion-icon>
+              </label>
+              <!--  PARA Q ACEPTE CUALQUIER TIPO DE IMAGEN -->
+              <!-- <input (change)="nuevaImagenUpload($event)" id="file-upload" style="display: none" type="file"
+                  accept="image/*"> -->
+              <input>
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <img class="image"> <!-- [src]="newMascota.foto"> -->
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label class="normal" position="floating">Nombre:</ion-label>
+          <ion-input class="normal" type="text" color="initial"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label class="normal" position="floating">Apellido:</ion-label>
+          <ion-input class="normal" type="text" color="initial"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label class="normal" position="floating">Edad:</ion-label>
+          <ion-input class="normal" type="number" color="initial"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label class="normal" position="floating">Dirección:</ion-label>
+          <ion-input class="normal" type="text" color="initial"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label class="normal" position="floating">Refencia:</ion-label>
+          <ion-input class="normal" type="text" color="initial"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label class="normal" position="floating">Celular:</ion-label>
+          <ion-input class="normal" type="text" color="initial"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label class="normal" position="floating">Email:</ion-label>
+          <ion-input class="normal" type="email" color="initial"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-radio-group>
+            <ion-list-header>
+              <ion-label>Registrarce como:</ion-label>
+            </ion-list-header>
+
+            <ion-item>
+              <ion-label>Cliente</ion-label>
+              <ion-radio slot="start" value="cliente" color="warning"></ion-radio>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>Paseador</ion-label>
+              <ion-radio slot="start" value="Paseador" color="success"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-item>
+
+        <ion-button style="margin: 20px;" expand="block">Guardar</ion-button>
+        <ion-button style="margin: 20px;" expand="block">Salir</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div>
