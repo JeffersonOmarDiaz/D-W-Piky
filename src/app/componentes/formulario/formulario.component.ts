@@ -88,6 +88,7 @@ export class FormularioComponent implements OnInit {
     this.presentLoading();
     //Valida si desea o no cambiar de imagen 
     if(this.cambiarImg === true){
+      
       const name = this.newMascota.nombre+this.newMascota.id;
       const res = await this.firestorageService.uploadImagen(this.newFile,  this.pathMascota, name);
       this.newMascota.foto = res;
@@ -134,6 +135,11 @@ export class FormularioComponent implements OnInit {
   async newImageUpload(event: any) {
     console.log('el evento es: ',event);
     if (event.target.files && event.target.files[0] && event.isTrusted === true) {
+      if(this.newMascota.foto !== ''){
+        console.log('Foto anterior:  ', this.newMascota.foto);
+        this.firestorageService.eliminarFoto(this.newMascota.foto);
+        console.log('Inrgresa a la funciona de eliminar su foto anterior: ');
+      }
       this.newFile = event.target.files[0];
       const reader = new FileReader();
       reader.onload = ((image) => {
@@ -143,7 +149,7 @@ export class FormularioComponent implements OnInit {
     }
     if(event.isTrusted === true ){
       this.cambiarImg =event.isTrusted; 
-      console.log('Usted ah decisdico cambiar IMG 22');
+      console.log('Usted ha decidido cambiar IMG');
     }
     console.log('Fin de la función nuevaImagenUpload');
   
