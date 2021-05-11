@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
 import { Mascota } from 'src/app/modelBD';
+import { FirestorageService } from 'src/app/services/firestorage.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 
 
@@ -34,7 +35,8 @@ export class PerfilPetsComponent implements OnInit {
 
   constructor(public firestoreService: FirestoreService,
               public alertController:AlertController,
-              public toastController:ToastController ) { }
+              public toastController:ToastController,
+              public firestorageService: FirestorageService ) { }
 
   ngOnInit() {
     this.getMascotas();
@@ -60,7 +62,7 @@ export class PerfilPetsComponent implements OnInit {
     console.log('borrado con exito');
   } */
   deletItem(mascota: Mascota){
-    console.log('Producto a eliminar  :',mascota);
+    console.log('Mascota a eliminar  :',mascota);
     this.firestoreService.deleteDoc(this.path, mascota.id);
   }
 
@@ -94,6 +96,10 @@ export class PerfilPetsComponent implements OnInit {
             console.log('Confirmó la eliminacion');
             console.log('Mascota a eliminar  :', mascota);
             this.firestoreService.deleteDoc(this.path, mascota.id).then(res => {
+              this.firestorageService.eliminarFoto(mascota.foto).then( res => {
+                  console.log('LA foto Tambien se ha eliminado: ---->', res);
+              }
+              );
               this.presentToast('Eliminado con exito', 2000);
               this.alertController.dismiss();
               this.loading.dismiss();
