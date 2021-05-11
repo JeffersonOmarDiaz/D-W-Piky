@@ -51,7 +51,7 @@ export class FormularioComponent implements OnInit {
       this.newMascota=mascota;
     }
     console.log('el id es: ',this.newMascota.id);
-    console.log('La fotoa  es: ',this.newMascota.foto);
+    console.log('La foto  es: ',this.newMascota.foto);
     //this.firestorageService.eliminarFoto('https://firebasestorage.googleapis.com/v0/b/banca-2e58b.appspot.com/o/Mascotas%2FJet0iUTiby5FLLo0Bz245KS?alt=media&token=fe8fe096-c794-410d-a976-2f9bc2f4466d');
     //Crear variable global con foto para ver si al ginal de los cambios aún ser conserva 
   }
@@ -83,11 +83,16 @@ export class FormularioComponent implements OnInit {
       idDuenio: '',
     }
   }
+  cambiarImg : boolean;
   async guardarMascota() {
     this.presentLoading();
-    const name = this.newMascota.nombre+this.newMascota.id;
-    const res = await this.firestorageService.uploadImagen(this.newFile,  this.pathMascota, name);
-    this.newMascota.foto = res;
+    //Valida si desea o no cambiar de imagen 
+    if(this.cambiarImg === true){
+      const name = this.newMascota.nombre+this.newMascota.id;
+      const res = await this.firestorageService.uploadImagen(this.newFile,  this.pathMascota, name);
+      this.newMascota.foto = res;
+    }
+    
     this.firestoreService.createDoc(this.newMascota, this.pathMascota, this.newMascota.id).then(res => {
       this.loading.dismiss();
       this.presentToast('Guardado con exito', 2000);
@@ -127,18 +132,23 @@ export class FormularioComponent implements OnInit {
   } */
 
   async newImageUpload(event: any) {
-    console.log(event);
-    if (event.target.files && event.target.files[0]) {
+    console.log('el evento es: ',event);
+    if (event.target.files && event.target.files[0] && event.isTrusted === true) {
       this.newFile = event.target.files[0];
       const reader = new FileReader();
       reader.onload = ((image) => {
-        /* this.newImage = image.target.result as string; */
         this.newMascota.foto = image.target.result as string;
       });
       reader.readAsDataURL(event.target.files[0]);
     }
+    if(event.isTrusted === true ){
+      this.cambiarImg =event.isTrusted; 
+      console.log('Usted ah decisdico cambiar IMG 22');
+    }
     console.log('Fin de la función nuevaImagenUpload');
-    //});
-  }
   
+  }
+
+  
+
 }

@@ -5,7 +5,7 @@
       <ion-row>
         <ion-card>
           <ion-col>
-            <h3 class="subtitulo p-10 encabezado">Registro de Mascotas</h3>
+            
             <ion-item>
               <ion-label class="normal">Foto: </ion-label>
               <ion-buttons slot="end">
@@ -14,27 +14,17 @@
                     <ion-icon slot="icon-only" name="images"></ion-icon>
                   </label>
                   <!--  PARA Q ACEPTE CUALQUIER TIPO DE IMAGEN -->
-                  <input (change)="newImageUpload($event)" id="file-upload" style="display: none" type="file" accept="image/*">
+                  <input (change)="newImageUpload($event)" id="file-upload" style="display: none" type="file" accept="image/*" >
                 </ion-button>
               </ion-buttons>
             </ion-item>
             <ion-item>
               <img class="image" [src]="newMascota.foto">
             </ion-item>
-            <!-- <ion-item>
-              <img class="image" [src]="newImage"> 
-            </ion-item> -->
           </ion-col>
         </ion-card>
       </ion-row>
-  
-      <!-- <ion-row>
-        <ion-col>
-          <ion-item>
-            <img class="image" [src]="newImage"> 
-          </ion-item>
-        </ion-col>
-      </ion-row> -->
+
   
       <ion-card>
         <ion-row>
@@ -107,24 +97,43 @@
                 <ion-item>
                   <ion-label>Pequeño</ion-label>
                   <ion-radio slot="start" value="pequenio" color="success"></ion-radio>
-                </ion-item>
-    
+                </ion-item>    
               </ion-radio-group>
             </ion-list>
           </ion-card>
-  
         </ion-col>
       </ion-row>
   
-      
+          <ion-row class="ion-justify-content-center">
+            <ion-col size="8">
+              <ion-card>
+                <ion-list>
+                  <ion-radio-group [(ngModel)]="newMascota.agresivo">
+                    <ion-list-header>
+                      <ion-label>Agresivo:</ion-label>
+                    </ion-list-header>
+        
+                    <ion-item>
+                      <ion-label>Si</ion-label>
+                      <ion-radio slot="start" value="si" color="danger"></ion-radio>
+                    </ion-item>
+        
+                    <ion-item>
+                      <ion-label>No</ion-label>
+                      <ion-radio slot="start" value="no" color="success"></ion-radio>
+                    </ion-item>
+                  </ion-radio-group>
+                </ion-list>
+              </ion-card>
+              </ion-col>
+            </ion-row>
   
       <ion-card>
         <ion-row>
           <ion-col>
             <ion-item>
               <ion-label class="normal" position="floating">Observaciones:</ion-label>
-              <ion-input [(ngModel)]="newMascota.observaciones" class="normal" type="text" inputmode="text">
-              </ion-input>
+              <ion-textarea [(ngModel)]="newMascota.observaciones" class="normal"></ion-textarea>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -132,7 +141,7 @@
   
       <ion-row class="ion-justify-content-center">
         <ion-col size="6">
-          <ion-button shape="round" expand="full" (click)="guardarMascota()">Guardar</ion-button>
+          <ion-button shape="round" expand="full" (click)="guardarMascota()" routerLink="/perfil-mascota" routerDirection="root">Guardar</ion-button>
         </ion-col>
       </ion-row>
   

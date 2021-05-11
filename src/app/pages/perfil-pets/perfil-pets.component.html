@@ -1,6 +1,6 @@
 <app-menu paginaTitulo="Mis Mascotas" [menuCliente]="verMC"></app-menu>
 
-<ion-content>
+<ion-content> 
     <ion-grid fixed>
         <ion-row>
             <ion-col>
@@ -16,7 +16,7 @@
                             <ion-label>{{mascota.edad}}</ion-label>
                             <ion-buttons>
                                 <ion-button routerLink="/registro-mascota" routerDirection="root" (click)="editMascota(mascota)">
-                                    <ion-icon slot="icon-only" name="create-sharp"></ion-icon>
+                                    <ion-icon slot="icon-only" name="create-sharp" ></ion-icon>
                                 </ion-button>
                                 <ion-button (click)="deleteMascota(mascota)">
                                     <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
