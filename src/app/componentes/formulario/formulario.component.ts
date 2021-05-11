@@ -51,7 +51,7 @@ export class FormularioComponent implements OnInit {
       this.newMascota=mascota;
     }
     console.log('el id es: ',this.newMascota.id);
-    console.log('La fotoa  es: ',this.newMascota.foto);
+    console.log('La foto  es: ',this.newMascota.foto);
     //this.firestorageService.eliminarFoto('https://firebasestorage.googleapis.com/v0/b/banca-2e58b.appspot.com/o/Mascotas%2FJet0iUTiby5FLLo0Bz245KS?alt=media&token=fe8fe096-c794-410d-a976-2f9bc2f4466d');
     //Crear variable global con foto para ver si al ginal de los cambios aún ser conserva 
   }
