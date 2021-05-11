@@ -1,0 +1,7 @@
+{
+  "name": "DWO2",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

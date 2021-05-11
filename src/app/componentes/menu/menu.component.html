@@ -1,0 +1,118 @@
+<!-- ESTE ES EL MENU DE CLIENTE -->
+<div *ngIf="menuCliente">
+  <ion-header style="position:fixed;">
+    <ion-toolbar>
+      <ion-title class="subtitulo ion-text-wrap">
+        {{paginaTitulo}}
+      </ion-title>
+      <ion-buttons slot="start">
+        <ion-button (click)="openMenu()">
+          <ion-icon color="primary" slot="icon-only" name="menu-outline"></ion-icon>
+        </ion-button>
+        <!-- <ion-menu-button ></ion-menu-button> -->
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-menu side="start" menuId="principal" contentId="main">
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Menú</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <!-- <ion-menu-toggle autoHide=false></ion-menu-toggle> --> 
+      <ion-list>
+        <ion-item button=true detail=true routerLink="/home" routerDirection="root">
+          <ion-label class="normal"> Inicio</ion-label>
+          <ion-icon slot="start" name="home-outline"></ion-icon>
+        </ion-item>
+        <ion-item button=true detail=true routerLink="/perfil-mascota" routerDirection="root">
+          <ion-label class="normal"> Mis Mascotas</ion-label>
+          <ion-icon slot="start" name="paw-outline"></ion-icon>
+        </ion-item>
+        <ion-item button=true detail=true routerLink="/#" routerDirection="root">
+          <ion-label class="normal"> Quiero un paseo</ion-label>
+          <ion-icon slot="start" name="walk-outline"></ion-icon>
+        </ion-item>
+        <ion-item button=true detail=true routerLink="/perfil-persona" routerDirection="root">
+          <ion-label class="normal"> Mi Perfil</ion-label>
+          <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+        </ion-item>
+        <ion-item>Menu Item</ion-item>
+        <ion-item>Menu Item</ion-item>
+      </ion-list>
+    </ion-content>
+    <ion-footer align="center" style=" text-align:center; margin-block: 30px;">
+      <ion-button shape="round" routerLink='/home-paseador' routerDirection="root">Cambiar a Paseador</ion-button>
+    </ion-footer>
+  </ion-menu>
+  <ion-router-outlet id="main"></ion-router-outlet>
+</div>
+
+
+<!-- ESTE ES EL MENU DE DW -->
+<div *ngIf="menuDW" >
+  <ion-header style="position:fixed;">
+    <ion-toolbar>
+      <ion-title class="subtitulo ion-text-wrap">
+        {{paginaTitulo}}
+      </ion-title>
+      <ion-buttons slot="start">
+        <ion-button (click)="openMenu()">
+          <ion-icon color="primary" slot="icon-only" name="menu-outline"></ion-icon>
+        </ion-button>
+        <!--<ion-menu-button></ion-menu-button>-->
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  
+  <ion-menu side="start" menuId="principal" contentId="main">
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Menú</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <!-- <ion-menu-toggle autoHide=false></ion-menu-toggle> -->
+      <ion-list>
+        <!-- <ion-item button=true detail=true href="/perfil-mascota">
+          <ion-label class="normal"> Mis Mascotas</ion-label>
+          <ion-icon slot="start" name="paw-outline"></ion-icon>
+        </ion-item> -->
+        <ion-item button=true detail=true routerLink="/perfil-persona" routerDirection="root">
+          <ion-label class="normal"> Mi Perfil</ion-label>
+          <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+        </ion-item>
+        <!-- <ion-item button=true detail=true href="/set-mascotas">
+          <ion-label class="normal"> Sacar a Pasear</ion-label>
+          <ion-icon slot="start" name="walk-outline"></ion-icon>
+        </ion-item> -->
+        <ion-item>Menu Item</ion-item>
+        <ion-item>Menu Item</ion-item>
+      </ion-list>
+    </ion-content>
+    <ion-footer align="center" style=" text-align:center; margin-block: 30px;">
+      <ion-button shape="round" routerLink='/home' routerDirection="root">Cambiar a Dueño</ion-button>
+    </ion-footer>
+  </ion-menu>
+  <ion-router-outlet id="main"></ion-router-outlet>
+</div>
+
+<!-- <ion-grid fixed>
+  <ion-row>
+    <ion-col>
+      <h1>Este es omar</h1>
+    </ion-col>
+    <ion-col>
+      ion-col
+    </ion-col>
+    <ion-col>
+      ion-col
+    </ion-col>
+    <ion-col>
+      ion-col
+    </ion-col>
+  </ion-row>
+</ion-grid> -->

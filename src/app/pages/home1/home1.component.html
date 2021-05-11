@@ -1,0 +1,71 @@
+<ion-content>
+  <app-menu paginaTitulo="Home" [menuCliente]="verMC"></app-menu>
+
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col>
+        <h1>Este es home de cliente</h1>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card align="center" style=" text-align:center;">
+          <ion-item>
+            
+            <!-- <ion-label>ion-item in a card, icon left, button right</ion-label> -->
+            <img src="../../../assets/images/icons/mismascotas.png" class="iconMenu" alt="Mis mascotas">
+            
+          </ion-item>
+        
+          <ion-card-content>
+            <ion-card-title>Mis Mascotas</ion-card-title>
+            <ion-icon name="paw-outline" slot="start"></ion-icon>
+            This is content, without any paragraph or header tags,
+            within an ion-card-content element.
+            <ion-button fill="outline" slot="end" class="botonMenu" routerLink="/perfil-mascota" routerDirection="root">Ir</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+        <ion-col>
+          <ion-card align="center" style=" text-align:center;">
+            <ion-item>
+              
+              <!-- <ion-label>ion-item in a card, icon left, button right</ion-label> -->
+              <img src="../../../assets/images/icons/paseador2.png" class="iconMenu" alt="Paseador">
+              
+            </ion-item>
+          
+            <ion-card-content>
+              <ion-card-title>Quiero un Paseo</ion-card-title>
+              <ion-icon name="walk-outline" slot="start"></ion-icon>
+              This is content, without any paragraph or header tags,
+              within an ion-card-content element.
+              <ion-button fill="outline" slot="end" class="botonMenu" href="#" routerDirection="root">Ir</ion-button>
+            </ion-card-content>
+          </ion-card>
+      </ion-col> 
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card align="center" style=" text-align:center;">
+          <ion-item>
+            
+            <!-- <ion-label>ion-item in a card, icon left, button right</ion-label> -->
+            <img src="../../../assets/images/icons/perfil.png" class="iconMenu" alt="Mi Perfil">
+            <!-- <ion-button fill="outline" slot="end" href="#">Ver</ion-button> -->
+          </ion-item>
+        
+          <ion-card-content>
+            <ion-card-title>Mi Perfil</ion-card-title>
+            <ion-icon name="person-circle-outline" slot="start"></ion-icon>
+            This is content, without any paragraph or header tags,
+            within an ion-card-content element.
+            <ion-button fill="outline" slot="end" class="botonMenu" href="#" routerDirection="root">Ir</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col> 
+    </ion-row>
+  </ion-grid>
+</ion-content> 
