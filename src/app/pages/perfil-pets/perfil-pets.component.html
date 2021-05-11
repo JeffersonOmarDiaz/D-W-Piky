@@ -11,9 +11,10 @@
             <ion-row>
                 <ion-col>
                     <ion-card>
-                        <ion-item *ngFor="let mascota of mascotas">
-                            <ion-label>{{mascota.nombre}}</ion-label>
-                            <ion-label>{{mascota.edad}}</ion-label>
+                        <ion-item *ngFor="let mascota of mascotas" class="itemMascota">
+                            <img src={{mascota.foto}} class="imgRedonda">
+                            <ion-label class="itemMascota">{{mascota.nombre}}</ion-label>
+                            <!-- <ion-label>{{mascota.edad}}</ion-label> -->
                             <ion-buttons>
                                 <ion-button routerLink="/registro-mascota" routerDirection="root" (click)="editMascota(mascota)">
                                     <ion-icon slot="icon-only" name="create-sharp" ></ion-icon>
