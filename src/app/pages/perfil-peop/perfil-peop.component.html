@@ -1,3 +1,149 @@
-<p>
-  perfil-peop works!
-</p>
+
+<ion-header style=" text-align:center;">
+  <ion-toolbar>
+    <ion-title class="subtitulo ion-text-wrap">
+      Mi Perfil
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-card style="text-align:center;">
+  
+            <ion-item>
+              <ion-label class="normal">Foto: </ion-label>
+              <ion-buttons slot="end">
+                <ion-button>
+                  <!-- <label for="file-upload"> -->
+                    <ion-icon slot="icon-only" name="images"></ion-icon>
+                  <!-- </label> -->
+                  <!--  PARA Q ACEPTE CUALQUIER TIPO DE IMAGEN -->
+                  <!-- <input (change)="nuevaImagenUpload($event)" id="file-upload" style="display: none" type="file"
+                      accept="image/*"> -->
+                  <!-- <input> -->
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+            <ion-item>
+              <img class="image"> <!-- [src]="newMascota.foto"> -->
+            </ion-item>
+          </ion-card>
+  
+        </ion-col>
+      </ion-row>
+      <ion-card style="text-align:center;">
+        
+        <ion-row>
+          <ion-col>
+            <label >
+              <ion-icon  name="mail-outline"></ion-icon>
+              {{cliente.email}}
+            </label>
+            <ion-item>
+              <ion-label class="normal" position="floating">Nombre:</ion-label>
+              <ion-input [(ngModel)]="cliente.nombre" class="normal" type="text" name="nombre" color="initial"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label class="normal" position="floating">Apellido:</ion-label>
+              <ion-input [(ngModel)]="cliente.apellido" class="normal" type="text" name="apellido" color="initial"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label class="normal" position="floating">Cédula de Identidad:</ion-label>
+              <ion-input [(ngModel)]="cliente.cedula" class="normal" type="text" name="cedula" color="initial"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      
+      </ion-card>
+  
+      <ion-card>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label class="normal" position="floating">Celular:</ion-label>
+              <ion-input [(ngModel)]="cliente.celular" class="normal" type="text" name="celular" color="initial"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+    
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label class="normal" position="floating">Edad:</ion-label>
+              <ion-input [(ngModel)]="cliente.edad" class="normal" type="number" name="edad" color="initial"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+  
+      <ion-card>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label class="normal" position="floating">Dirección:</ion-label>
+              <ion-input class="normal" type="text" color="initial"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+    
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label class="normal" position="floating">Refencia:</ion-label>
+              <ion-input class="normal" type="text" color="initial"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+    
+        <!-- <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label class="normal">Email: {{cliente.email}}</ion-label>
+              <ion-input class="normal" type="email" name="email" color="initial"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row> -->
+      </ion-card>
+  
+  
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="5">
+          <!-- <ion-item>
+            <ion-radio-group>
+              <ion-list-header>
+                <ion-label>Registrarce como:</ion-label>
+              </ion-list-header>
+  
+              <ion-item>
+                <ion-label>Cliente</ion-label>
+                <ion-radio slot="start" value="cliente" color="warning"></ion-radio>
+              </ion-item>
+  
+              <ion-item>
+                <ion-label>Paseador</ion-label>
+                <ion-radio slot="start" value="Paseador" color="success"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </ion-item> -->
+  
+          <ion-button style="margin: 20px;" shape="round" expand="full">Guardar</ion-button>
+          <ion-button style="margin: 20px;" shape="round" expand="full">Salir</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+</ion-content>

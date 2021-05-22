@@ -1,3 +1,42 @@
-<p>
-  login1 works!
-</p>
+<ion-header style=" text-align:center;">
+  <ion-toolbar>
+    <ion-title class="subtitulo ion-text-wrap">
+      Login
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-grid style="margin-top: 75px;">
+      <ion-row >
+        <ion-col >
+          <ion-card >
+            <ion-item>
+              <img src="../../../assets/images/icons/mismascotas.png" class="iconMenu" alt="Mis mascotas">
+            </ion-item>
+           <ion-card-content style=" text-align:center;">
+             <p>Abrir cuenta <br> 
+              Registrarse
+             </p>
+             <ion-grid>
+               <ion-row class="ion-justify-content-center">
+                 <ion-col size="6">
+                   <ion-button color="danger" (click)="logueoAuth()" shape="round" expand="full">
+                       <ion-icon name="logo-google"></ion-icon>oogle
+                   </ion-button>
+                 </ion-col>
+               </ion-row>
+             </ion-grid>
+               
+           </ion-card-content> 
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="6">
+      
+          <button (click)="salir()">Salir</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+</ion-content>

@@ -11,6 +11,7 @@ export class FirestoreService {
   constructor(public database:AngularFirestore) { }
 
   createDoc(data: any, path: string, id: string){
+    console.log('Llega a la creación del cliente / D-W: ',data);
     const collection  = this.database.collection(path);
     return collection.doc(id).set(data);
   }

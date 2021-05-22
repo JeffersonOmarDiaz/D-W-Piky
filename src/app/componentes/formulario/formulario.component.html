@@ -3,13 +3,13 @@
     <ion-grid>
 
       <ion-row>
-        <ion-card>
-          <ion-col>
+        <ion-col>
+            <ion-card style="text-align:center;">
             
             <ion-item>
               <ion-label class="normal">Foto: </ion-label>
               <ion-buttons slot="end">
-                <ion-button>
+                <ion-button >
                   <label for="file-upload">
                     <ion-icon slot="icon-only" name="images"></ion-icon>
                   </label>
@@ -19,10 +19,10 @@
               </ion-buttons>
             </ion-item>
             <ion-item>
-              <img class="image" [src]="newMascota.foto">
+              <img class="image" [src]="newMascota.foto" onerror="this.src='../../../assets/images/icons/perfil-dog.png'">
             </ion-item>
+          </ion-card>
           </ion-col>
-        </ion-card>
       </ion-row>
 
   
