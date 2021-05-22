@@ -38,12 +38,12 @@ const routes: Routes = [
     component: Home1Component
   }, {
     //si no se escribe nada en la ruta 
-    path: '', component: Home1Component
+    path: '', component: Login1Component
   },
   {
     //ruta por defecto "si escriben cualquier cosa"
     path: '**',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
 ];
