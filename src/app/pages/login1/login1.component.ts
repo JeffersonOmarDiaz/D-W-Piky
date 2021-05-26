@@ -5,6 +5,10 @@ import { Subscription } from 'rxjs';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { Router } from '@angular/router';
 
+/* Importaciones para google movil */
+import '@codetrix-studio/capacitor-google-auth';
+import { Plugins } from '@capacitor/core';
+
 @Component({
   selector: 'app-login1',
   templateUrl: './login1.component.html',
@@ -29,6 +33,8 @@ export class Login1Component implements OnInit {
   emailGm = "";
 
   suscribreUserInfo: Subscription;
+
+
   constructor(public  firebaseauthS: FirebaseauthService,
               public firestoreService:FirestoreService,
               private router: Router) {
@@ -38,6 +44,7 @@ export class Login1Component implements OnInit {
       if (res !== null){
         this.uid = res.uid;
         this.emailGm = res.email;
+        console.log('El email es: ', this.emailGm);
         this.getUserInfo(this.uid);
       }
       //else{
@@ -68,18 +75,25 @@ export class Login1Component implements OnInit {
   }
 
   async logueoAuth (){
+    let SMSerror = '';
     await this.firebaseauthS.GoogleAuth().then( res => {
       console.log('Todo a ido de maravilla ', res);
       console.log('trata de obtener el correo: ',res.user.email);
       this.emailGm = res.user.email;
       /* this.guardarUser(); */
     }).catch( err => {
+      SMSerror = err;
       console.log('error de autenticación ', err);
     });
-    const uid = await this.firebaseauthS.getUid();
+    if (SMSerror === '') {
+      const uid = await this.firebaseauthS.getUid();
       this.cliente.uid = uid //aqui se le asigna id al registro 
-    this.guardarUser();
+      this.guardarUser();
       console.log(uid);
+    }else{
+      console.log('Ocurrio un error: -> sms lleno');
+    }
+    
   }
 
   getUserInfo(uid :string){
@@ -96,6 +110,7 @@ export class Login1Component implements OnInit {
   async guardarUser() {
     const path = 'Cliente-dw';
     this.cliente.email = this.emailGm;
+    console.log('El correo que llega para guardar es: ', this.cliente.email);
     console.log('La información del cliente a guardar es: ',this.cliente.uid);
     await this.firestoreService.createDoc(this.cliente, path, this.cliente.uid).then(res => {
       this.router.navigate(['/home']);
@@ -110,4 +125,27 @@ export class Login1Component implements OnInit {
     this.firebaseauthS.logout();
     this.suscribreUserInfo.unsubscribe();
   }
+
+  /* Funcion para logue google */
+  async googleSignup() {
+    let errorSms = '';
+    await this.firebaseauthS.autenticacionGoogle().then(res => {
+      console.log('my user: ', res);
+      console.log('Las caracteristicas del usuario son : -->', res.email);
+      this.emailGm = res.email;
+    }).catch( err =>{
+      errorSms = err;
+      console.log('El error de ATH es: --->: ',err);
+    });
+    if(errorSms === ''){
+      const uid = await this.firebaseauthS.getUid();
+      this.cliente.uid = uid;
+      console.log('El uid a usar capacitor es: ',this.cliente.uid);
+      this.guardarUser();
+      console.log(uid);
+    }
+    
+  }
+  
+  
 }

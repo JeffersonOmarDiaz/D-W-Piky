@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "37046319801",
+    "project_id": "banca-2e58b",
+    "storage_bucket": "banca-2e58b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37046319801:android:28a1afc95a728f34437968",
+        "android_client_info": {
+          "package_name": "com.dogwalkerpiky.login"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "37046319801-ivsgrc7vs0jm5h07fkou08e599tnccbs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dogwalkerpiky.login",
+            "certificate_hash": "6e44dbe3946255d3d02b0def538f95f109e19e42"
+          }
+        },
+        {
+          "client_id": "37046319801-acfiha3cr04fpbheeun8jad3pj7f5bta.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw-XiQWrRIR9ySTeqtZRjQcH-v68Swjcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "37046319801-acfiha3cr04fpbheeun8jad3pj7f5bta.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
