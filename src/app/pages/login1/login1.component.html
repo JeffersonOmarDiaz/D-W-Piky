@@ -20,30 +20,31 @@
              </p>
              <ion-grid>
                <ion-row class="ion-justify-content-center">
-                 <ion-col size="6">
+                 <ion-col size="8">
                    <ion-button color="danger" (click)="logueoAuth()" shape="round" expand="full">
                        <ion-icon name="logo-google"></ion-icon>oogle
                    </ion-button>
                  </ion-col>
                </ion-row>
              </ion-grid>
-               
            </ion-card-content> 
           </ion-card>
         </ion-col>
       </ion-row>
       <ion-row class="ion-justify-content-center">
         <ion-col size="6">
-      
           <button (click)="salir()">Salir</button>
         </ion-col>
       </ion-row>
     </ion-grid>
 
+    
     <ion-card>
       <ion-card-content>
-        <!-- {{ userInfo | json}} -->
-        <ion-button (click)="googleSignup()">Sign in new</ion-button>
+        <ion-button color="danger" (click)="googleSignup()" shape="round" expand="full">
+          Continuar con  <ion-icon name="logo-google"></ion-icon>oogle
+      </ion-button>
+        <!-- <ion-button (click)="googleSignup()">Sign in new</ion-button> -->
     </ion-card-content>
   </ion-card>
 </ion-content>
