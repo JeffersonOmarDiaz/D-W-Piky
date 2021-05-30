@@ -34,7 +34,7 @@ export class Login1Component implements OnInit {
 
   suscribreUserInfo: Subscription;
 
-
+  clienter : Cliente []=[];
   constructor(public  firebaseauthS: FirebaseauthService,
               public firestoreService:FirestoreService,
               private router: Router) {
@@ -47,9 +47,9 @@ export class Login1Component implements OnInit {
         console.log('El email es: ', this.emailGm);
         this.getUserInfo(this.uid);
       }
-      //else{
-        //this.initCliente();
-      //}
+      else{
+        this.initCliente();
+      }
     });
    }
 
@@ -124,6 +124,7 @@ export class Login1Component implements OnInit {
   salir(){
     this.firebaseauthS.logout();
     this.suscribreUserInfo.unsubscribe();
+    this.initCliente();
   }
 
   /* Funcion para logue google */
@@ -139,10 +140,37 @@ export class Login1Component implements OnInit {
     });
     if(errorSms === ''){
       const uid = await this.firebaseauthS.getUid();
+      let userExit = false;
       this.cliente.uid = uid;
-      console.log('El uid a usar capacitor es: ',this.cliente.uid);
-      this.guardarUser();
-      console.log(uid);
+      await this.firestoreService.getCollection<Cliente>('Cliente-dw').subscribe(res => {
+        this.clienter = res;
+        console.log('Estos son los Clientes ', res);
+        const recorreArray = (arr) => {
+          for(let i=0; i<=arr.length-1; i++){
+          console.log(arr[i].nombre);
+          /* console.log('el uid que n puede leer es: ', arr[i].uid);
+          console.log('el uid 2 que n puede leer es: ', this.cliente.uid); */
+          if(arr[i].uid === this.cliente.uid){
+            console.log('hay una similitud'); 
+            userExit = true;
+            return;
+          }
+          }
+        }
+        recorreArray(res);
+        if(userExit === true){
+          console.log('Devolvió un true '); 
+          this.router.navigate(['/home']);
+          return;
+        }else{
+          console.log('No existe el usuario se lo regsitrará '); 
+          this.cliente.uid = uid;
+          this.guardarUser();
+        }
+      });
+      //console.log('El uid a usar capacitor es: ',this.cliente.uid);
+      //this.guardarUser();
+      //console.log(uid);
     }
     
   }
