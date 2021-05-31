@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
+import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 
 @Component({
   selector: 'app-menu',
@@ -12,12 +14,20 @@ export class MenuComponent implements OnInit {
   @Input () paginaTitulo : string;
   @Input () menuDW : boolean;
 
-  constructor(public menuController:MenuController) { }
+  //suscribreUserInfo: Subscription;
+  constructor(public menuController:MenuController,
+              public  firebaseauthS: FirebaseauthService,) { }
 
   ngOnInit() {}
 
   openMenu(){
     this.menuController.toggle('principal');
     console.log('Cargó el menú');
+  }
+
+  salir(){
+    this.firebaseauthS.logout();
+    //this.suscribreUserInfo.unsubscribe();
+    
   }
 }

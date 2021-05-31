@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 /* Importaciones para google movil */
 import '@codetrix-studio/capacitor-google-auth';
 import { Plugins } from '@capacitor/core';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login1',
@@ -35,9 +36,11 @@ export class Login1Component implements OnInit {
   suscribreUserInfo: Subscription;
 
   clienter : Cliente []=[];
+  loading: any;
   constructor(public  firebaseauthS: FirebaseauthService,
               public firestoreService:FirestoreService,
-              private router: Router) {
+              private router: Router,
+              public loadingController: LoadingController,) {
 
     this.firebaseauthS.stateAuth().subscribe( res => {
       console.log('estado de autenticacion es: ',res);
@@ -80,7 +83,6 @@ export class Login1Component implements OnInit {
       console.log('Todo a ido de maravilla ', res);
       console.log('trata de obtener el correo: ',res.user.email);
       this.emailGm = res.user.email;
-      /* this.guardarUser(); */
     }).catch( err => {
       SMSerror = err;
       console.log('error de autenticación ', err);
@@ -114,13 +116,22 @@ export class Login1Component implements OnInit {
     console.log('La información del cliente a guardar es: ',this.cliente.uid);
     await this.firestoreService.createDoc(this.cliente, path, this.cliente.uid).then(res => {
       this.router.navigate(['/home']);
-      
       console.log('CLIENTE Guardado con exitos!!!');
     }).catch(error => {
       console.log('No se pudo guardar el a ocurrido un error ->', error);
     });
   }
 
+  async presentLoading(sms:string) {
+    this.loading = await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: sms,
+      duration: 3000
+    });
+    await this.loading.present();
+    /* const { role, data } = await loading.onDidDismiss();
+    console.log('Loading dismissed!'); */
+  }
   salir(){
     this.firebaseauthS.logout();
     this.suscribreUserInfo.unsubscribe();
@@ -131,6 +142,7 @@ export class Login1Component implements OnInit {
   async googleSignup() {
     let errorSms = '';
     await this.firebaseauthS.autenticacionGoogle().then(res => {
+      this.presentLoading('Iniciando...');
       console.log('my user: ', res);
       console.log('Las caracteristicas del usuario son : -->', res.email);
       this.emailGm = res.email;

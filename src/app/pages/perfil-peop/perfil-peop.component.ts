@@ -3,6 +3,8 @@ import { Subscription } from 'rxjs';
 import { Cliente } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
+/* Importación para retroceso en dispositivo físico */
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-perfil-peop',
@@ -28,7 +30,8 @@ export class PerfilPeopComponent implements OnInit {
   emailGm = '';
   suscribreUserInfo: Subscription;
   constructor(public firestoreService:FirestoreService,
-              public  firebaseauthS: FirebaseauthService,) {
+              public  firebaseauthS: FirebaseauthService,
+              private platform: Platform,) {
     this.firebaseauthS.stateAuth().subscribe( res => {
       console.log('estado de autenticacion es: ',res);
       if (res !== null){
@@ -36,6 +39,9 @@ export class PerfilPeopComponent implements OnInit {
         this.emailGm = res.email;
         this.getUserInfo(this.uid);
       }
+    });
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      console.log('Handler was called!');
     });
    }
 
