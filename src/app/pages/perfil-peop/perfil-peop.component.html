@@ -13,23 +13,21 @@
       <ion-row>
         <ion-col>
           <ion-card style="text-align:center;">
-  
+   
             <ion-item>
               <ion-label class="normal">Foto: </ion-label>
               <ion-buttons slot="end">
                 <ion-button>
-                  <!-- <label for="file-upload"> -->
+                  <label for="file-upload">
                     <ion-icon slot="icon-only" name="images"></ion-icon>
-                  <!-- </label> -->
+                  </label>
                   <!--  PARA Q ACEPTE CUALQUIER TIPO DE IMAGEN -->
-                  <!-- <input (change)="nuevaImagenUpload($event)" id="file-upload" style="display: none" type="file"
-                      accept="image/*"> -->
-                  <!-- <input> -->
+                  <input (change)="newImageUpload($event)" id="file-upload" style="display: none" type="file" accept="image/*" >
                 </ion-button>
               </ion-buttons>
             </ion-item>
             <ion-item>
-              <img class="image"> <!-- [src]="newMascota.foto"> -->
+              <img class="image" [src]="cliente.foto" onerror="this.src='../../../assets/images/icons/nofotoerfil.png'">
             </ion-item>
           </ion-card>
   
@@ -140,7 +138,7 @@
             </ion-radio-group>
           </ion-item> -->
   
-          <ion-button style="margin: 20px;" shape="round" expand="full">Guardar</ion-button>
+          <ion-button style="margin: 20px;" shape="round" expand="full" (click)="guardarCliente()">Guardar</ion-button>
           <ion-button style="margin: 20px;" shape="round" expand="full">Salir</ion-button>
         </ion-col>
       </ion-row>

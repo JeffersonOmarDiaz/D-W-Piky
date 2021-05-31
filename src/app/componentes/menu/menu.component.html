@@ -1,6 +1,6 @@
 <!-- ESTE ES EL MENU DE CLIENTE -->
 <div *ngIf="menuCliente">
-  <ion-header style="position:fixed;">
+  <ion-header style="position:fixed;" style=" text-align:center;">
     <ion-toolbar>
       <ion-title class="subtitulo ion-text-wrap">
         {{paginaTitulo}}
@@ -31,7 +31,7 @@
           <ion-label class="normal"> Mis Mascotas</ion-label>
           <ion-icon slot="start" name="paw-outline"></ion-icon>
         </ion-item>
-        <ion-item button=true detail=true routerLink="/#" routerDirection="root">
+        <ion-item button=true detail=true routerLink="/home" routerDirection="root">
           <ion-label class="normal"> Quiero un paseo</ion-label>
           <ion-icon slot="start" name="walk-outline"></ion-icon>
         </ion-item>
@@ -97,7 +97,7 @@
         <ion-item>Menu Item</ion-item>
       </ion-list>
     </ion-content>
-    <ion-footer align="center" style=" text-align:center; margin-block: 30px;">
+    <ion-footer  style=" text-align:center; margin-block: 30px;">
       <ion-button shape="round" routerLink='/home' routerDirection="root">Cambiar a Dueño</ion-button>
     </ion-footer>
   </ion-menu>
