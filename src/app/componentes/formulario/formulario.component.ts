@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
-import { Mascota } from 'src/app/modelBD';
+import { Subscription } from 'rxjs';
+import { Cliente, Mascota } from 'src/app/modelBD';
+import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestorageService } from 'src/app/services/firestorage.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 
@@ -37,12 +39,43 @@ export class FormularioComponent implements OnInit {
 
   newImage = '';
   newFile ='';
+
+  //Inicio de variables para registrar nuevas mascotas
+  cliente: Cliente = {
+    uid: '',
+    email: '',
+    celular: '',
+    foto: '',
+    referncia: '',
+    ubicacion: null,
+    edad: null,
+    nombre: '',
+    apellido: '',
+    cedula: '',
+    mascotas: [],
+  };
+  
+  uid = '';
+  suscribreUserInfo: Subscription;
+  pathCliente: "/Cliente-dw";
+  //Fin avirables nueva mascota
   constructor(public firestoreService: FirestoreService,
               public loadingController: LoadingController,
               public toastController: ToastController,
               public alertController: AlertController,
               public firestorageService: FirestorageService,
-              ) { }
+              public firebaseauthS: FirebaseauthService
+              ) {
+                this.firebaseauthS.stateAuth().subscribe( res => {
+                  console.log('estado de autenticacion es: ',res);
+                  if (res !== null){
+                    this.uid = res.uid;
+                    console.log('El atributo mascotas de cliente es: ', this.cliente.mascotas);
+                    this.getUserInfo(this.uid);
+                  }
+                });
+               }
+            
 
   ngOnInit() {
     const mascota = this.firestoreService.getItem();
@@ -55,6 +88,33 @@ export class FormularioComponent implements OnInit {
     
   }
 
+  //Inicio Funciones de registro mascota Cliente 
+  getUserInfo(uid :string){
+    if(uid !== undefined){
+      console.log('el id de que llega al getUSerInfo es: ',uid);
+    }
+    const path = "Cliente-dw";
+    this.suscribreUserInfo = this.firestoreService.getDoc<Cliente>(path,uid).subscribe( res => {
+      this.cliente = res;
+      console.log('La informacion del cliente es: ', this.cliente);
+    });
+  }
+
+  async guardarCliente() {
+    
+    this.presentLoading();
+    
+    this.firestoreService.createDoc(this.cliente, 'Cliente-dw', this.cliente.uid).then(res => {
+      this.loading.dismiss();
+      this.presentToast('Guardado con exito', 2000);
+      //this.limpiarCampos();
+    }).catch(error => {
+      console.log('No se pudo Actulizar el cliente un error ->', error);
+      this.presentToast('Error al guardar!!', 2000);
+    });
+  }
+
+  //Fin Funciones de registro mascota Cliente 
 ///PAra guardar imagenes es base 64 sin URL
   /* guardarMascota(){
     this.presentLoading();
@@ -96,6 +156,10 @@ export class FormularioComponent implements OnInit {
     this.firestoreService.createDoc(this.newMascota, this.pathMascota, this.newMascota.id).then(res => {
       this.loading.dismiss();
       this.presentToast('Guardado con exito', 2000);
+      console.log('Llega a actualizar cliente con los datos: Path ',this.pathCliente, ' documento: ', this.cliente, 'ID CLiente: ',this.cliente.uid)
+      this.cliente.mascotas[0]= this.newMascota;
+      //this.cliente.mascotas.push(this.newMascota);
+      this.guardarCliente();
       this.limpiarCampos();
     }).catch(error => {
       console.log('No se pudo guardar el a ocurrido un error ->', error);

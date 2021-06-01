@@ -25,6 +25,7 @@ export class PerfilPeopComponent implements OnInit {
     nombre: '',
     apellido: '',
     cedula: '',
+    mascotas: [],
   };
 
   uid = '';

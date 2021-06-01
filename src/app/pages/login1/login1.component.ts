@@ -28,6 +28,7 @@ export class Login1Component implements OnInit {
   nombre: '',
   apellido: '',
   cedula: '',
+  mascotas: [],
 }
 
   uid ='';
@@ -74,6 +75,7 @@ export class Login1Component implements OnInit {
       nombre: '',
       apellido: '',
       cedula: '',
+      mascotas: [],
     }
   }
 
