@@ -42,8 +42,8 @@
               {{cliente.email}}
             </label>
             <ion-item>
-              <ion-label class="normal" position="floating">Nombre:</ion-label>
-              <ion-input [(ngModel)]="cliente.nombre" class="normal" type="text" name="nombre" color="initial"></ion-input>
+              <ion-label class="normal" position="floating">Nombre*</ion-label>
+              <ion-input [(ngModel)]="cliente.nombre" class="normal" type="text" name="nombre" color="initial" maxlength="20" required="true" ></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -51,8 +51,8 @@
         <ion-row>
           <ion-col>
             <ion-item>
-              <ion-label class="normal" position="floating">Apellido:</ion-label>
-              <ion-input [(ngModel)]="cliente.apellido" class="normal" type="text" name="apellido" color="initial"></ion-input>
+              <ion-label class="normal" position="floating">Apellido*</ion-label>
+              <ion-input [(ngModel)]="cliente.apellido" class="normal" type="text" name="apellido" color="initial" maxlength="20" required="true"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -60,9 +60,10 @@
         <ion-row>
           <ion-col>
             <ion-item>
-              <ion-label class="normal" position="floating">Cédula de Identidad:</ion-label>
-              <ion-input [(ngModel)]="cliente.cedula" class="normal" type="text" name="cedula" color="initial"></ion-input>
+              <ion-label class="normal" position="floating">Cédula de Identidad*</ion-label>
+              <ion-input [(ngModel)]="cliente.cedula" class="normal" type="text" name="cedula" color="initial" maxlength="10" minlength="10" required="true" pattern="[0-9]{10}"></ion-input>
             </ion-item>
+            <!-- <ion-button style="margin: 20px;" shape="round" expand="full" (click)="validarCedula()">validar</ion-button> -->
           </ion-col>
         </ion-row>
       
@@ -72,8 +73,8 @@
         <ion-row>
           <ion-col>
             <ion-item>
-              <ion-label class="normal" position="floating">Celular:</ion-label>
-              <ion-input [(ngModel)]="cliente.celular" class="normal" type="text" name="celular" color="initial"></ion-input>
+              <ion-label class="normal" position="floating">Celular*</ion-label>
+              <ion-input [(ngModel)]="cliente.celular" class="normal" type="text" name="celular" color="initial" maxlength="10" minlength="10" required="true" pattern="[0-9]{10}" placeholder="0999999999"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -81,8 +82,8 @@
         <ion-row>
           <ion-col>
             <ion-item>
-              <ion-label class="normal" position="floating">Edad:</ion-label>
-              <ion-input [(ngModel)]="cliente.edad" class="normal" type="number" name="edad" color="initial"></ion-input>
+              <ion-label class="normal" position="floating">Edad*</ion-label>
+              <ion-input [(ngModel)]="cliente.edad" class="normal" type="number" name="edad" color="initial" required="true"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -92,7 +93,7 @@
         <ion-row>
           <ion-col>
             <ion-item>
-              <ion-label class="normal" position="floating">Dirección:</ion-label>
+              <ion-label class="normal" position="floating">Dirección</ion-label>
               <ion-input class="normal" type="text" color="initial"></ion-input>
             </ion-item>
           </ion-col>
@@ -101,8 +102,8 @@
         <ion-row>
           <ion-col>
             <ion-item>
-              <ion-label class="normal" position="floating">Refencia:</ion-label>
-              <ion-input class="normal" type="text" color="initial"></ion-input>
+              <ion-label class="normal" position="floating">Refencia*</ion-label>
+              <ion-input [(ngModel)]="cliente.referncia" class="normal" type="text" color="initial"  maxlength="70" required="true"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -138,7 +139,7 @@
             </ion-radio-group>
           </ion-item> -->
   
-          <ion-button style="margin: 20px;" shape="round" expand="full" (click)="guardarCliente()">Guardar</ion-button>
+          <ion-button style="margin: 20px;" shape="round" expand="full" (click)="validarGuardar()">Guardar</ion-button>
           <ion-button style="margin: 20px;" shape="round" expand="full">Salir</ion-button>
         </ion-col>
       </ion-row>
