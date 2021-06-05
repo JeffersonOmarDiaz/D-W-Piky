@@ -162,8 +162,6 @@ export class Login1Component implements OnInit {
         const recorreArray = (arr) => {
           for(let i=0; i<=arr.length-1; i++){
           console.log(arr[i].nombre);
-          /* console.log('el uid que n puede leer es: ', arr[i].uid);
-          console.log('el uid 2 que n puede leer es: ', this.cliente.uid); */
           if(arr[i].uid === this.cliente.uid){
             console.log('hay una similitud'); 
             userExit = true;
@@ -174,7 +172,7 @@ export class Login1Component implements OnInit {
         recorreArray(res);
         if(userExit === true){
           console.log('Devolvió un true '); 
-          //this.router.navigate(['/home']);
+          this.router.navigate(['/home']);
           return;
         }else{
           console.log('No existe el usuario se lo regsitrará '); 

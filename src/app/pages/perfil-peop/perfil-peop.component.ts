@@ -51,9 +51,16 @@ export class PerfilPeopComponent implements OnInit {
       }
     });
     /* REvisar función para retroceso */
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      console.log('Handler was called!');
+    /* this.platform.backButton.subscribeWithPriority(5, () => {
+      console.log('Another handler was called!');
     });
+  
+    this.platform.backButton.subscribeWithPriority(10, (processNextHandler) => {
+      console.log('Handler was called!');
+  
+      processNextHandler();
+    }); */
+    /* REvisar función para retroceso */
    }
 
   ngOnInit() {}
