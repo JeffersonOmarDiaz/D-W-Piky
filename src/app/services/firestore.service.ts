@@ -8,6 +8,7 @@ import { Mascota } from '../modelBD';
 export class FirestoreService {
 
   editMascota: Mascota;
+  valorEliminar: number;
   constructor(public database:AngularFirestore) { }
 
   createDoc(data: any, path: string, id: string){
@@ -50,6 +51,14 @@ export class FirestoreService {
   getItem(){
     return this.editMascota;
   }
+  setParametrosArrayMascota(id: number ){
+    this.valorEliminar= id;
+  }
+
+  getValor(){
+    return this.valorEliminar;
+  }
+
   //Esta funcion está más arriba verificar solo falta el tipo 
   deletDocument<tipo>(enlace: string, id: string){
     const ref= this.database.collection<tipo>(enlace);

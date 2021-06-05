@@ -59,6 +59,7 @@ export class FormularioComponent implements OnInit {
   suscribreUserInfo: Subscription;
   pathCliente: "/Cliente-dw";
   //Fin avirables nueva mascota
+  elimarArray = null;
   constructor(public firestoreService: FirestoreService,
               public loadingController: LoadingController,
               public toastController: ToastController,
@@ -83,9 +84,9 @@ export class FormularioComponent implements OnInit {
       console.log('La informacion a editar es: ', mascota);
       this.newMascota=mascota;
     }
-    /* console.log('el id es: ',this.newMascota.id);
-    console.log('La foto  es: ',this.newMascota.foto); */
-    
+    const valorEliminar = this.firestoreService.getValor();
+    console.log('El valor que llega para eliminar es: ',valorEliminar);
+    this.elimarArray = valorEliminar;
   }
 
   //Inicio Funciones de registro mascota Cliente 
@@ -103,7 +104,6 @@ export class FormularioComponent implements OnInit {
   async guardarCliente() {
     
     this.presentLoading();
-    
     this.firestoreService.createDoc(this.cliente, 'Cliente-dw', this.cliente.uid).then(res => {
       this.loading.dismiss();
       this.presentToast('Guardado con exito', 2000);
@@ -157,10 +157,14 @@ export class FormularioComponent implements OnInit {
       this.loading.dismiss();
       this.presentToast('Guardado con exito', 2000);
       console.log('Llega a actualizar cliente con los datos: Path ',this.pathCliente, ' documento: ', this.cliente, 'ID CLiente: ',this.cliente.uid)
-      this.cliente.mascotas[0]= this.newMascota;
-      //this.cliente.mascotas.push(this.newMascota);
+      /* this.cliente.mascotas[0]= this.newMascota; */
+      this.cliente.mascotas.push(this.newMascota);
+      if(this.elimarArray != undefined){
+        this.cliente.mascotas.splice(this.elimarArray,1);
+      }
       this.guardarCliente();
       this.limpiarCampos();
+      return true;
     }).catch(error => {
       console.log('No se pudo guardar el a ocurrido un error ->', error);
       this.presentToast('Error al guardar!!', 2000);

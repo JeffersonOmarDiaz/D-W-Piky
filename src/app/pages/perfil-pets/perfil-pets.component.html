@@ -2,19 +2,20 @@
 
 <ion-content> 
     <ion-grid fixed>
-        <ion-row>
+        <!-- <ion-row>
             <ion-col>
                 <h2>Estas son sus mascotas</h2>
             </ion-col>
-        </ion-row>
-        <ion-card>
+        </ion-row> -->
+
+        <!-- DESCOMENTAR PARA VER TODAS LAS MASCOTAS -->
+        <!-- <ion-card>
             <ion-row>
                 <ion-col>
                     <ion-card>
                         <ion-item *ngFor="let mascota of mascotas" class="itemMascota">
-                            <img src={{mascota.foto}} class="imgRedonda">
+                            <img src={{mascota.foto}} class="imgRedonda" onerror="this.src='../../../assets/images/icons/perfil-dog.png'">
                             <ion-label class="itemMascota">{{mascota.nombre}}</ion-label>
-                            <!-- <ion-label>{{mascota.edad}}</ion-label> -->
                             <ion-buttons>
                                 <ion-button routerLink="/registro-mascota" routerDirection="root" (click)="editMascota(mascota)">
                                     <ion-icon slot="icon-only" name="create-sharp" ></ion-icon>
@@ -24,6 +25,30 @@
                                   </ion-button>
                             </ion-buttons>
                         </ion-item>
+                    </ion-card>
+                </ion-col>
+            </ion-row>
+        </ion-card> -->
+        <!-- DESCOMENTAR PARA VER TODAS LAS MASCOTAS -->
+        
+        <ion-card>
+            <ion-row>
+                <ion-col>
+                    <ion-card>
+                        
+                        <ion-item  *ngFor="let mascota of clienteMascota" class="itemMascota">
+                            <img src={{mascota.foto}} class="imgRedonda" onerror="this.src='../../../assets/images/icons/perfil-dog.png'">
+                            <ion-label class="itemMascota">{{mascota.nombre}}</ion-label>
+                            <ion-buttons>
+                                <ion-button routerLink="/registro-mascota" routerDirection="root" (click)="editMascota(mascota); enviarID(mascota.id, clienteMascota)">
+                                    <ion-icon slot="icon-only" name="create-sharp" ></ion-icon>
+                                </ion-button>
+                                <ion-button (click)="deleteUserPet(mascota.id, clienteMascota)">
+                                    <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
+                                  </ion-button>
+                            </ion-buttons>
+                        </ion-item>
+    
                     </ion-card>
                 </ion-col>
             </ion-row>
