@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FirestoreService } from 'src/app/services/firestore.service';
 
 @Component({
   selector: 'app-home2',
@@ -8,7 +9,10 @@ import { Component, OnInit } from '@angular/core';
 export class Home2Component implements OnInit {
 
   menuDW = true;
-  constructor() { }
+  private pathRetorno = '/home-paseador'
+  constructor(public firestoreService: FirestoreService) {
+    this.firestoreService.setLink(this.pathRetorno);
+   }
 
   ngOnInit() {}
 

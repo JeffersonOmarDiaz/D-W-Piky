@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FirestoreService } from 'src/app/services/firestore.service';
 
 
 @Component({
@@ -10,11 +11,14 @@ export class Home1Component implements OnInit {
 
   verMC = true;
   
-  constructor() { }
+  constructor(public firestoreService: FirestoreService) { }
 
   ngOnInit() {
     
   }
 
+  enviarLink(path: string){
+    this.firestoreService.setLink(path);
+  }
   
 }

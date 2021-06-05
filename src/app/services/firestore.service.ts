@@ -9,6 +9,7 @@ export class FirestoreService {
 
   editMascota: Mascota;
   valorEliminar: number;
+  link = '';
   constructor(public database:AngularFirestore) { }
 
   createDoc(data: any, path: string, id: string){
@@ -66,5 +67,14 @@ export class FirestoreService {
   }
   /* Funciones creadas para editar y eliminar Fin */
 
+
+  /* funcion para retroceso con link */
+  setLink(path :string){
+    this.link = path;
+  }
+  getLink(){
+    return this.link;
+  }
+  /* funcion para retroceso con link */
 
 }

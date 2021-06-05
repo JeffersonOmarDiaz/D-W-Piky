@@ -18,11 +18,11 @@
             
           </ion-item>
         
-          <ion-card-content routerLink="/perfil-mascota" routerDirection="root">
+          <ion-card-content routerLink="/perfil-mascota" routerDirection="root" (click)="enviarLink('/perfil-mascota')">
             <ion-card-title>Mis Mascotas</ion-card-title>
             <ion-icon name="paw-outline" slot="start"></ion-icon>
             Registrar o editar información de sus mascotas.
-            <ion-button fill="outline" slot="end" class="botonMenu" routerLink="/perfil-mascota" routerDirection="root">Ir</ion-button>
+            <ion-button fill="outline" slot="end" class="botonMenu" routerLink="/perfil-mascota" routerDirection="root" (click)="enviarLink('/perfil-mascota')">Ir</ion-button>
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -37,11 +37,11 @@
               
             </ion-item>
           
-            <ion-card-content routerLink="/#" routerDirection="root">
+            <ion-card-content routerLink="/home" routerDirection="root">
               <ion-card-title>Quiero un Paseo</ion-card-title>
               <ion-icon name="walk-outline" slot="start"></ion-icon>
               Solicitar que algún paseador cuide de su mascota por un periodo de tiempo.
-              <ion-button fill="outline" slot="end" class="botonMenu" routerLink="/#" routerDirection="root">Ir</ion-button>
+              <ion-button fill="outline" slot="end" class="botonMenu" routerLink="/home" routerDirection="root">Ir</ion-button>
             </ion-card-content>
           </ion-card>
       </ion-col> 
@@ -56,11 +56,11 @@
             <!-- <ion-button fill="outline" slot="end" href="#">Ver</ion-button> -->
           </ion-item>
         
-          <ion-card-content routerLink="/perfil-persona" routerDirection="root">
+          <ion-card-content routerLink="/perfil-persona" routerDirection="root" (click)="enviarLink('/home')">
             <ion-card-title>Mi Perfil</ion-card-title>
             <ion-icon name="person-circle-outline" slot="start"></ion-icon>
             Editar sus datos personales como dueño de las mascotas.
-            <ion-button fill="outline" slot="end" class="botonMenu" routerLink="/perfil-persona" routerDirection="root">Ir</ion-button>
+            <ion-button fill="outline" slot="end" class="botonMenu" routerLink="/perfil-persona" routerDirection="root" (click)="enviarLink('/home')">Ir</ion-button>
           </ion-card-content>
         </ion-card>
       </ion-col> 

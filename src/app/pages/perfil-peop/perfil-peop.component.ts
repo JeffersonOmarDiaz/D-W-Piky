@@ -6,6 +6,7 @@ import { FirestoreService } from 'src/app/services/firestore.service';
 /* Importación para retroceso en dispositivo físico */
 import { LoadingController, Platform, ToastController } from '@ionic/angular';
 import { FirestorageService } from 'src/app/services/firestorage.service';
+import { Router } from '@angular/router';
  
 @Component({
   selector: 'app-perfil-peop',
@@ -36,12 +37,15 @@ export class PerfilPeopComponent implements OnInit {
   loading: any;
 
   private pathCliente = "/Cliente-dw";
+  pathRetorno = '';
+  rolUser = '';
   constructor(public firestoreService:FirestoreService,
               public  firebaseauthS: FirebaseauthService,
               private platform: Platform,
               public firestorageService: FirestorageService,
               public  loadingController: LoadingController,
-              public toastController: ToastController,) {
+              public toastController: ToastController,
+              private router: Router,) {
     this.firebaseauthS.stateAuth().subscribe( res => {
       console.log('estado de autenticacion es: ',res);
       if (res !== null){
@@ -61,10 +65,33 @@ export class PerfilPeopComponent implements OnInit {
       processNextHandler();
     }); */
     /* REvisar función para retroceso */
+    //Retroceso con link
+    this.pathRetorno= this.firestoreService.getLink();
+    console.log('retorna a: ',this.pathRetorno);
+    //Retroceso con link
    }
 
   ngOnInit() {}
 
+//Retroceso con link
+retrocederLink(){
+  console.log('retorna a: ',this.pathRetorno);
+  if(this.pathRetorno === ''){
+    /* this.router.navigate(['/home']); */
+    if(this.cliente.nombre === 'Omar'){
+      this.router.navigate(['/home-paseador']);
+      this.firestoreService.setLink('');
+    }else{
+      this.router.navigate(['/home']);
+      this.firestoreService.setLink('');
+    }
+  }else{
+    this.router.navigate([this.pathRetorno]);
+    this.firestoreService.setLink('');
+    console.log('Queda en cache: ', this.firestoreService.getLink() );
+  }
+}
+//Retroceso con link
 
   getUserInfo(uid :string){
     if(uid !== undefined){
