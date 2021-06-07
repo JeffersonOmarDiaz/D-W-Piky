@@ -117,7 +117,8 @@ export class Login1Component implements OnInit {
     console.log('El correo que llega para guardar es: ', this.cliente.email);
     console.log('La información del cliente a guardar es: ',this.cliente.uid);
     await this.firestoreService.createDoc(this.cliente, path, this.cliente.uid).then(res => {
-      this.router.navigate(['/home']);
+      /* this.router.navigate(['/home']); */
+      window.location.assign('/home');
       console.log('CLIENTE Guardado con exitos!!!');
     }).catch(error => {
       console.log('No se pudo guardar el a ocurrido un error ->', error);
@@ -172,7 +173,8 @@ export class Login1Component implements OnInit {
         recorreArray(res);
         if(userExit === true){
           console.log('Devolvió un true '); 
-          this.router.navigate(['/home']);
+          //this.router.navigate(['/home']);
+          window.location.assign('/home');
           return;
         }else{
           console.log('No existe el usuario se lo regsitrará '); 
