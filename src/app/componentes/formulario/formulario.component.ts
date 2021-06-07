@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Cliente, Mascota } from 'src/app/modelBD';
@@ -65,7 +66,8 @@ export class FormularioComponent implements OnInit {
               public toastController: ToastController,
               public alertController: AlertController,
               public firestorageService: FirestorageService,
-              public firebaseauthS: FirebaseauthService
+              public firebaseauthS: FirebaseauthService,
+              private router: Router,
               ) {
                 this.firebaseauthS.stateAuth().subscribe( res => {
                   console.log('estado de autenticacion es: ',res);
@@ -102,16 +104,29 @@ export class FormularioComponent implements OnInit {
   }
 
   async guardarCliente() {
-    
-    this.presentLoading();
-    this.firestoreService.createDoc(this.cliente, 'Cliente-dw', this.cliente.uid).then(res => {
-      this.loading.dismiss();
-      this.presentToast('Guardado con exito', 2000);
-      //this.limpiarCampos();
-    }).catch(error => {
-      console.log('No se pudo Actulizar el cliente un error ->', error);
-      this.presentToast('Error al guardar!!', 2000);
-    });
+    if (this.newMascota.foto != '' && this.newMascota.nombre != '' && this.newMascota.edad != null && this.newMascota.sexo != '' && this.newMascota.agresivo != '' && this.newMascota.tamanio != '') {
+      if (this.newMascota.edad < 0 || this.newMascota.edad > 16) {
+        const sms = 'La edad de una mascota va desde 0 - 15 años';
+        console.log(sms);
+        this.presentToast(sms, 3000);
+        return;
+      } else {
+        this.presentLoading();
+        this.firestoreService.createDoc(this.cliente, 'Cliente-dw', this.cliente.uid).then(res => {
+          this.loading.dismiss();
+          this.presentToast('Guardado con exito', 2000);
+          this.limpiarCampos();
+        }).catch(error => {
+          console.log('No se pudo Actulizar el cliente un error ->', error);
+          this.presentToast('Error al guardar!!', 2000);
+        });
+      }
+    } else {
+      const sms = 'Llenar todos los campos requeridos (*)';
+      console.log(sms);
+      this.presentToast(sms, 3000);
+      return;
+    }
   }
 
   //Fin Funciones de registro mascota Cliente 
@@ -144,31 +159,48 @@ export class FormularioComponent implements OnInit {
   }
   cambiarImg : boolean;
   async guardarMascota() {
-    this.presentLoading();
-    //Valida si desea o no cambiar de imagen 
-    if(this.cambiarImg === true){
-      
-      const name = this.newMascota.nombre+this.newMascota.id;
-      const res = await this.firestorageService.uploadImagen(this.newFile,  this.pathMascota, name);
-      this.newMascota.foto = res;
-    }
-    
-    this.firestoreService.createDoc(this.newMascota, this.pathMascota, this.newMascota.id).then(res => {
-      this.loading.dismiss();
-      this.presentToast('Guardado con exito', 2000);
-      console.log('Llega a actualizar cliente con los datos: Path ',this.pathCliente, ' documento: ', this.cliente, 'ID CLiente: ',this.cliente.uid)
-      /* this.cliente.mascotas[0]= this.newMascota; */
-      this.cliente.mascotas.push(this.newMascota);
-      if(this.elimarArray != undefined){
-        this.cliente.mascotas.splice(this.elimarArray,1);
+    if (this.newMascota.foto != '' && this.newMascota.nombre != '' && this.newMascota.edad != null && this.newMascota.sexo != '' && this.newMascota.agresivo != '' && this.newMascota.tamanio != '') {
+      if (this.newMascota.edad < 0 || this.newMascota.edad > 15) {
+        const sms = 'La edad de una mascota va desde 0 - 15 años';
+        console.log(sms);
+        this.presentToast(sms, 3000);
+        return;
+      } else {
+        this.presentLoading();
+        //Valida si desea o no cambiar de imagen 
+        if (this.cambiarImg === true) {
+
+          const name = this.newMascota.nombre + this.newMascota.id;
+          const res = await this.firestorageService.uploadImagen(this.newFile, this.pathMascota, name);
+          this.newMascota.foto = res;
+        }
+
+        this.firestoreService.createDoc(this.newMascota, this.pathMascota, this.newMascota.id).then(res => {
+          this.loading.dismiss();
+          this.presentToast('Guardado con exito', 2000);
+          console.log('Llega a actualizar cliente con los datos: Path ', this.pathCliente, ' documento: ', this.cliente, 'ID CLiente: ', this.cliente.uid)
+          /* this.cliente.mascotas[0]= this.newMascota; */
+          this.cliente.mascotas.push(this.newMascota);
+          if (this.elimarArray != undefined) {
+            this.cliente.mascotas.splice(this.elimarArray, 1);
+          }
+          this.guardarCliente();
+          //this.limpiarCampos();
+          window.location.assign('/perfil-mascota');
+          //this.router.navigate(['/perfil-mascota']);
+          return true;
+        }).catch(error => {
+          console.log('No se pudo guardar el a ocurrido un error ->', error);
+          this.presentToast('Error al guardar!!', 2000);
+        });
       }
-      this.guardarCliente();
-      this.limpiarCampos();
-      return true;
-    }).catch(error => {
-      console.log('No se pudo guardar el a ocurrido un error ->', error);
-      this.presentToast('Error al guardar!!', 2000);
-    });
+
+    } else {
+      const sms = 'Llenar todos los campos requeridos (*)';
+      console.log(sms);
+      this.presentToast(sms, 3000);
+      return;
+    }
   }
 
   async presentLoading() {

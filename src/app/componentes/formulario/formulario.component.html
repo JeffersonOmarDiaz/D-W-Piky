@@ -7,14 +7,14 @@
             <ion-card style="text-align:center;">
             
             <ion-item>
-              <ion-label class="normal">Foto: </ion-label>
+              <ion-label class="normal">Foto* </ion-label>
               <ion-buttons slot="end">
                 <ion-button >
                   <label for="file-upload">
                     <ion-icon slot="icon-only" name="images"></ion-icon>
                   </label>
                   <!--  PARA Q ACEPTE CUALQUIER TIPO DE IMAGEN -->
-                  <input (change)="newImageUpload($event)" id="file-upload" style="display: none" type="file" accept="image/*" >
+                  <input (change)="newImageUpload($event)" id="file-upload" style="display: none" type="file" accept="image/*">
                 </ion-button>
               </ion-buttons>
             </ion-item>
@@ -30,8 +30,8 @@
         <ion-row>
           <ion-col>
             <ion-item>
-              <ion-label class="normal" position="floating">Nombre:</ion-label>
-              <ion-input [(ngModel)]="newMascota.nombre" class="normal" type="text" color="initial"></ion-input>
+              <ion-label class="normal" position="floating">Nombre*</ion-label>
+              <ion-input [(ngModel)]="newMascota.nombre" class="normal" type="text" color="initial"  maxlength="15" required="true"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -39,8 +39,8 @@
         <ion-row>
           <ion-col>
             <ion-item>
-              <ion-label class="normal" position="floating">Edad (Años):</ion-label>
-              <ion-input [(ngModel)]="newMascota.edad" class="normal" type="number" color="initial"></ion-input>
+              <ion-label class="normal" position="floating">Edad* (Años)</ion-label>
+              <ion-input [(ngModel)]="newMascota.edad" class="normal" type="number" color="initial" required="true"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -54,7 +54,7 @@
             <ion-list>
               <ion-radio-group [(ngModel)]="newMascota.sexo">
                 <ion-list-header>
-                  <ion-label>Sexo:</ion-label>
+                  <ion-label>Sexo*</ion-label>
                 </ion-list-header>
     
                 <ion-item>
@@ -81,7 +81,7 @@
             <ion-list>
               <ion-radio-group [(ngModel)]="newMascota.tamanio">
                 <ion-list-header>
-                  <ion-label>Tamaño:</ion-label>
+                  <ion-label>Tamaño*</ion-label>
                 </ion-list-header>
     
                 <ion-item>
@@ -110,7 +110,7 @@
                 <ion-list>
                   <ion-radio-group [(ngModel)]="newMascota.agresivo">
                     <ion-list-header>
-                      <ion-label>Agresivo:</ion-label>
+                      <ion-label>Agresivo*</ion-label>
                     </ion-list-header>
         
                     <ion-item>
@@ -141,7 +141,7 @@
   
       <ion-row class="ion-justify-content-center">
         <ion-col size="6">
-          <ion-button shape="round" expand="full" (click)="guardarMascota()" routerLink="/perfil-mascota" routerDirection="root">Guardar</ion-button>
+          <ion-button shape="round" expand="full" (click)="guardarMascota()">Guardar</ion-button>
         </ion-col>
       </ion-row>
   
@@ -151,123 +151,3 @@
 
 
 <!-- REGISTRO DE PERSONAS -->
-<div *ngIf="registroPeople">
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <h3 class="subtitulo p-10 encabezado">Registro</h3>
-        <ion-item>
-          <ion-label class="normal">Foto: </ion-label>
-          <ion-buttons slot="end">
-            <ion-button>
-              <label for="file-upload">
-                <ion-icon slot="icon-only" name="images-outline"></ion-icon>
-              </label>
-              <!--  PARA Q ACEPTE CUALQUIER TIPO DE IMAGEN -->
-              <!-- <input (change)="nuevaImagenUpload($event)" id="file-upload" style="display: none" type="file"
-                  accept="image/*"> -->
-              <input>
-            </ion-button>
-          </ion-buttons>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <img class="image"> <!-- [src]="newMascota.foto"> -->
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-label class="normal" position="floating">Nombre:</ion-label>
-          <ion-input class="normal" type="text" color="initial"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-label class="normal" position="floating">Apellido:</ion-label>
-          <ion-input class="normal" type="text" color="initial"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-label class="normal" position="floating">Edad:</ion-label>
-          <ion-input class="normal" type="number" color="initial"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-label class="normal" position="floating">Dirección:</ion-label>
-          <ion-input class="normal" type="text" color="initial"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-label class="normal" position="floating">Refencia:</ion-label>
-          <ion-input class="normal" type="text" color="initial"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-label class="normal" position="floating">Celular:</ion-label>
-          <ion-input class="normal" type="text" color="initial"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-label class="normal" position="floating">Email:</ion-label>
-          <ion-input class="normal" type="email" color="initial"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-radio-group>
-            <ion-list-header>
-              <ion-label>Registrarce como:</ion-label>
-            </ion-list-header>
-
-            <ion-item>
-              <ion-label>Cliente</ion-label>
-              <ion-radio slot="start" value="cliente" color="warning"></ion-radio>
-            </ion-item>
-
-            <ion-item>
-              <ion-label>Paseador</ion-label>
-              <ion-radio slot="start" value="Paseador" color="success"></ion-radio>
-            </ion-item>
-          </ion-radio-group>
-        </ion-item>
-
-        <ion-button style="margin: 20px;" expand="block">Guardar</ion-button>
-        <ion-button style="margin: 20px;" expand="block">Salir</ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</div>
