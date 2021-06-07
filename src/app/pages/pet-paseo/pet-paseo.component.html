@@ -1,4 +1,25 @@
 <app-menu paginaTitulo="Quiero un paseo" [menuCliente]="verMC"></app-menu>
 <ion-content>
-  <h1>Quiero un paseo</h1>
+  <ion-grid fixed>
+    <ion-card>
+      <ion-row>
+        <ion-col>
+          <!-- <ion-item  *ngFor="let mascota of clienteMascota" class="itemMascota">
+            <img src={{mascota.foto}} class="imgRedonda" onerror="this.src='../../../assets/images/icons/perfil-dog.png'">
+            <ion-label class="itemMascota">{{mascota.nombre}}</ion-label>
+          </ion-item> -->
+          <ion-list>
+            <ion-card-content >
+            <ion-item *ngFor="let mascota of clienteMascota">
+              <img src={{mascota.foto}} class="imgRedonda" onerror="this.src='../../../assets/images/icons/perfil-dog.png'">
+              <ion-label class="itemMascota">{{mascota.nombre}}</ion-label>
+              <ion-checkbox slot="end" ></ion-checkbox>
+              <!-- <ion-checkbox slot="end" [(ngModel)]="entry.isChecked"></ion-checkbox> -->
+            </ion-item>
+          </ion-card-content>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </ion-grid>
 </ion-content>
