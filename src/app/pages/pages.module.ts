@@ -12,6 +12,7 @@ import { RegistroPepComponent } from './registro-pep/registro-pep.component';
 import { PerfilPeopComponent } from './perfil-peop/perfil-peop.component';
 import { PerfilPetsComponent } from './perfil-pets/perfil-pets.component';
 import { ComponentesModule } from '../componentes/componentes.module';
+import { PetPaseoComponent } from './pet-paseo/pet-paseo.component';
 
 
 
@@ -24,6 +25,7 @@ import { ComponentesModule } from '../componentes/componentes.module';
     RegistroPepComponent,
     PerfilPeopComponent,
     PerfilPetsComponent,
+    PetPaseoComponent,
   ],
   imports: [
     CommonModule,

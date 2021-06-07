@@ -5,10 +5,15 @@ import { Home2Component } from './pages/home2/home2.component';
 import { Login1Component } from './pages/login1/login1.component';
 import { PerfilPeopComponent } from './pages/perfil-peop/perfil-peop.component';
 import { PerfilPetsComponent } from './pages/perfil-pets/perfil-pets.component';
+import { PetPaseoComponent } from './pages/pet-paseo/pet-paseo.component';
 import { RegistroMascotaComponent } from './pages/registro-mascota/registro-mascota.component';
 import { RegistroPepComponent } from './pages/registro-pep/registro-pep.component';
 
 const routes: Routes = [
+  {
+    path: 'quiero-paseo',
+    component: PetPaseoComponent
+  },
   {
     path: 'perfil-mascota',
     component: PerfilPetsComponent
