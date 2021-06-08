@@ -31,7 +31,7 @@
           <ion-col>
             <ion-item>
               <ion-label class="normal" position="floating">Nombre*</ion-label>
-              <ion-input [(ngModel)]="newMascota.nombre" class="normal" type="text" color="initial"  maxlength="15" required="true"></ion-input>
+              <ion-input [(ngModel)]="newMascota.nombre" class="normal" type="text" color="initial"  maxlength="15" required="true" style="text-transform: capitalize"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -133,7 +133,7 @@
           <ion-col>
             <ion-item>
               <ion-label class="normal" position="floating">Observaciones:</ion-label>
-              <ion-textarea [(ngModel)]="newMascota.observaciones" class="normal"></ion-textarea>
+              <ion-textarea [(ngModel)]="newMascota.observaciones" class="normal" style="text-transform: capitalize"></ion-textarea>
             </ion-item>
           </ion-col>
         </ion-row>

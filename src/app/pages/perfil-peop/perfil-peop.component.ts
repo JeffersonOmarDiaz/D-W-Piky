@@ -253,8 +253,8 @@ retrocederLink(){
             };
             //Aumentado para validación de número de celular
             //Aumentado para validación de la edad
-            if(edad <= 14 ){
-              const sms = 'La edad mínima para usar esta aplicación es de 15 años';
+            if(edad <= 14 || edad >=71){
+              const sms = 'El rango de edad para usar la aplicación es de 15 - 70 años';
               console.log(sms);
               this.presentToast(sms, 3000);
               return false;
