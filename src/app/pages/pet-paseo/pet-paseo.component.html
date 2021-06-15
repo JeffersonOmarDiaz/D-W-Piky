@@ -13,11 +13,22 @@
             <ion-item *ngFor="let mascota of clienteMascota">
               <img src={{mascota.foto}} class="imgRedonda" onerror="this.src='../../../assets/images/icons/perfil-dog.png'">
               <ion-label class="itemMascota">{{mascota.nombre}}</ion-label>
-              <ion-checkbox slot="end" ></ion-checkbox>
+              <ion-checkbox slot="end" (click)="estado($event, mascota)"></ion-checkbox>
               <!-- <ion-checkbox slot="end" [(ngModel)]="entry.isChecked"></ion-checkbox> -->
             </ion-item>
           </ion-card>
           </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+    <ion-card >
+      <ion-row>
+        <ion-col>
+          <ion-item *ngIf="mostrarDialogo">
+
+            <h1>esta por cargar información </h1>
+          </ion-item>
         </ion-col>
       </ion-row>
     </ion-card>
