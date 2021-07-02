@@ -110,6 +110,13 @@ export class Login1Component implements OnInit {
     this.suscribreUserInfo = this.firestoreService.getDoc<Cliente>(path,uid).subscribe( res => {
       this.cliente = res;
       console.log('La informacion del cliente es: ', this.cliente);
+      //Para ingresar directo al rol asignado "home / home-paseador"
+      if(this.cliente.rol === 'duenio'){
+        window.location.assign('/home');
+      }else if(this.cliente.rol === 'paseador'){
+        window.location.assign('/home-paseador');
+      }
+      //Para ingresar directo al rol asignado "home / home-paseador"
     });
   }
 
