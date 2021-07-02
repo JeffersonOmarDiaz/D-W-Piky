@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Cliente, Mascota } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
@@ -28,6 +29,7 @@ export class PetPaseoComponent implements OnInit {
     apellido: '',
     cedula: '',
     mascotas: [],
+    rol: 'duenio'
   };
   
   clienteMascota : Mascota []=[];
@@ -44,17 +46,22 @@ export class PetPaseoComponent implements OnInit {
     apellido: '',
     cedula: '',
     mascotas: [],
+    rol: 'duenio'
   };
   mascotaNotifi: Mascota []=[];
   mostrarDialogo: boolean;
   //FIN Para capturar los datos de notificación de mascota
   constructor(public firebaseauthS: FirebaseauthService,
-              public firestoreService: FirestoreService,) { 
+              public firestoreService: FirestoreService,
+              private router: Router) { 
     this.firebaseauthS.stateAuth().subscribe( res => {
       console.log('estado de autenticacion es: ',res);
       if (res !== null){
         this.uid = res.uid;
         this.getUserInfo(this.uid);
+      }else{
+        console.log('No esta autenticado');
+        this.router.navigate(['/login']);
       }
     });
   }

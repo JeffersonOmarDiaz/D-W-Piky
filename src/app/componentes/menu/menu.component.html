@@ -57,7 +57,7 @@
 
 <!-- ESTE ES EL MENU DE DW -->
 <div *ngIf="menuDW" >
-  <ion-header style=" text-align: center;" >
+  <ion-header style="text-align: center;" >
     <ion-toolbar>
       <ion-title class="subtitulo ion-text-wrap">
         {{paginaTitulo}}
@@ -99,6 +99,10 @@
     </ion-content>
     <ion-footer  style=" text-align:center; margin-block: 30px;">
       <ion-button shape="round" routerLink='/home' routerDirection="root">Cambiar a Dueño</ion-button>
+      <ion-item button=true href="login" (click)="salir()">
+        <ion-label class="normal">Cerrar Sesión</ion-label>
+        <ion-icon slot="end" name="log-out-outline"></ion-icon>
+      </ion-item>
     </ion-footer>
   </ion-menu>
   <ion-router-outlet id="main"></ion-router-outlet>

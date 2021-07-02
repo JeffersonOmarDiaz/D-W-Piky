@@ -54,6 +54,7 @@ export class FormularioComponent implements OnInit {
     apellido: '',
     cedula: '',
     mascotas: [],
+    rol: 'duenio',
   };
   
   uid = '';

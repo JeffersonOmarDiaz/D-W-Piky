@@ -24,4 +24,7 @@ export interface Cliente{
     apellido: string;
     cedula: string;
     mascotas: Mascota[];
+    rol: RolesExistentes;
 } 
+
+export type RolesExistentes = 'duenio' | 'paseador';

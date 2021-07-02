@@ -27,6 +27,7 @@ export class PerfilPeopComponent implements OnInit {
     apellido: '',
     cedula: '',
     mascotas: [],
+    rol: 'duenio'
   };
 
   uid = '';
@@ -52,6 +53,9 @@ export class PerfilPeopComponent implements OnInit {
         this.uid = res.uid;
         this.emailGm = res.email;
         this.getUserInfo(this.uid);
+      }else{
+        console.log('El usuario no se a autenticado');
+        this.router.navigate(['/login']);
       }
     });
     /* REvisar función para retroceso */
@@ -73,18 +77,23 @@ export class PerfilPeopComponent implements OnInit {
 
   ngOnInit() { }
 
-  //Retroceso con link
+  //Retroceso con link revisar
   retrocederLink() {
     console.log('retorna a: ', this.pathRetorno);
     if (this.pathRetorno === '') {
-      /* this.router.navigate(['/home']); */
-      if (this.cliente.nombre === 'Omar') {
+      if (this.cliente.rol === 'paseador') {
+        console.log('El rol es paseador');
         this.router.navigate(['/home-paseador']);
         this.firestoreService.setLink('');
-      } else {
+      } else if(this.cliente.rol === 'duenio'){
+        console.log('El rol es dueño');
         this.router.navigate(['/home']);
         this.firestoreService.setLink('');
+      }else{
+        this.router.navigate(['/login']);
+
       }
+      
     } else {
       this.router.navigate([this.pathRetorno]);
       this.firestoreService.setLink('');
@@ -96,12 +105,15 @@ export class PerfilPeopComponent implements OnInit {
   getUserInfo(uid: string) {
     if (uid !== undefined) {
       console.log('el id de que llega al getUSerInfo es: ', uid);
-    }
-    const path = "Cliente-dw";
-    this.suscribreUserInfo = this.firestoreService.getDoc<Cliente>(path, uid).subscribe(res => {
-      this.cliente = res;
-      console.log('La informacion del cliente es: ', this.cliente);
-    });
+      const path = "Cliente-dw";
+      this.suscribreUserInfo = this.firestoreService.getDoc<Cliente>(path, uid).subscribe(res => {
+        this.cliente = res;
+        console.log('La informacion del cliente es: ', this.cliente);
+        if(this.cliente.rol === null || this.cliente.rol === undefined){
+          this.router.navigate(['/login']);
+        }
+      });
+    } 
   }
 
   async guardarCliente() {

@@ -29,6 +29,7 @@ export class Login1Component implements OnInit {
   apellido: '',
   cedula: '',
   mascotas: [],
+  rol: 'duenio',
 }
 
   uid ='';
@@ -76,6 +77,7 @@ export class Login1Component implements OnInit {
       apellido: '',
       cedula: '',
       mascotas: [],
+      rol:'duenio', 
     }
   }
 
