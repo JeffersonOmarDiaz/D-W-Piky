@@ -22,15 +22,19 @@
       </ion-row>
     </ion-card>
 
-    <ion-card >
+    <!-- <ion-card> -->
       <ion-row>
         <ion-col>
-          <ion-item *ngIf="mostrarDialogo">
-
-            <h1>esta por cargar información </h1>
-          </ion-item>
+          <!-- <ion-list> -->
+            <!-- <ion-item *ngIf="mostrarDialogo" button=true  (click)="btnSolicitarPaseo()"> -->
+              <!-- <ion-label class="normal"> Inicio</ion-label> -->
+              <!-- <ion-icon slot="end" name="walk-outline"></ion-icon> -->
+              <!-- <ion-button shape="round" expand="full" >Solicitar Paseador</ion-button>
+            </ion-item> -->
+            <ion-button *ngIf="mostrarDialogo" shape="round" expand="full" (click)="btnSolicitarPaseo()">Solicitar Paseador</ion-button>
+          <!-- </ion-list> -->
         </ion-col>
       </ion-row>
-    </ion-card>
-  </ion-grid>
+    <!--   -->
+    </ion-grid>
 </ion-content>

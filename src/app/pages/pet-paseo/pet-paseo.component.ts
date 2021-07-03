@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Cliente, Mascota } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
@@ -16,7 +17,7 @@ export class PetPaseoComponent implements OnInit {
 
   uid = '';
   suscribreUserInfo: Subscription;
-
+  numMascotaPaseo = 0;
   cliente: Cliente = {
     uid: this.uid,
     email: '',
@@ -53,7 +54,8 @@ export class PetPaseoComponent implements OnInit {
   //FIN Para capturar los datos de notificación de mascota
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
-              private router: Router) { 
+              private router: Router,
+              public toastController: ToastController,) { 
     this.firebaseauthS.stateAuth().subscribe( res => {
       console.log('estado de autenticacion es: ',res);
       if (res !== null){
@@ -109,6 +111,23 @@ export class PetPaseoComponent implements OnInit {
       this.mostrarDialogo = false;
     }else{
       this.mostrarDialogo = true;
+      this.numMascotaPaseo = this.clientNotifi.mascotas.length;
     }
+  }
+
+  btnSolicitarPaseo(){
+    if(this.numMascotaPaseo > 4){
+      this.presentToast('Solo puede pasear un maximo de 4 mascotas', 4000);
+    }else{
+      console.log('Generando solicitud de paseo');
+    }
+  }
+
+  async presentToast(mensaje: string, tiempo: number) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: tiempo 
+    });
+    toast.present();
   }
 }
