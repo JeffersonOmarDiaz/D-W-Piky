@@ -187,7 +187,7 @@ export class FormularioComponent implements OnInit {
           }
           this.guardarCliente();
           //this.limpiarCampos();
-          window.location.assign('/perfil-mascota');
+          //window.location.assign('/perfil-mascota');
           //this.router.navigate(['/perfil-mascota']);
           return true;
         }).catch(error => {
