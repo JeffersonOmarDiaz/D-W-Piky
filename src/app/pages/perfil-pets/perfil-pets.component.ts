@@ -85,6 +85,8 @@ export class PerfilPetsComponent implements OnInit {
       this.clienteMascota = res.mascotas;
       console.log('La informacion del cliente es: ', this.cliente);
       console.log('La informacion de las mascotas cliente es: ', this.clienteMascota);
+      //Linea de ordenamiento problematica en la eliminación
+      //console.log('La informacion de las mascotas cliente es: ', this.clienteMascota.sort(((unaMascota, otraMascota) => unaMascota.nombre.localeCompare( otraMascota.nombre))) );
     });
     return;
   }

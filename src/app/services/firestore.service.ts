@@ -44,6 +44,13 @@ export class FirestoreService {
     //la bd en tiempo real
   }
 
+  getCollectionQuery<tipo>(path: string){
+    const collection = this.database.collection<tipo>(path, 
+      //ref => ref.where('estado', '==', 'enviado' )); 
+      ref => ref.orderBy("mascotas","asc")); 
+    return collection.valueChanges();  
+  }
+
   /* Funciones creadas para editar y eliminar inicio */
   setItem(mascota: Mascota){
     this.editMascota = mascota;

@@ -73,13 +73,15 @@ export class PetPaseoComponent implements OnInit {
   getUserInfo(uid :string){
     if(uid !== undefined){
       console.log('el id de que llega al getUSerInfo es: ',uid);
+      //return;
     }
+    console.log('Suscrito a  la info');
     const path = "Cliente-dw";
     this.suscribreUserInfo = this.firestoreService.getDoc<Cliente>(path,uid).subscribe( res => {
       this.cliente = res;
       this.clienteMascota = res.mascotas;
       console.log('La informacion del cliente es: ', this.cliente);
-      console.log('La informacion de las mascotas cliente es: ', this.clienteMascota);
+      console.log('La informacion de las mascotas cliente es: ', this.clienteMascota.sort(((unaMascota, otraMascota) => unaMascota.nombre.localeCompare( otraMascota.nombre))) );
     });
     return;
   }
