@@ -13,6 +13,7 @@ import { PerfilPeopComponent } from './perfil-peop/perfil-peop.component';
 import { PerfilPetsComponent } from './perfil-pets/perfil-pets.component';
 import { ComponentesModule } from '../componentes/componentes.module';
 import { PetPaseoComponent } from './pet-paseo/pet-paseo.component';
+import { SolicitudesComponent } from './solicitudes/solicitudes.component';
 
 
 
@@ -26,6 +27,7 @@ import { PetPaseoComponent } from './pet-paseo/pet-paseo.component';
     PerfilPeopComponent,
     PerfilPetsComponent,
     PetPaseoComponent,
+    SolicitudesComponent,
   ],
   imports: [
     CommonModule,

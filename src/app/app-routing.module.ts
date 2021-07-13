@@ -8,8 +8,13 @@ import { PerfilPetsComponent } from './pages/perfil-pets/perfil-pets.component';
 import { PetPaseoComponent } from './pages/pet-paseo/pet-paseo.component';
 import { RegistroMascotaComponent } from './pages/registro-mascota/registro-mascota.component';
 import { RegistroPepComponent } from './pages/registro-pep/registro-pep.component';
+import { SolicitudesComponent } from './pages/solicitudes/solicitudes.component';
 
 const routes: Routes = [
+  {
+    path: 'solicitudes',
+    component: SolicitudesComponent
+  },
   {
     path: 'quiero-paseo',
     component: PetPaseoComponent

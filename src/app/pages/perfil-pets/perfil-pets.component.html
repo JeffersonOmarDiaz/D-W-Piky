@@ -39,11 +39,11 @@
                         <ion-item  *ngFor="let mascota of clienteMascota" class="itemMascota">
                             <img src={{mascota.foto}} class="imgRedonda" onerror="this.src='../../../assets/images/icons/perfil-dog.png'">
                             <ion-label class="itemMascota ion-text-wrap">{{mascota.nombre}}</ion-label>
-                            <ion-buttons >
-                                <ion-button class="ion-text-wrap" routerLink="/registro-mascota" routerDirection="root" (click)="editMascota(mascota); enviarID(mascota.id, clienteMascota)">
+                            <ion-buttons>
+                                <ion-button routerLink="/registro-mascota" routerDirection="root" (click)="editMascota(mascota); enviarID(mascota.id, clienteMascota)">
                                     <ion-icon slot="icon-only" name="create-sharp" ></ion-icon>
                                 </ion-button>
-                                <ion-button class="ion-text-wrap" (click)="deleteUserPet(mascota.id, clienteMascota)">
+                                <ion-button (click)="deleteUserPet(mascota.id, clienteMascota)">
                                     <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
                                   </ion-button>
                             </ion-buttons>

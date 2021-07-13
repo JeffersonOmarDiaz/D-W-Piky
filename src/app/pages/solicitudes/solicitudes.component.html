@@ -1,0 +1,26 @@
+<app-menu paginaTitulo="Solicitudes" [menuCliente]="verMC"></app-menu>
+
+
+<ion-content>
+  <div class="m-3">
+
+    <ion-segment mode="ios" (ionChange)="changeSegment($event)" value="nuevos">
+      <ion-segment-button value="nuevos">
+        <ion-label class="normal">Nuevos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="culminados">
+        <ion-label class="normal">Culminados</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <!-- <ion-card >
+    <ion-item>
+      <ion-label class="normal">
+        Estado:
+        <p>Fecha: 
+      </ion-label>
+    </ion-item>
+    
+  </ion-card> -->
+</ion-content>
