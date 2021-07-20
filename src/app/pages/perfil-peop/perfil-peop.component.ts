@@ -27,7 +27,7 @@ export class PerfilPeopComponent implements OnInit {
     apellido: '',
     cedula: '',
     mascotas: [],
-    rol: 'duenio'
+    role: 'duenio'
   };
 
   uid = '';
@@ -81,11 +81,11 @@ export class PerfilPeopComponent implements OnInit {
   retrocederLink() {
     console.log('retorna a: ', this.pathRetorno);
     if (this.pathRetorno === '') {
-      if (this.cliente.rol === 'paseador') {
+      if (this.cliente.role === 'paseador') {
         console.log('El rol es paseador');
         this.router.navigate(['/home-paseador']);
         this.firestoreService.setLink('');
-      } else if(this.cliente.rol === 'duenio'){
+      } else if(this.cliente.role === 'duenio'){
         console.log('El rol es dueño');
         this.router.navigate(['/home']);
         this.firestoreService.setLink('');
@@ -109,7 +109,7 @@ export class PerfilPeopComponent implements OnInit {
       this.suscribreUserInfo = this.firestoreService.getDoc<Cliente>(path, uid).subscribe(res => {
         this.cliente = res;
         console.log('La informacion del cliente es: ', this.cliente);
-        if(this.cliente.rol === null || this.cliente.rol === undefined){
+        if(this.cliente.role === null || this.cliente.role=== undefined){
           this.router.navigate(['/login']);
         }
       });
@@ -156,13 +156,24 @@ export class PerfilPeopComponent implements OnInit {
       console.log('Usted ha decidido cambiar IMG');
     }
     console.log('Fin de la función nuevaImagenUpload');
-
+    
+    this.loading.dismiss();
   }
 
   async presentLoading() {
     this.loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Guardando...',
+    });
+    await this.loading.present();
+    /* const { role, data } = await loading.onDidDismiss();
+    console.log('Loading dismissed!'); */
+  }
+
+  async galeria() {
+    this.loading = await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: 'Abriendo Galería...',
     });
     await this.loading.present();
     /* const { role, data } = await loading.onDidDismiss();

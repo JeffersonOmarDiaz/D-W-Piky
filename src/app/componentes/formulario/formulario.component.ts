@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { FirestoreService } from 'src/app/services/firestore.service';
   templateUrl: './formulario.component.html',
   styleUrls: ['./formulario.component.scss'],
 })
-export class FormularioComponent implements OnInit {
+export class FormularioComponent implements OnInit, OnDestroy {
 
   @Input ()registroPet :boolean;
   @Input ()registroPeople :boolean;
@@ -54,11 +54,12 @@ export class FormularioComponent implements OnInit {
     apellido: '',
     cedula: '',
     mascotas: [],
-    rol: 'duenio',
+    role: 'duenio',
   };
   
   uid = '';
   suscribreUserInfo: Subscription;
+  suscribeInfoAuth: Subscription;
   pathCliente: "/Cliente-dw";
   //Fin avirables nueva mascota
   elimarArray = null;
@@ -70,7 +71,7 @@ export class FormularioComponent implements OnInit {
               public firebaseauthS: FirebaseauthService,
               private router: Router,
               ) {
-                this.firebaseauthS.stateAuth().subscribe( res => {
+                this.suscribeInfoAuth = this.firebaseauthS.stateAuth().subscribe( res => {
                   console.log('estado de autenticacion es: ',res);
                   if (res !== null){
                     this.uid = res.uid;
@@ -90,6 +91,16 @@ export class FormularioComponent implements OnInit {
     const valorEliminar = this.firestoreService.getValor();
     console.log('El valor que llega para eliminar es: ',valorEliminar);
     this.elimarArray = valorEliminar;
+  }
+
+  ngOnDestroy() {
+    console.log('ngOnDestroy() - carritoComponent');
+    if (this.suscribeInfoAuth) {
+      this.suscribeInfoAuth.unsubscribe();
+    }
+    if (this.suscribreUserInfo) {
+      this.suscribreUserInfo.unsubscribe();
+    }
   }
 
   //Inicio Funciones de registro mascota Cliente 
@@ -179,6 +190,7 @@ export class FormularioComponent implements OnInit {
         this.firestoreService.createDoc(this.newMascota, this.pathMascota, this.newMascota.id).then(res => {
           this.loading.dismiss();
           this.presentToast('Guardado con exito', 2000);
+          this.mensajeRetorno();
           console.log('Llega a actualizar cliente con los datos: Path ', this.pathCliente, ' documento: ', this.cliente, 'ID CLiente: ', this.cliente.uid)
           /* this.cliente.mascotas[0]= this.newMascota; */
           this.cliente.mascotas.push(this.newMascota);
@@ -210,8 +222,31 @@ export class FormularioComponent implements OnInit {
       message: 'Guardando...',
     });
     await this.loading.present();
+    //this.router.navigate(['/perfil-mascota']);
     /* const { role, data } = await loading.onDidDismiss();
     console.log('Loading dismissed!'); */
+  }
+
+  async mensajeRetorno(){
+    const alert = await this.alertController.create({
+      cssClass: 'normal',
+      header: '',
+      message: 'Guardado con <strong>éxito</strong>!!!',
+      buttons: [
+        {
+          text: 'Ok',
+          role: 'okay',
+          cssClass: 'normal',
+          handler: (blah) => {
+            console.log('Cambio de ventana');
+            this.ngOnDestroy();
+            //this.router.navigate(['/perfil-mascota']);
+            window.location.assign('/perfil-mascota');
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   async presentToast(mensaje: string, tiempo: number) {

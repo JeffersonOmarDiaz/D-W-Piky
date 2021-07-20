@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
@@ -9,7 +9,7 @@ import { FirestoreService } from 'src/app/services/firestore.service';
   templateUrl: './registro-mascota.component.html',
   styleUrls: ['./registro-mascota.component.scss'],
 })
-export class RegistroMascotaComponent implements OnInit {
+export class RegistroMascotaComponent implements OnInit, OnDestroy {
 
   verMC = true;
   registroPet = true;
@@ -20,7 +20,7 @@ export class RegistroMascotaComponent implements OnInit {
               public firebaseauthS: FirebaseauthService,
               private router: Router,
               ) {
-    this.firebaseauthS.stateAuth().subscribe( res => {
+    this.suscribreUserInfo=this.firebaseauthS.stateAuth().subscribe( res => {
       //console.log('estado de autenticacion es: ',res);
       if (res !== null){
         this.uid = res.uid;
@@ -33,6 +33,13 @@ export class RegistroMascotaComponent implements OnInit {
 
   ngOnInit() {
     
+  }
+
+  ngOnDestroy(){
+    console.log('OnDEstroy => from registroMascotas');
+    if (this.suscribreUserInfo) {
+      this.suscribreUserInfo.unsubscribe();
+    }
   }
 
 }

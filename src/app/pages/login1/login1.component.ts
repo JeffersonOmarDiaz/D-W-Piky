@@ -29,7 +29,7 @@ export class Login1Component implements OnInit {
   apellido: '',
   cedula: '',
   mascotas: [],
-  rol: 'duenio',
+  role: 'duenio',
 }
 
   uid ='';
@@ -77,7 +77,7 @@ export class Login1Component implements OnInit {
       apellido: '',
       cedula: '',
       mascotas: [],
-      rol:'duenio', 
+      role:'duenio', 
     }
   }
 
@@ -110,11 +110,11 @@ export class Login1Component implements OnInit {
         this.cliente = res;
         console.log('La informacion del cliente es: ', this.cliente);
         //Para ingresar directo al rol asignado "home / home-paseador"
-        if(this.cliente.rol === 'duenio'){
+        /* if(this.cliente.rol === 'duenio'){
           window.location.assign('/home');
         }else if(this.cliente.rol === 'paseador'){
           window.location.assign('/home-paseador');
-        }
+        } */
         //Para ingresar directo al rol asignado "home / home-paseador"
       });
     }
@@ -182,11 +182,11 @@ export class Login1Component implements OnInit {
         recorreArray(res);
         if(userExit === true){
           console.log('Devolvió un true '); 
-          //this.router.navigate(['/home']);
-          window.location.assign('/home');
+          this.router.navigate(['/home']);
+          //window.location.assign('/home');
           return;
         }else{
-          console.log('No existe el usuario se lo regsitrará '); 
+          console.log('No existe el usuario se lo registrará '); 
           this.cliente.uid = uid;
           this.guardarUser();
         }

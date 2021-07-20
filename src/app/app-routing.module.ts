@@ -10,45 +10,53 @@ import { RegistroMascotaComponent } from './pages/registro-mascota/registro-masc
 import { RegistroPepComponent } from './pages/registro-pep/registro-pep.component';
 import { SolicitudesComponent } from './pages/solicitudes/solicitudes.component';
 
+//Usuario Logueado INCIO
+import { canActivate, redirectUnauthorizedTo, redirectLoggedInTo } from '@angular/fire/auth-guard';
+const isLogged = () => redirectLoggedInTo(['/home']);
+
+const redirectUnauthorizedToLogin = () =>
+  redirectUnauthorizedTo(['/']);
+//Usuario Logueado FIN
+
 const routes: Routes = [
   {
     path: 'solicitudes',
-    component: SolicitudesComponent
+    component: SolicitudesComponent, ...canActivate(redirectUnauthorizedToLogin),
   },
   {
     path: 'quiero-paseo',
-    component: PetPaseoComponent
+    component: PetPaseoComponent, ...canActivate(redirectUnauthorizedToLogin),
   },
   {
     path: 'perfil-mascota',
-    component: PerfilPetsComponent
+    component: PerfilPetsComponent, ...canActivate(redirectUnauthorizedToLogin),
   },
   {
     path: 'perfil-persona',
-    component: PerfilPeopComponent
+    component: PerfilPeopComponent, ...canActivate(redirectUnauthorizedToLogin),
   },
   {
     path: 'registro-mascota',
-    component: RegistroMascotaComponent
+    component: RegistroMascotaComponent, ...canActivate(redirectUnauthorizedToLogin)
   },
   {
     path: 'registro',
-    component: RegistroPepComponent
+    component: RegistroPepComponent, ...canActivate(redirectUnauthorizedToLogin),
   },
   {
     path: 'login',
-    component: Login1Component
+    component: Login1Component, ...canActivate(isLogged),
   },
   {
     path: 'home-paseador',
-    component: Home2Component
+    component: Home2Component, ...canActivate(redirectUnauthorizedToLogin)
   },
   {
     path: 'home',
-    component: Home1Component
+    component: Home1Component, ...canActivate(redirectUnauthorizedToLogin)
   }, {
     //si no se escribe nada en la ruta 
-    path: '', component: Login1Component
+    path: '', component: Login1Component, ...canActivate(isLogged)
   },
   {
     //ruta por defecto "si escriben cualquier cosa"

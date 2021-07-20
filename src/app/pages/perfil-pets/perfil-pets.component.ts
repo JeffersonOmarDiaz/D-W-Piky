@@ -49,7 +49,7 @@ export class PerfilPetsComponent implements OnInit {
     apellido: '',
     cedula: '',
     mascotas: [],
-    rol: 'duenio'
+    role: 'duenio'
   };
   suscribreUserInfo: Subscription;
   valorEliminar = null;

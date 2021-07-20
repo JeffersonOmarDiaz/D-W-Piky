@@ -30,7 +30,7 @@ export class PetPaseoComponent implements OnInit {
     apellido: '',
     cedula: '',
     mascotas: [],
-    rol: 'duenio'
+    role: 'duenio'
   };
   
   clienteMascota : Mascota []=[];
@@ -47,7 +47,7 @@ export class PetPaseoComponent implements OnInit {
     apellido: '',
     cedula: '',
     mascotas: [],
-    rol: 'duenio'
+    role: 'duenio'
   };
   mascotaNotifi: Mascota []=[];
   mostrarDialogo: boolean;

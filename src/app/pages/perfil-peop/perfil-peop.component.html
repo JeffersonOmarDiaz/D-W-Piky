@@ -27,7 +27,7 @@
                     <ion-icon slot="icon-only" name="images"></ion-icon>
                   </label>
                   <!--  PARA Q ACEPTE CUALQUIER TIPO DE IMAGEN -->
-                  <input (change)="newImageUpload($event)" id="file-upload" style="display: none" type="file" accept="image/*" >
+                  <input (change)="newImageUpload($event)" (click)="galeria()" id="file-upload" style="display: none" type="file" accept="image/*" >
                 </ion-button>
               </ion-buttons>
             </ion-item>
