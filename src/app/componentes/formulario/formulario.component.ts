@@ -225,7 +225,7 @@ export class FormularioComponent implements OnInit, OnDestroy {
     //this.router.navigate(['/perfil-mascota']);
     /* const { role, data } = await loading.onDidDismiss();
     console.log('Loading dismissed!'); */
-  }
+  } 
 
   async mensajeRetorno(){
     const alert = await this.alertController.create({

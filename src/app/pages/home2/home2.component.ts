@@ -17,6 +17,7 @@ export class Home2Component implements OnInit, OnDestroy {
 
   uid = '';
   suscribreUserInfo: Subscription;
+  suscribreUserInfoRol: Subscription;
   cliente : Cliente;
   constructor(public firestoreService: FirestoreService,
               public firebaseauthService: FirebaseauthService,
@@ -27,20 +28,23 @@ export class Home2Component implements OnInit, OnDestroy {
  
   ngOnInit() {
     //comprobar estado de autenticación 
-    this.suscribreUserInfo=this.firebaseauthService.stateAuth().subscribe(res => { 
+    /* this.suscribreUserInfo=this.firebaseauthService.stateAuth().subscribe(res => { 
       console.log(res);
       if (res !== null) {
         this.uid = res.uid;
         console.log(res.email);
         this.tipoRol(this.uid); 
       }
-    });
+    }); */
   }
 
   ngOnDestroy(){
     console.log('OnDEstroy => from home2');
     if (this.suscribreUserInfo) {
       this.suscribreUserInfo.unsubscribe();
+    }
+    if (this.suscribreUserInfoRol) {
+      this.suscribreUserInfoRol.unsubscribe();
     }
   }
 
@@ -53,7 +57,7 @@ export class Home2Component implements OnInit, OnDestroy {
         console.log(res.email); */
         //Colecciones del cliente rol
         const path = "Cliente-dw";
-        this.suscribreUserInfo = this.firestoreService.getDoc<Cliente>(path, uid).subscribe(res => {
+        this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, uid).subscribe(res => {
           this.cliente = res;
           console.log('El rol actual es: ',res.role);
           if(res.role === 'paseador'){

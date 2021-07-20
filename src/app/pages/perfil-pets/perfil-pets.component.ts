@@ -64,9 +64,6 @@ export class PerfilPetsComponent implements OnInit {
                   if (res !== null){
                     this.uid = res.uid;
                     this.getUserInfo(this.uid);
-                  }else{
-                    console.log('No esta autenticado');
-                    this.router.navigate(['/login']);
                   }
                 });
               }

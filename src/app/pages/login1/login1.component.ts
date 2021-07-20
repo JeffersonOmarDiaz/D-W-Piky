@@ -122,7 +122,7 @@ export class Login1Component implements OnInit {
 
   async guardarUser() {
     const path = 'Cliente-dw';
-    this.cliente.email = this.emailGm;
+    this.cliente.email = this.emailGm; 
     console.log('El correo que llega para guardar es: ', this.cliente.email);
     console.log('La información del cliente a guardar es: ',this.cliente.uid);
     await this.firestoreService.createDoc(this.cliente, path, this.cliente.uid).then(res => {
