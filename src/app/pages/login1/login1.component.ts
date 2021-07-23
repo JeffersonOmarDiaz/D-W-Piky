@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Cliente } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { LoadingController } from '@ionic/angular';
   templateUrl: './login1.component.html',
   styleUrls: ['./login1.component.scss'],
 })
-export class Login1Component implements OnInit {
+export class Login1Component implements OnInit, OnDestroy {
 
   cliente: Cliente = {
   uid: '',
@@ -36,6 +36,7 @@ export class Login1Component implements OnInit {
   emailGm = "";
 
   suscribreUserInfo: Subscription;
+  suscribreUserInfoLogin: Subscription;
 
   clienter : Cliente []=[];
   loading: any;
@@ -61,6 +62,16 @@ export class Login1Component implements OnInit {
   async ngOnInit() {
     const uid = await this.firebaseauthS.getUid();
     console.log('Un id enviado es: ',uid);
+  }
+
+  ngOnDestroy(){
+    console.log('ngOnDestroy() ==> Login');
+    if(this.suscribreUserInfo){
+      this.suscribreUserInfo.unsubscribe();
+    }
+    if(this.suscribreUserInfoLogin){
+      this.suscribreUserInfoLogin.unsubscribe();
+    }
   }
 
   initCliente() {
@@ -127,7 +138,7 @@ export class Login1Component implements OnInit {
     console.log('La información del cliente a guardar es: ',this.cliente.uid);
     await this.firestoreService.createDoc(this.cliente, path, this.cliente.uid).then(res => {
       /* this.router.navigate(['/home']); */
-      window.location.assign('/home');
+      /* window.location.assign('/home'); */
       console.log('CLIENTE Guardado con exitos!!!');
     }).catch(error => {
       console.log('No se pudo guardar el a ocurrido un error ->', error);
@@ -144,6 +155,7 @@ export class Login1Component implements OnInit {
     /* const { role, data } = await loading.onDidDismiss();
     console.log('Loading dismissed!'); */
   }
+
   salir(){
     this.firebaseauthS.logout();
     this.suscribreUserInfo.unsubscribe();
@@ -166,7 +178,7 @@ export class Login1Component implements OnInit {
       const uid = await this.firebaseauthS.getUid();
       let userExit = false;
       this.cliente.uid = uid;
-      await this.firestoreService.getCollection<Cliente>('Cliente-dw').subscribe(res => {
+      this.suscribreUserInfoLogin = this.firestoreService.getCollection<Cliente>('Cliente-dw').subscribe(res => {
         this.clienter = res;
         console.log('Estos son los Clientes ', res);
         const recorreArray = (arr) => {
@@ -183,7 +195,6 @@ export class Login1Component implements OnInit {
         if(userExit === true){
           console.log('Devolvió un true '); 
           this.router.navigate(['/home']);
-          //window.location.assign('/home');
           return;
         }else{
           console.log('No existe el usuario se lo registrará '); 
