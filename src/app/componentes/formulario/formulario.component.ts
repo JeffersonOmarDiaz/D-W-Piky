@@ -71,14 +71,7 @@ export class FormularioComponent implements OnInit, OnDestroy {
               public firebaseauthS: FirebaseauthService,
               private router: Router,
               ) {
-                this.suscribeInfoAuth = this.firebaseauthS.stateAuth().subscribe( res => {
-                  console.log('estado de autenticacion es: ',res);
-                  if (res !== null){
-                    this.uid = res.uid;
-                    console.log('El atributo mascotas de cliente es: ', this.cliente.mascotas);
-                    this.getUserInfo(this.uid);
-                  }
-                });
+                this.estadoCliente();
                }
             
 
@@ -101,6 +94,17 @@ export class FormularioComponent implements OnInit, OnDestroy {
     if (this.suscribreUserInfo) {
       this.suscribreUserInfo.unsubscribe();
     }
+  }
+
+  estadoCliente(){
+    this.suscribeInfoAuth = this.firebaseauthS.stateAuth().subscribe( res => {
+      console.log('estado de autenticacion es: ',res);
+      if (res !== null){
+        this.uid = res.uid;
+        console.log('El atributo mascotas de cliente es: ', this.cliente.mascotas);
+        this.getUserInfo(this.uid);
+      }
+    });
   }
 
   //Inicio Funciones de registro mascota Cliente 
@@ -239,9 +243,11 @@ export class FormularioComponent implements OnInit, OnDestroy {
           cssClass: 'normal',
           handler: (blah) => {
             console.log('Cambio de ventana');
-            this.ngOnDestroy();
+            this.estadoCliente();
+            //this.ngOnDestroy();
             //this.router.navigate(['/perfil-mascota']);
-            window.location.assign('/perfil-mascota');
+            this.router.navigate([`/perfil-mascota`], { replaceUrl: true });
+            //window.location.assign('/perfil-mascota');
           }
         }
       ]

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { FirestoreService } from 'src/app/services/firestore.service';
   templateUrl: './perfil-pets.component.html',
   styleUrls: ['./perfil-pets.component.scss'],
 })
-export class PerfilPetsComponent implements OnInit {
+export class PerfilPetsComponent implements OnInit, OnDestroy {
 
   verMC = true;
   mascotas : Mascota []=[];
@@ -52,6 +52,7 @@ export class PerfilPetsComponent implements OnInit {
     role: 'duenio'
   };
   suscribreUserInfo: Subscription;
+  suscribreUserPet: Subscription;
   valorEliminar = null;
   constructor(public firestoreService: FirestoreService,
               public alertController:AlertController,
@@ -59,7 +60,7 @@ export class PerfilPetsComponent implements OnInit {
               public firestorageService: FirestorageService,
               public firebaseauthS: FirebaseauthService,
               private router: Router ) { 
-                this.firebaseauthS.stateAuth().subscribe( res => {
+                this.suscribreUserInfo = this.firebaseauthS.stateAuth().subscribe( res => {
                   console.log('estado de autenticacion es: ',res);
                   if (res !== null){
                     this.uid = res.uid;
@@ -72,12 +73,22 @@ export class PerfilPetsComponent implements OnInit {
     this.getMascotas();
   }
 
+  ngOnDestroy(){
+    console.log('ngOnDestroy() =>> perfil - pets');
+    if (this.suscribreUserInfo) {
+      this.suscribreUserInfo.unsubscribe();
+    }
+    if (this.suscribreUserPet) {
+      this.suscribreUserPet.unsubscribe();
+    }
+  }
+
   getUserInfo(uid :string){
     if(uid !== undefined){
       console.log('el id de que llega al getUSerInfo es: ',uid);
     }
     const path = "Cliente-dw";
-    this.suscribreUserInfo = this.firestoreService.getDoc<Cliente>(path,uid).subscribe( res => {
+    this.suscribreUserPet = this.firestoreService.getDoc<Cliente>(path,uid).subscribe( res => {
       this.cliente = res;
       this.clienteMascota = res.mascotas;
       console.log('La informacion del cliente es: ', this.cliente);

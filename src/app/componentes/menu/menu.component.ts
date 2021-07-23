@@ -60,19 +60,18 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  async cambiarDuenio(){
+  async cambiarRol(rol: string){
     const path = "Cliente-dw";
     this.suscribreUserState = this.firestoreService.getDoc<Cliente>(path,this.uid).subscribe( res => {
       this.cliente = res;
-      this.cliente.role = 'duenio';
+      if (rol === 'duenio'){
+        this.cliente.role = 'duenio';
+      }else if (rol === 'paseador'){
+        this.cliente.role = 'paseador';
+      }
       console.log('La informacion del cliente es: ', this.cliente);
-      this.guardarCliente(this.cliente, path, this.cliente.uid);
+      //this.guardarCliente(this.cliente, path, this.cliente.uid);
     });
-    return;
-  }
-
-  async guardarCliente(data: any, path: string, uid: string) {
-
     const alert = await this.alertController.create({
       cssClass: 'normal',
       header: 'Advertencia!',
@@ -83,19 +82,22 @@ export class MenuComponent implements OnInit, OnDestroy {
           role: 'cancel',
           cssClass: 'normal',
           handler: (blah) => {
-            console.log('Canceló la eliminación: blah');
+            console.log('Canceló cambio de rol: blah');
           }
         }, 
         {
           text: 'Ok',
           role: 'okay',
           handler: () => {
-            console.log('GuardarCliente ==> ', data);
-            this.firestoreService.createDoc(data, path, uid).then(res => {
-              //this.presentLoading();
-              //this.loading.dismiss();
-              window.location.assign('/login');
-              this.ngOnDestroy();
+            console.log('GuardarCliente ==> ', this.cliente);
+             this.firestoreService.createDoc(this.cliente, path, this.cliente.uid).then(res => {
+              if(this.cliente.role === 'duenio'){
+                this.menuController.close('principal');
+                this.router.navigate([`/home`], { replaceUrl: true });
+              }else if(this.cliente.role === 'paseador'){
+                this.menuController.close('principal');
+                this.router.navigate([`/home-paseador`], { replaceUrl: true });
+              }
             }).catch(error => {
               console.log('No se pudo Actulizar el cliente un error ->', error);
             });
@@ -104,10 +106,9 @@ export class MenuComponent implements OnInit, OnDestroy {
         }
       ]
     });
-
     await alert.present();
-
   }
+
 
   async presentLoading() {
     this.loading = await this.loadingController.create({
@@ -120,8 +121,8 @@ export class MenuComponent implements OnInit, OnDestroy {
     console.log('Loading dismissed!'); */
   }
 
-  openMenu(){
-    this.menuController.toggle('principal');
+  async openMenu(){
+    await this.menuController.toggle('principal');
     console.log('Cargó el menú');
   }
 

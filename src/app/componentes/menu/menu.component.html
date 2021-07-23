@@ -47,7 +47,7 @@
       </ion-list>
     </ion-content>
     <ion-footer style=" text-align:center; margin-block: 30px;">
-      <ion-button shape="round" routerLink='/home-paseador' routerDirection="root">Cambiar a Paseador</ion-button>
+      <ion-button shape="round" (click)="cambiarRol('paseador')">Cambiar a Paseador</ion-button>
       <ion-item button=true href="login" (click)="salir()">
         <ion-label class="normal">Cerrar Sesión</ion-label>
         <ion-icon slot="end" name="log-out-outline"></ion-icon>
@@ -105,7 +105,7 @@
       </ion-list>
     </ion-content>
     <ion-footer  style=" text-align:center; margin-block: 30px;">
-      <ion-button shape="round" (click)="cambiarDuenio()">Cambiar a Dueño</ion-button>
+      <ion-button shape="round" (click)="cambiarRol('duenio')">Cambiar a Dueño</ion-button>
       <ion-item button=true href="login" (click)="salir()">
         <ion-label class="normal">Cerrar Sesión</ion-label>
         <ion-icon slot="end" name="log-out-outline"></ion-icon>

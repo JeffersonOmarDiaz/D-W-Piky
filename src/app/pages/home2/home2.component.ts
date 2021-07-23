@@ -36,8 +36,9 @@ export class Home2Component implements OnInit, OnDestroy {
         this.tipoRol(this.uid); 
       }
     }); */
+    //this.router.navigate(['/home-paseador']);
   }
-
+ 
   ngOnDestroy(){
     console.log('OnDEstroy => from home2');
     if (this.suscribreUserInfo) {
@@ -47,7 +48,9 @@ export class Home2Component implements OnInit, OnDestroy {
       this.suscribreUserInfoRol.unsubscribe();
     }
   }
-
+  refrescarPagina(){
+    window.location.assign('/home-paseador');
+  }
   tipoRol(uid: string){
     //comprobar TIPO de ROL
     /* this.firebaseauthService.stateAuth().subscribe(res => {  */
@@ -65,8 +68,8 @@ export class Home2Component implements OnInit, OnDestroy {
             //window.location.assign('/home-paseador');
             return true;
           }else{
-            window.location.assign('/home');
-            //this.router.navigate(['/home']);
+            //window.location.assign('/home');
+            this.router.navigate(['/home']);
             return;
           }
         });

@@ -1,5 +1,5 @@
 //Sin modificaciones
-/* import { Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -8,10 +8,10 @@
 })
 export class AppComponent {
   constructor() {}
-} */
+}
 //Con modificaciones
 
-import { Component, OnDestroy } from '@angular/core';
+/* import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Cliente } from './modelBD';
@@ -44,13 +44,13 @@ export class AppComponent   {
             this.suscribreUserClient = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
               this.cliente = res;
               console.log('El rol actual es: ',res.role);
-              if(res.role === 'paseador'){
-                this.router.navigate(['/home-paseador']);
+              if(res.role === 'duenio'){
+                this.router.navigate(['/home']);
                 //window.location.assign('/home-paseador');
                 return true;
-              }else{
+              }else if(res.role === 'paseador'){
                 //window.location.assign('/home');
-                this.router.navigate(['/home']);
+                this.router.navigate(['/home-paseador']);
                 return;
               }
             });
@@ -60,5 +60,5 @@ export class AppComponent   {
   }
 
   
-}
+} */
  
