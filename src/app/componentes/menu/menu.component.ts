@@ -126,9 +126,15 @@ export class MenuComponent implements OnInit, OnDestroy {
     console.log('Cargó el menú');
   }
 
-  salir(){
-    this.firebaseAuthS.logout();
-    //this.suscribreUserInfo.unsubscribe();
-    
+  async openMenu1(){
+    await this.menuController.toggle('principal');
+    console.log('Cargó el menú');
+  }
+  async salir(){
+    this.ngOnDestroy();
+    console.log('Cerror al salir');
+    await this.firebaseAuthS.logout();
+    this.menuController.close('principal');
+    this.router.navigate([`/login`]);
   }
 }
