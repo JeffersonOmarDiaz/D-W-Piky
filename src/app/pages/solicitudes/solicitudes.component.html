@@ -1,7 +1,7 @@
-<app-menu paginaTitulo="Solicitudes" [menuCliente]="verMC"></app-menu>
+<app-menu paginaTitulo="Solicitudes" [menuCliente]="verMC" *ngIf="rolDuenio"></app-menu>
 
 
-<ion-content>
+<ion-content *ngIf="rolDuenio">
   <div class="m-3">
 
     <ion-segment mode="ios" (ionChange)="changeSegment($event)" value="nuevos">

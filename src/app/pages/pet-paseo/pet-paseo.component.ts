@@ -51,24 +51,46 @@ export class PetPaseoComponent implements OnInit {
   };
   mascotaNotifi: Mascota []=[];
   mostrarDialogo: boolean;
+
+  suscribreUserInfoRol: Subscription;
+  suscribreUser: Subscription;
+  rolDuenio:boolean;
   //FIN Para capturar los datos de notificación de mascota
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
-              public toastController: ToastController,) { 
-    this.firebaseauthS.stateAuth().subscribe( res => {
-      console.log('estado de autenticacion es: ',res);
-      if (res !== null){
-        this.uid = res.uid;
-        this.getUserInfo(this.uid);
-      }else{
-        console.log('No esta autenticado');
-        this.router.navigate(['/login']);
-      }
-    });
+              public toastController: ToastController,) { }
+
+  ngOnInit() {
+    this.tipoRol();
   }
 
-  ngOnInit() {}
+  tipoRol(){
+    this.suscribreUserInfo=this.firebaseauthS.stateAuth().subscribe(res => { 
+      console.log(res);
+      if (res !== null) {
+        this.uid = res.uid;
+        //comprobar TIPO de ROL
+          console.log('tipoRol =>');
+            const path = "Cliente-dw";
+            this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
+              this.cliente = res;
+              console.log('El rol actual es: ',res.role);
+              if(res.role === 'paseador'){
+                this.rolDuenio = false;
+                this.router.navigate([`/home-paseador`], { replaceUrl: true });
+                return true;
+              }else{
+                this.rolDuenio = true;
+                this.getUserInfo(this.uid);
+                return false;
+              }
+            });
+        return;
+      }
+    });
+    return false;
+  }
 
   getUserInfo(uid :string){
     if(uid !== undefined){
@@ -77,7 +99,7 @@ export class PetPaseoComponent implements OnInit {
     }
     console.log('Suscrito a  la info');
     const path = "Cliente-dw";
-    this.suscribreUserInfo = this.firestoreService.getDoc<Cliente>(path,uid).subscribe( res => {
+    this.suscribreUser = this.firestoreService.getDoc<Cliente>(path,uid).subscribe( res => {
       this.cliente = res;
       this.clienteMascota = res.mascotas;
       console.log('La informacion del cliente es: ', this.cliente);

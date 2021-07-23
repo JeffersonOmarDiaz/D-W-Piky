@@ -1,6 +1,6 @@
 <!-- <app-menu paginaTitulo="Mis Mascotas" [menuCliente]="verMC"></app-menu> -->
 
-<ion-header style=" text-align:center;">
+<ion-header style=" text-align:center;" *ngIf="rolDuenio">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button slot="icon-only" defaultHref="/perfil-mascota" color="primary"></ion-back-button>
@@ -10,7 +10,8 @@
     </ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content>
+
+<ion-content *ngIf="rolDuenio">
   <ion-grid fixed>
     <ion-row>
       <ion-col>

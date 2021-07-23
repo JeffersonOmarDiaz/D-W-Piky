@@ -1,5 +1,6 @@
-<app-menu paginaTitulo="Quiero un paseo" [menuCliente]="verMC"></app-menu>
-<ion-content>
+<app-menu paginaTitulo="Quiero un paseo" [menuCliente]="verMC" *ngIf="rolDuenio"></app-menu>
+
+<ion-content *ngIf="rolDuenio">
   <ion-grid fixed>
     <ion-card>
       <ion-row>

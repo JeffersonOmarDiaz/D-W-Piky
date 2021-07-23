@@ -1,7 +1,7 @@
-<app-menu paginaTitulo="Inicio - D-W" [menuDW]="menuDW"></app-menu>
+<app-menu paginaTitulo="Inicio - D-W" [menuDW]="menuDW" *ngIf="rolPaseador"></app-menu>
 <ion-content>
  
-  <ion-grid fixed>
+  <ion-grid fixed *ngIf="rolPaseador">
     <ion-row>
       <ion-col>
         <ion-button (click)="refrescarPagina()">Refrescar</ion-button>

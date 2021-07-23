@@ -53,7 +53,9 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
   };
   suscribreUserInfo: Subscription;
   suscribreUserPet: Subscription;
+  suscribreUserInfoRol: Subscription;
   valorEliminar = null;
+  rolDuenio: boolean;
   constructor(public firestoreService: FirestoreService,
               public alertController:AlertController,
               public toastController:ToastController,
@@ -70,6 +72,7 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
               }
 
   ngOnInit() {
+    this.tipoRol();
     this.getMascotas();
   }
 
@@ -81,6 +84,35 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
     if (this.suscribreUserPet) {
       this.suscribreUserPet.unsubscribe();
     }
+    if (this.suscribreUserInfoRol) {
+      this.suscribreUserInfoRol.unsubscribe();
+    }
+  }
+
+  tipoRol(){
+    this.suscribreUserInfo=this.firebaseauthS.stateAuth().subscribe(res => { 
+      console.log(res);
+      if (res !== null) {
+        this.uid = res.uid;
+        //comprobar TIPO de ROL
+          console.log('tipoRol =>');
+            const path = "Cliente-dw";
+            this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
+              this.cliente = res;
+              console.log('El rol actual es: ',res.role);
+              if(res.role === 'paseador'){
+                this.rolDuenio = false;
+                this.router.navigate([`/home-paseador`], { replaceUrl: true });
+                return true;
+              }else{
+                this.rolDuenio = true;
+                return false;
+              }
+            });
+        return;
+      }
+    });
+    return false;
   }
 
   getUserInfo(uid :string){

@@ -45,12 +45,14 @@ export class AppComponent   {
               this.cliente = res;
               console.log('El rol actual es: ',res.role);
               if(res.role === 'duenio'){
-                this.router.navigate(['/home']);
+                //this.router.navigate(['/home']);
                 //window.location.assign('/home-paseador');
+                this.router.navigateByUrl('/home');
                 return true;
               }else if(res.role === 'paseador'){
                 //window.location.assign('/home');
-                this.router.navigate(['/home-paseador']);
+                //this.router.navigate(['/home-paseador']);
+                this.router.navigateByUrl('/home-paseador');
                 return;
               }
             });

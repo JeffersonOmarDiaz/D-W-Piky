@@ -1,6 +1,6 @@
-<app-menu paginaTitulo="Mis Mascotas" [menuCliente]="verMC"></app-menu>
+<app-menu paginaTitulo="Mis Mascotas" [menuCliente]="verMC" *ngIf="rolDuenio"></app-menu>
 
-<ion-content> 
+<ion-content *ngIf="rolDuenio"> 
     <ion-grid fixed>
         <!-- <ion-row>
             <ion-col>

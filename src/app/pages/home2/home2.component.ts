@@ -19,6 +19,7 @@ export class Home2Component implements OnInit, OnDestroy {
   suscribreUserInfo: Subscription;
   suscribreUserInfoRol: Subscription;
   cliente : Cliente;
+  rolPaseador: boolean;
   constructor(public firestoreService: FirestoreService,
               public firebaseauthService: FirebaseauthService,
               private router: Router) {
@@ -27,16 +28,7 @@ export class Home2Component implements OnInit, OnDestroy {
    }
  
   ngOnInit() {
-    //comprobar estado de autenticación 
-    /* this.suscribreUserInfo=this.firebaseauthService.stateAuth().subscribe(res => { 
-      console.log(res);
-      if (res !== null) {
-        this.uid = res.uid;
-        console.log(res.email);
-        this.tipoRol(this.uid); 
-      }
-    }); */
-    //this.router.navigate(['/home-paseador']);
+    this.tipoRol();
   }
  
   ngOnDestroy(){
@@ -51,29 +43,37 @@ export class Home2Component implements OnInit, OnDestroy {
   refrescarPagina(){
     window.location.assign('/home-paseador');
   }
-  tipoRol(uid: string){
-    //comprobar TIPO de ROL
-    /* this.firebaseauthService.stateAuth().subscribe(res => {  */
-      console.log('tipoRol =>');
-      /* if (res !== null) {
+  tipoRol(){
+    this.suscribreUserInfo=this.firebaseauthService.stateAuth().subscribe(res => { 
+      console.log(res);
+      if (res !== null) {
         this.uid = res.uid;
-        console.log(res.email); */
-        //Colecciones del cliente rol
-        const path = "Cliente-dw";
-        this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, uid).subscribe(res => {
-          this.cliente = res;
-          console.log('El rol actual es: ',res.role);
-          if(res.role === 'paseador'){
-            this.router.navigate(['/home-paseador']);
-            //window.location.assign('/home-paseador');
-            return true;
-          }else{
-            //window.location.assign('/home');
-            this.router.navigate(['/home']);
-            return;
-          }
-        });
-    return;
+        console.log(res.email);
+        //this.tipoRol(this.uid); 
+        //comprobar TIPO de ROL
+          console.log('tipoRol =>');
+            const path = "Cliente-dw";
+            this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
+              this.cliente = res;
+              console.log('El rol actual es: ',res.role);
+              if(res.role === 'paseador'){
+                this.rolPaseador = true;
+                //this.router.navigate(['/home-paseador']);
+                //window.location.assign('/home-paseador');
+                //this.router.navigate([`/home-paseador`], { replaceUrl: true });
+                return true;
+              }else if(res.role === 'duenio'){
+                this.rolPaseador = true;
+                //window.location.assign('/home');
+                //this.router.navigate(['/home']);
+                this.router.navigate([`/home`], { replaceUrl: true });
+                return false;
+              }
+            });
+        return;
+      }
+    });
+    return false;
   }
 
 }

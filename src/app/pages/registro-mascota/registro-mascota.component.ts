@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Cliente } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 
@@ -15,24 +16,31 @@ export class RegistroMascotaComponent implements OnInit, OnDestroy {
   registroPet = true;
   uid = '';
   suscribreUserInfo: Subscription;
+  suscribreUserInfoRol: Subscription;
+  rolDuenio: boolean;
+
+  cliente: Cliente = {
+    uid: this.uid,
+    email: '',
+    celular: '',
+    foto: '',
+    referncia: '',
+    ubicacion: null,
+    edad: null,
+    nombre: '',
+    apellido: '',
+    cedula: '',
+    mascotas: [],
+    role: 'duenio'
+  };
 
   constructor(public firestoreService:FirestoreService,
               public firebaseauthS: FirebaseauthService,
               private router: Router,
-              ) {
-    this.suscribreUserInfo=this.firebaseauthS.stateAuth().subscribe( res => {
-      //console.log('estado de autenticacion es: ',res);
-      if (res !== null){
-        this.uid = res.uid;
-      }else{
-        console.log('No esta autenticado');
-        this.router.navigate(['/login']);
-      }
-    });
-   }
+              ) {}
 
   ngOnInit() {
-    
+    this.tipoRol();
   }
 
   ngOnDestroy(){
@@ -40,6 +48,35 @@ export class RegistroMascotaComponent implements OnInit, OnDestroy {
     if (this.suscribreUserInfo) {
       this.suscribreUserInfo.unsubscribe();
     }
+    if (this.suscribreUserInfoRol) {
+      this.suscribreUserInfoRol.unsubscribe();
+    }
+  }
+
+  tipoRol(){
+    this.suscribreUserInfo=this.firebaseauthS.stateAuth().subscribe(res => { 
+      console.log(res);
+      if (res !== null) {
+        this.uid = res.uid;
+        //comprobar TIPO de ROL
+          console.log('tipoRol =>');
+            const path = "Cliente-dw";
+            this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
+              this.cliente = res;
+              console.log('El rol actual es: ',res.role);
+              if(res.role === 'paseador'){
+                this.rolDuenio = false;
+                this.router.navigate([`/home-paseador`], { replaceUrl: true });
+                return true;
+              }else{
+                this.rolDuenio = true;
+                return false;
+              }
+            });
+        return;
+      }
+    });
+    return false;
   }
 
 }

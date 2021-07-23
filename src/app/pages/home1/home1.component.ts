@@ -17,23 +17,24 @@ export class Home1Component implements OnInit, OnDestroy {
   
   uid = '';
   suscribreUserInfo: Subscription;
-  suscribreUserClient: Subscription;
+  suscribreUserInfoRol: Subscription;
   cliente : Cliente;
+  rolDuenio: boolean;
   constructor(public firestoreService: FirestoreService,
               public firebaseauthService: FirebaseauthService,
               private router: Router) {
   }
 
   ngOnInit() {
-    //this.tipoRol();
+    this.tipoRol();
   }
 
   ngOnDestroy(){
     if (this.suscribreUserInfo) {
       this.suscribreUserInfo.unsubscribe();
     }
-    if (this.suscribreUserClient) {
-      this.suscribreUserClient.unsubscribe();
+    if (this.suscribreUserInfoRol) {
+      this.suscribreUserInfoRol.unsubscribe();
     }
   }
 
@@ -51,22 +52,27 @@ export class Home1Component implements OnInit, OnDestroy {
         //comprobar TIPO de ROL
           console.log('tipoRol =>');
             const path = "Cliente-dw";
-            this.suscribreUserClient = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
+            this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
               this.cliente = res;
               console.log('El rol actual es: ',res.role);
               if(res.role === 'paseador'){
+                this.rolDuenio = false;
                 //this.router.navigate(['/home-paseador']);
-                window.location.assign('/home-paseador');
+                //window.location.assign('/home-paseador');
+                this.router.navigate([`/home-paseador`], { replaceUrl: true });
                 return true;
               }else{
+                this.rolDuenio = true;
                 //window.location.assign('/home');
-                this.router.navigate(['/home']);
-                return;
+                //this.router.navigate(['/home']);
+                //this.router.navigate([`/home`], { replaceUrl: true });
+                return false;
               }
             });
         return;
       }
     });
+    return false;
   }
   
 }
