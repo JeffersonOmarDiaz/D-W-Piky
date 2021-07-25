@@ -87,7 +87,7 @@ export class FormularioComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('ngOnDestroy() - carritoComponent');
+    console.log('ngOnDestroy() - Formulario.component');
     if (this.suscribeInfoAuth) {
       this.suscribeInfoAuth.unsubscribe();
     }
@@ -129,6 +129,7 @@ export class FormularioComponent implements OnInit, OnDestroy {
       } else {
         this.presentLoading();
         this.firestoreService.createDoc(this.cliente, 'Cliente-dw', this.cliente.uid).then(res => {
+          this.router.navigate([`/perfil-mascota`], { replaceUrl: true });
           this.loading.dismiss();
           this.presentToast('Guardado con exito', 2000);
           this.limpiarCampos();

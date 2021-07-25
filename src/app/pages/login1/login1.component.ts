@@ -137,7 +137,7 @@ export class Login1Component implements OnInit, OnDestroy {
     console.log('El correo que llega para guardar es: ', this.cliente.email);
     console.log('La información del cliente a guardar es: ',this.cliente.uid);
     await this.firestoreService.createDoc(this.cliente, path, this.cliente.uid).then(res => {
-      /* this.router.navigate(['/home']); */
+      this.router.navigate(['/home']);
       /* window.location.assign('/home'); */
       console.log('CLIENTE Guardado con exitos!!!');
     }).catch(error => {

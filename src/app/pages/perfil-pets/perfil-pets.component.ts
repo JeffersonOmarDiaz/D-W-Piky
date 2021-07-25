@@ -54,6 +54,7 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
   suscribreUserInfo: Subscription;
   suscribreUserPet: Subscription;
   suscribreUserInfoRol: Subscription;
+  suscribeMascotas: Subscription;
   valorEliminar = null;
   rolDuenio: boolean;
   constructor(public firestoreService: FirestoreService,
@@ -87,6 +88,10 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
     if (this.suscribreUserInfoRol) {
       this.suscribreUserInfoRol.unsubscribe();
     }
+    if (this.suscribeMascotas) {
+      this.suscribeMascotas.unsubscribe();
+    }
+    
   }
 
   tipoRol(){
@@ -133,7 +138,7 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
 
   getMascotas() {
     //debemos mandar un tipo '<>' que en este caso es producto q se define
-    this.firestoreService.getCollection<Mascota>(this.path).subscribe(res => {
+    this.suscribeMascotas = this.firestoreService.getCollection<Mascota>(this.path).subscribe(res => {
       this.mascotas = res;
       console.log('Estos son las MAscotas En LA BD', res);
     });
@@ -170,6 +175,7 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
         return;
       }
       }
+      return;
     }
     recorreArray(array);
     console.log('La posición es: ',pos);
@@ -192,28 +198,45 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
           role: 'okay',
           handler: () => {
             console.log('Confirmó la eliminacion');
-            console.log(nombreMascota);
+            //console.log(nombreMascota);
             console.log(this.path);
             console.log('Mascota a eliminar  :', nombreMascota);
-            this.firestoreService.deleteDoc(this.path, idMascota).then(res => {
-              this.firestorageService.eliminarFoto(fotoMascota).then( res => {
-                  console.log('LA foto Tambien se ha eliminado: ---->', res);
-              }
-              );
-              this.clienteMascota.splice(posicionArray,1);
-              this.guardarCliente();
-              this.presentToast('Eliminado con exito', 2000);
-              this.alertController.dismiss();
-              this.loading.dismiss();
-            }).catch(error => {
-              console.log('No se pudo eliminar a ocurrido un error ->', error);
-              this.presentToast('Eliminado con exito!!', 2000);
-            });
+            this.cliente.mascotas = this.clienteMascota.splice(posicionArray,1);
+            console.log(this.clienteMascota);
+            this.btnDelet(idMascota, fotoMascota, posicionArray, this.clienteMascota);
           }
         }
       ]
     });
     await alert.present();
+  }
+
+  async btnDelet(idMascota: string, fotoMascota: string, posicionArray: number, mascotas: any){
+    this.cliente.mascotas = mascotas;
+    
+    console.log("btnDetet => ", this.cliente.mascotas);
+    await this.guardarCliente(this.cliente, 'Cliente-dw', this.cliente.uid);
+    await this.firestoreService.deleteDoc(this.path, idMascota).then(res => {
+      this.firestorageService.eliminarFoto(fotoMascota).then( res => {
+          console.log('LA foto Tambien se ha eliminado: ---->', res);
+      }
+      );
+      this.presentToast('Eliminado con exito', 2000);
+      return;
+    }).catch(error => {
+      console.log('No se pudo eliminar a ocurrido un error ->', error);
+      this.presentToast('No se pudo eliminar!!', 2000);
+    });
+    return;
+  }
+
+  async guardarCliente(data: any, path: string, uid: string) {
+    console.log('guardarCliente()', data);
+    await this.firestoreService.createDoc(data, path, uid).then(res => {
+      
+    }).catch(error => {
+      console.log('No se pudo Actulizar el cliente un error ->', error);
+    });
   }
 
   enviarID(pos: string, array : any){
@@ -233,16 +256,10 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
     recorreArray(array);
   }
 
-  async guardarCliente() {
-    this.firestoreService.createDoc(this.cliente, 'Cliente-dw', this.cliente.uid).then(res => {
-    }).catch(error => {
-      console.log('No se pudo Actulizar el cliente un error ->', error);
-    });
-  }
 
-  deletItem(mascota: Mascota){
+  async deletItem(mascota: Mascota){
     console.log('Mascota a eliminar  :',mascota);
-    this.firestoreService.deleteDoc(this.path, mascota.id);
+    await this.firestoreService.deleteDoc(this.path, mascota.id);
   }
 
   async presentToast(mensaje: string, tiempo:number) {
