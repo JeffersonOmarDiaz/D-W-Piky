@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { Cliente } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
-
+ 
 @Component({
   selector: 'app-home2',
   templateUrl: './home2.component.html',
@@ -58,7 +58,7 @@ export class Home2Component implements OnInit, OnDestroy {
               console.log('El rol actual es: ',res.role);
               if(res.role === 'paseador'){
                 this.rolPaseador = true;
-                //this.router.navigate(['/home-paseador']);
+                this.router.navigate(['/home-paseador']);
                 //window.location.assign('/home-paseador');
                 //this.router.navigate([`/home-paseador`], { replaceUrl: true });
                 return true;

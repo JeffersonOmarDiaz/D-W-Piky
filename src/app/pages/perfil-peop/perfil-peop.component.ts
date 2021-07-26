@@ -53,18 +53,15 @@ export class PerfilPeopComponent implements OnInit {
         this.uid = res.uid;
         this.emailGm = res.email;
         this.getUserInfo(this.uid);
-      }else{
-        console.log('El usuario no se a autenticado');
-        this.router.navigate(['/login']);
       }
     });
     /* REvisar función para retroceso */
     /* this.platform.backButton.subscribeWithPriority(5, () => {
       console.log('Another handler was called!');
-    });
+    }); */
   
-    this.platform.backButton.subscribeWithPriority(10, (processNextHandler) => {
-      console.log('Handler was called!');
+    /* this.platform.backButton.subscribeWithPriority(10, (processNextHandler) => {
+      console.log('evento de retroceso');
   
       processNextHandler();
     }); */
