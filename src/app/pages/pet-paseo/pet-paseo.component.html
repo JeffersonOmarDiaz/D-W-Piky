@@ -1,15 +1,11 @@
 <app-menu paginaTitulo="Quiero un paseo" [menuCliente]="verMC" *ngIf="rolDuenio"></app-menu>
 
 <ion-content *ngIf="rolDuenio">
-  <ion-grid fixed>
-    <ion-card>
+  <ion-grid fixed >
+    <ion-card *ngIf="!llenarSolicitudPaseo">
       <ion-row>
         <ion-col>
           <h6 style=" text-align: center;">¿A quien pasearas?</h6>
-          <!-- <ion-item  *ngFor="let mascota of clienteMascota" class="itemMascota">
-            <img src={{mascota.foto}} class="imgRedonda" onerror="this.src='../../../assets/images/icons/perfil-dog.png'">
-            <ion-label class="itemMascota">{{mascota.nombre}}</ion-label>
-          </ion-item> -->
           <ion-list>
             <ion-card >
             <ion-item *ngFor="let mascota of clienteMascota">
@@ -26,15 +22,55 @@
 
     <!-- <ion-card> -->
       <ion-row>
-        <ion-col>
-          <!-- <ion-list> -->
-            <!-- <ion-item *ngIf="mostrarDialogo" button=true  (click)="btnSolicitarPaseo()"> -->
-              <!-- <ion-label class="normal"> Inicio</ion-label> -->
-              <!-- <ion-icon slot="end" name="walk-outline"></ion-icon> -->
-              <!-- <ion-button shape="round" expand="full" >Solicitar Paseador</ion-button>
-            </ion-item> -->
+        <ion-col *ngIf="!llenarSolicitudPaseo">
             <ion-button *ngIf="mostrarDialogo" shape="round" expand="full" (click)="btnSolicitarPaseo()">Solicitar Paseador</ion-button>
-          <!-- </ion-list> -->
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="llenarSolicitudPaseo">
+        <!-- <ion-col *ngIf="llenarSolicitudPaseo"> -->
+          <ion-col >
+            <ion-item>
+              <h5>Pasear a: {{numMascotaPaseo}} mascotas</h5>
+            </ion-item>
+            <ion-item>
+              <ion-list (click)="calcularPagoRef()">
+                <ion-radio-group [(ngModel)]="tiempoPaseo" >
+                  <ion-list-header>
+                    <ion-label>Tiempo de paseo*</ion-label>
+                  </ion-list-header>
+                  <ion-item>
+                    <ion-label>1 hora</ion-label>
+                    <ion-radio slot="start" value="1" color="success"></ion-radio>
+                  </ion-item>
+
+                  <ion-item>
+                    <ion-label>2 horas</ion-label>
+                    <ion-radio slot="start" value="2" color="success"></ion-radio>
+                  </ion-item>
+      
+                  <ion-item>
+                    <ion-label>3 horas</ion-label>
+                    <ion-radio slot="start" value="3" color="success"></ion-radio>
+                  </ion-item>
+                </ion-radio-group>
+              </ion-list>
+            </ion-item>
+            <ion-item>
+              <ion-label>Valor mínimo pagar "${{valorPagoRef}}" : </ion-label>
+              <ion-input type="number" name="valor"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label class="normal" position="floating">Observaciones: </ion-label>
+              <ion-textarea class="normal ion-text-wrap" style="text-transform: capitalize" [(ngModel)]="observacionesPaseo" ></ion-textarea>
+            </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="llenarSolicitudPaseo">
+        <ion-col>
+          <ion-button shape="round" expand="full" (click)="generarSolicitudBD()">Solicitar</ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button shape="round" expand="full" (click)="cancelarSolicitud()">Cancelar</ion-button>
         </ion-col>
       </ion-row>
     <!--   -->

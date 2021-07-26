@@ -35,7 +35,7 @@ export class PetPaseoComponent implements OnInit {
   
   clienteMascota : Mascota []=[];
   //INICIO Para capturar los datos de notificación de mascota
-  clientNotifi: Cliente = {
+  clientNotifiTemp: Cliente = {
     uid: this.uid,
     email: '',
     celular: '',
@@ -55,6 +55,12 @@ export class PetPaseoComponent implements OnInit {
   suscribreUserInfoRol: Subscription;
   suscribreUser: Subscription;
   rolDuenio:boolean;
+  llenarSolicitudPaseo: boolean;
+  mascotasNotificacionTemp : Mascota []=[];
+  tarifaMinima = 2;
+  tiempoPaseo : number;
+  observacionesPaseo: string;
+  valorPagoRef: number;
   //FIN Para capturar los datos de notificación de mascota
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
@@ -113,7 +119,7 @@ export class PetPaseoComponent implements OnInit {
     if(!checked.currentTarget.checked){
       //console.log('Los datos de que se cargaran es: ',informacion);
       this.mascotaNotifi = informacion;
-      this.clientNotifi.mascotas.push(informacion);
+      this.clientNotifiTemp.mascotas.push(informacion);
     }else if(checked.currentTarget.checked){
       let idMascota = '';
       let posicionArray = null;
@@ -126,25 +132,30 @@ export class PetPaseoComponent implements OnInit {
         }
         }
       }
-      recorreArray(this.clientNotifi.mascotas);
-      this.clientNotifi.mascotas.splice(posicionArray, 1);
+      recorreArray(this.clientNotifiTemp.mascotas);
+      this.clientNotifiTemp.mascotas.splice(posicionArray, 1);
       //console.log(this.clientNotifi.mascotas);
     }
-    console.log('La información para la notificación es: ',this.clientNotifi);
-    if(this.clientNotifi.mascotas.length === 0){
+    this.cliente.mascotas = this.clientNotifiTemp.mascotas;
+    console.log('Información del cliente ==> ', this.cliente);
+    //console.log('La información para la notificación es: ',this.clientNotifi);
+    if(this.clientNotifiTemp.mascotas.length === 0){
       this.mostrarDialogo = false;
     }else{
       this.mostrarDialogo = true;
-      this.numMascotaPaseo = this.clientNotifi.mascotas.length;
+      this.numMascotaPaseo = this.clientNotifiTemp.mascotas.length;
     }
   }
 
   btnSolicitarPaseo(){
     if(this.numMascotaPaseo > 4){
       this.presentToast('Solo puede pasear un maximo de 4 mascotas', 4000);
+      this.llenarSolicitudPaseo = false;
     }else{
       console.log('Generando solicitud de paseo');
+      this.llenarSolicitudPaseo = true;
     }
+   // this.llenarSolicitudPaseo = false;
   }
 
   async presentToast(mensaje: string, tiempo: number) {
@@ -154,4 +165,26 @@ export class PetPaseoComponent implements OnInit {
     });
     toast.present();
   }
+
+  async calcularPagoRef(){
+    //let tiempoPaseo = 1;
+    await console.log('Tiempo paseo ',  await this.tiempoPaseo);
+    this.valorPagoRef= (this.tiempoPaseo * this.numMascotaPaseo * this.tarifaMinima);
+    console.log('calcularPagoRef()  ==>', this.valorPagoRef);
+  }
+
+  generarSolicitudBD(){
+    //console.log('generarSolicitudBD() ', this.tiempoPaseo);
+    console.log('');
+  }
+  cancelarSolicitud(){
+    this.numMascotaPaseo =0; 
+    this.valorPagoRef =0;
+    this.tiempoPaseo = 0;
+    this.observacionesPaseo = "";
+    this.clientNotifiTemp.mascotas= [];
+    this.mostrarDialogo = false;
+    this.llenarSolicitudPaseo = false;
+  }
+  
 }

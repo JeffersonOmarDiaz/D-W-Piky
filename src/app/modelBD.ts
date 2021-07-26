@@ -26,5 +26,5 @@ export interface Cliente{
     mascotas: Mascota[];
     role: RolesExistentes;
 } 
-
+ 
 export type RolesExistentes = 'duenio' | 'paseador';
