@@ -61,6 +61,7 @@ export class PetPaseoComponent implements OnInit {
   tiempoPaseo : number;
   observacionesPaseo: string;
   valorPagoRef: number;
+  valorIngresadoDuenio: number;
   //FIN Para capturar los datos de notificación de mascota
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
@@ -174,10 +175,22 @@ export class PetPaseoComponent implements OnInit {
   }
 
   generarSolicitudBD(){
-    //console.log('generarSolicitudBD() ', this.tiempoPaseo);
-    console.log('');
+    if(this.tiempoPaseo != 0 && this.tiempoPaseo != undefined){
+      console.log('PAgo del cliente ==> ', this.valorIngresadoDuenio);
+      console.log('Observa  =>> ', this.observacionesPaseo);
+      console.log('Tiempo de paseo', this.tiempoPaseo);
+      if(this.valorIngresadoDuenio < this.valorPagoRef || this.valorIngresadoDuenio === undefined){
+        console.log("El valor debe ser superior o igual al referencial");
+        console.log('PAgo del cliente ==> ', this.valorIngresadoDuenio);
+      }else{
+        console.log('SE va ha generar una nueva solicitud');
+      }
+    }else{
+      console.log('Escoja un tiempo de paseo', this.tiempoPaseo);
+    }
   }
   cancelarSolicitud(){
+    console.log('ancelarSolicitud()');
     this.numMascotaPaseo =0; 
     this.valorPagoRef =0;
     this.tiempoPaseo = 0;
@@ -185,6 +198,7 @@ export class PetPaseoComponent implements OnInit {
     this.clientNotifiTemp.mascotas= [];
     this.mostrarDialogo = false;
     this.llenarSolicitudPaseo = false;
+    this.valorIngresadoDuenio =0;
   }
   
 }
