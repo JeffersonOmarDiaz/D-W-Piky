@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  ApiKeyGoogleMaps: 'AIzaSyDdn5gyLWzizH4iML_wn5SWLxteVirDSlE',
   firebaseConfig : {
     apiKey: "AIzaSyA94bdR1KPdfCVul0WJoJ3GyfbfsFb99JU",
     authDomain: "banca-2e58b.firebaseapp.com",

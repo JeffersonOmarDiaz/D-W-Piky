@@ -18,7 +18,10 @@ export interface Cliente{
     celular: string;
     foto: string;
     referncia: string;
-    ubicacion: any;
+    ubicacion: {
+        lat: number;
+        lng: number;
+       }
     edad: number;
     nombre: string;
     apellido: string;

@@ -4,9 +4,10 @@ import { Cliente } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 /* Importación para retroceso en dispositivo físico */
-import { LoadingController, Platform, ToastController } from '@ionic/angular';
+import { LoadingController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { FirestorageService } from 'src/app/services/firestorage.service';
 import { Router } from '@angular/router';
+import { GooglemapsComponent } from 'src/app/googlemaps/googlemaps.component';
 
 @Component({
   selector: 'app-perfil-peop',
@@ -46,7 +47,8 @@ export class PerfilPeopComponent implements OnInit {
     public firestorageService: FirestorageService,
     public loadingController: LoadingController,
     public toastController: ToastController,
-    private router: Router,) {
+    private router: Router,
+    private modalController: ModalController) {
     this.firebaseauthS.stateAuth().subscribe(res => {
       console.log('estado de autenticacion es: ', res);
       if (res !== null) {
@@ -336,6 +338,34 @@ export class PerfilPeopComponent implements OnInit {
       this.presentToast(sms, 2000);
       return;
     };
+
+  }
+
+  async addDirection() {
+
+    const ubicacion = this.cliente.ubicacion;
+    let positionInput = {  
+      lat: -0.220081,
+      lng: -78.5142586
+    };
+    if (ubicacion !== null) {
+        positionInput = ubicacion; 
+    }
+
+    const modalAdd  = await this.modalController.create({
+      component: GooglemapsComponent,
+      mode: 'ios',
+      swipeToClose: true,
+      componentProps: {position: positionInput}
+    });
+    await modalAdd.present();
+
+    const {data} = await modalAdd.onWillDismiss();
+    if (data) {
+      console.log('data -> ', data);
+      this.cliente.ubicacion = data.pos;
+      console.log('this.cliente -> ', this.cliente);
+    }
 
   }
 }
