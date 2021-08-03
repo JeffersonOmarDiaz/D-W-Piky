@@ -346,7 +346,8 @@ export class PerfilPeopComponent implements OnInit {
     const ubicacion = this.cliente.ubicacion;
     let positionInput = {  
       lat: -0.220081,
-      lng: -78.5142586
+      lng: -78.5142586,
+      direccion:"Sebastián de Benalcázar N3-45"
     };
     if (ubicacion !== null) {
         positionInput = ubicacion; 
@@ -356,13 +357,16 @@ export class PerfilPeopComponent implements OnInit {
       component: GooglemapsComponent,
       mode: 'ios',
       swipeToClose: true,
-      componentProps: {position: positionInput}
+      componentProps: {position: positionInput, direccion: String}
     });
     await modalAdd.present();
 
     const {data} = await modalAdd.onWillDismiss();
     if (data) {
       console.log('data -> ', data);
+
+      data.pos.direccion = data.direccion;
+
       this.cliente.ubicacion = data.pos;
       console.log('this.cliente -> ', this.cliente);
     }

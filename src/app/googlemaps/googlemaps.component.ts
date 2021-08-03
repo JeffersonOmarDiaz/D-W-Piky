@@ -19,8 +19,11 @@ export class GooglemapsComponent implements OnInit {
   //coordenadas cuenca para abrir con una posición pre cargada
   @Input() position = {  
     lat: -0.220081,
-    lng: -78.5142586
+    lng: -78.5142586,
+    direccion : "Sebastián de Benalcázar N3-45"
   };
+
+  //@Input ()  direcionInputh = "Sebastián de Benalcázar N3-45";
 
   label ={
     //para información sobre el marcador
@@ -33,11 +36,15 @@ export class GooglemapsComponent implements OnInit {
   marker: any; //posicion del marker
   infowindow: any; //seccion donde aparece ubicacion, ubicacion de envio
   positionSet:any; //posicion en donde se queda guardado la posicion
+  //direccionGuardar: string;
 
    //para decir donde estará el mapa en el html se debe importar hace refencia al div map
   @ViewChild('map') divMap: ElementRef;
   //dirección visual
   geocoder: any;
+  //validad detro de Quito - Ecuador
+  dentroQuito = false;
+  nuevaDir = '';
   constructor(private renderer: Renderer2,
               @Inject(DOCUMENT) private document, 
               private googlemapsService: GooglemapsService, 
@@ -84,26 +91,64 @@ export class GooglemapsComponent implements OnInit {
     this.geocodePosition(this.marker.getPosition());
 }
 
-geocodePosition(pos){
-  //Para las direcciones 
-  let direccion = '';
+async geocodePosition(pos){
+  //Para las direcciones de las calles
+  console.log('geocodePosition ');
   this.geocoder.geocode({
     latLng: pos
   }, (responses)=>{
     if(responses && responses.length > 0){
-      direccion=responses[0].formatted_address;
-      console.log('La dirección es: ', direccion);
+      this.position.direccion=responses[0].formatted_address;
+      console.log('La dirección es: ', this.position.direccion);
+      this.nuevaDir = this.position.direccion;
+      this.validaCuidadQuito(this.position.direccion);
+      
+      return this.nuevaDir;
     }else{
 
     }
   });
+  
 }
 
+  //para saber si esta dentro de quito
+  async validaCuidadQuito(direccion: string) {
+    let arrPais = direccion.split(',');
+    //dividir la cadena de texto por una coma
+    console.log(arrPais);
+    let paisObtenido =arrPais[arrPais.length-1].toUpperCase();
+    let arrCiudad = arrPais[arrPais.length-2].toUpperCase();
+    console.log(paisObtenido);
+    if(paisObtenido ==' ECUADOR'){
+      console.log('Se encuentra dentro de ecuador');
+      //Cuidad obternida
+      let ciudadObtenida = arrCiudad.split(' ');
+      console.log(ciudadObtenida);
+      ciudadObtenida.forEach(elemento =>{
+        if(elemento === 'QUITO'){
+          console.log('Se encuentra dentro Quito - Ecuador');
+         this.dentroQuito = true;
+         this.position.direccion = arrPais[0];
+         return;
+        }else{
+        }
+      });
+    }else{
+      console.log('Falso quito');
+      this.dentroQuito = false;
+    }
+    
+  }
+
+
+
   clickHandleEvent(){
+    console.log('Evento clic');
     this.map.addListener( 'click', (event: any) =>{
       const position = {
         lat: event.latLng.lat(),
         lng: event.latLng.lng(),
+        direccion: this.nuevaDir,
       };
       this.addMarker(position);//par los cursores
       this.geocodePosition(this.marker.getPosition());
@@ -113,7 +158,6 @@ geocodePosition(pos){
   addMarker(position: any): void {
     //podemos añadir más marcadores
     let latLng = new google.maps.LatLng(position.lat, position.lng);
-
     this.marker.setPosition(latLng);
     this.map.panTo(position);
     this.positionSet = position;
@@ -145,6 +189,7 @@ geocodePosition(pos){
       const position = {
         lat: res.coords.latitude,
         lng: res.coords.longitude,
+        direccion: this.nuevaDir,
       }
       this.addMarker(position);
       this.geocodePosition(this.marker.getPosition());
@@ -152,10 +197,17 @@ geocodePosition(pos){
 
   }
 
-  aceptar() {
+  async aceptar() {
+    
     console.log('click aceptar -> ', this.positionSet);
-    this.modalController.dismiss({ pos: this.positionSet })
+    
+    if(this.dentroQuito){
+      console.log('Dirección en Quito: ', this.position.direccion);
+      this.modalController.dismiss({ pos: this.positionSet, direccion: this.position.direccion})
+    }else{
+      console.log('FUERA de la ciudad de quito');
+    }
   }
     
-
+  
 }

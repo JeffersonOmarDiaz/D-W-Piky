@@ -21,6 +21,7 @@ export interface Cliente{
     ubicacion: {
         lat: number;
         lng: number;
+        direccion: string;
        }
     edad: number;
     nombre: string;
