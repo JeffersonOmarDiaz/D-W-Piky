@@ -21,6 +21,8 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
 
   loading: any;
 
+  btnRegistro = false;
+
   //Para Limpiar los campos en un nuevo registro Inicio
   newMascota: Mascota ={
     foto: '',
@@ -128,7 +130,13 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
     this.suscribreUserPet = this.firestoreService.getDoc<Cliente>(path,uid).subscribe( res => {
       this.cliente = res;
       this.clienteMascota = res.mascotas;
-      console.log('La informacion del cliente es: ', this.cliente);
+      console.log('La informacion del cliente es: ', this.cliente); 
+      if(this.cliente.cedula != ''){
+        console.log('Si tiene cédula');
+        this.btnRegistro = true;
+      }else{
+        this.btnRegistro = false;
+      }
       console.log('La informacion de las mascotas cliente es: ', this.clienteMascota);
       //Linea de ordenamiento problematica en la eliminación
       //console.log('La informacion de las mascotas cliente es: ', this.clienteMascota.sort(((unaMascota, otraMascota) => unaMascota.nombre.localeCompare( otraMascota.nombre))) );

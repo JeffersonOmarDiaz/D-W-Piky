@@ -41,6 +41,7 @@ export class PerfilPeopComponent implements OnInit {
   private pathCliente = "/Cliente-dw";
   pathRetorno = '';
   rolUser = '';
+  direccionLabel = ' ';
   constructor(public firestoreService: FirestoreService,
     public firebaseauthS: FirebaseauthService,
     private platform: Platform,
@@ -108,9 +109,12 @@ export class PerfilPeopComponent implements OnInit {
       this.suscribreUserInfo = this.firestoreService.getDoc<Cliente>(path, uid).subscribe(res => {
         this.cliente = res;
         console.log('La informacion del cliente es: ', this.cliente);
-        if(this.cliente.role === null || this.cliente.role=== undefined){
+        this.direccionLabel = this.cliente.ubicacion.direccion;
+        console.log('La direción del cliente es: ', this.cliente.ubicacion.direccion);
+
+        /* if(this.cliente.role === null || this.cliente.role=== undefined){
           this.router.navigate(['/login']);
-        }
+        } */
       });
     } 
   }
@@ -194,8 +198,9 @@ export class PerfilPeopComponent implements OnInit {
     const edad = this.cliente.edad;
     const referencia = this.cliente.referncia;
     const cedula = this.cliente.cedula;
+    const ubicacion = this.cliente.ubicacion;
 
-    if (nombre != '' && apellido != "" && celular != "" && edad != null && referencia != "" && cedula != "") {
+    if (nombre != '' && apellido != "" && celular != "" && edad != null && referencia != "" && cedula != "" && ubicacion != null) {
       console.log('Todos los campos estan llenos');
 
       if (cedula.length === 10) {
@@ -366,7 +371,7 @@ export class PerfilPeopComponent implements OnInit {
       console.log('data -> ', data);
 
       data.pos.direccion = data.direccion;
-
+      this.direccionLabel = data.direccion;
       this.cliente.ubicacion = data.pos;
       console.log('this.cliente -> ', this.cliente);
     }

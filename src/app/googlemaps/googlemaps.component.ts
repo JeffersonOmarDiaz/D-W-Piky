@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, ElementRef, Inject, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { Plugins } from '@capacitor/core';
 import { GooglemapsService } from './googlemaps.service';
 
@@ -16,14 +16,14 @@ declare var google: any;
 })
 export class GooglemapsComponent implements OnInit {
 
-  //coordenadas cuenca para abrir con una posición pre cargada
+  //coordenadas Cuidad de Quito para abrir con una posición pre cargada
   @Input() position = {  
     lat: -0.220081,
     lng: -78.5142586,
     direccion : "Sebastián de Benalcázar N3-45"
   };
 
-  //@Input ()  direcionInputh = "Sebastián de Benalcázar N3-45";
+  
 
   label ={
     //para información sobre el marcador
@@ -36,7 +36,7 @@ export class GooglemapsComponent implements OnInit {
   marker: any; //posicion del marker
   infowindow: any; //seccion donde aparece ubicacion, ubicacion de envio
   positionSet:any; //posicion en donde se queda guardado la posicion
-  //direccionGuardar: string;
+  
 
    //para decir donde estará el mapa en el html se debe importar hace refencia al div map
   @ViewChild('map') divMap: ElementRef;
@@ -48,7 +48,8 @@ export class GooglemapsComponent implements OnInit {
   constructor(private renderer: Renderer2,
               @Inject(DOCUMENT) private document, 
               private googlemapsService: GooglemapsService, 
-              public modalController: ModalController) { }
+              public modalController: ModalController,
+              public toastController: ToastController,) { }
 
   ngOnInit(): void {
     this.init();
@@ -203,11 +204,24 @@ async geocodePosition(pos){
     
     if(this.dentroQuito){
       console.log('Dirección en Quito: ', this.position.direccion);
+      // Mensaje si esta fuera de la ciudad
+      const sms = '¡Realizado!';
+      this.presentToast(sms, 120);
       this.modalController.dismiss({ pos: this.positionSet, direccion: this.position.direccion})
     }else{
       console.log('FUERA de la ciudad de quito');
+      // Mensaje si esta fuera de la ciudad
+      const sms = '¡Ubicación no válida!. Su domicilio debe estar dentro de la cuidad de Quito';
+      this.presentToast(sms, 3500);
     }
   }
-    
+  
+  async presentToast(mensaje: string, tiempo: number) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: tiempo
+    });
+    toast.present();
+  }
   
 }

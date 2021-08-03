@@ -96,14 +96,6 @@
   
       <ion-card>
 
-        <!-- <ion-row>
-          <ion-col>
-            <ion-item>
-              <ion-label class="normal" position="floating">Dirección</ion-label>
-              <ion-input class="normal" type="text" color="initial" style="text-transform: capitalize"></ion-input>
-            </ion-item>
-          </ion-col>
-        </ion-row> -->
     
         <ion-item (click)="addDirection()">
           <ion-label class="normal">
@@ -115,6 +107,11 @@
             </ion-button>
           </ion-buttons>
         </ion-item>
+        <ion-item >
+          <p>
+            <ion-label>{{direccionLabel}}</ion-label>
+          </p>
+        </ion-item>
 
         <ion-row>
           <ion-col>
@@ -124,38 +121,11 @@
             </ion-item>
           </ion-col>
         </ion-row>
-    
-        <!-- <ion-row>
-          <ion-col>
-            <ion-item>
-              <ion-label class="normal">Email: {{cliente.email}}</ion-label>
-              <ion-input class="normal" type="email" name="email" color="initial"></ion-input>
-            </ion-item>
-          </ion-col>
-        </ion-row> -->
       </ion-card>
   
   
       <ion-row class="ion-justify-content-center">
         <ion-col size="5">
-          <!-- <ion-item>
-            <ion-radio-group>
-              <ion-list-header>
-                <ion-label>Registrarce como:</ion-label>
-              </ion-list-header>
-  
-              <ion-item>
-                <ion-label>Cliente</ion-label>
-                <ion-radio slot="start" value="cliente" color="warning"></ion-radio>
-              </ion-item>
-  
-              <ion-item>
-                <ion-label>Paseador</ion-label>
-                <ion-radio slot="start" value="Paseador" color="success"></ion-radio>
-              </ion-item>
-            </ion-radio-group>
-          </ion-item> -->
-  
           <ion-button style="margin: 20px;" shape="round" expand="full" (click)="validarGuardar()">Guardar</ion-button>
           <ion-button style="margin: 20px;" shape="round" expand="full" (click)="retrocederLink()">Volver</ion-button>
         </ion-col>
