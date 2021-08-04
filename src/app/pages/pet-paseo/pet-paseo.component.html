@@ -58,8 +58,23 @@
               </ion-list>
             </ion-item>
             <ion-item>
-              <ion-label class="itemMascota ion-text-wrap" position="floating">Valor mínimo pagar "${{valorPagoRef}}" : </ion-label>
-              <ion-input type="number" name="valor" maxlength="15" required="true" [(ngModel)]="valorIngresadoDuenio"></ion-input>
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <ion-label class="itemMascota ion-text-wrap" >Valor mínimo pagar </ion-label>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row class="ion-text-wrap">
+                  <ion-col >
+                    <ion-label class="itemMascota ion-text-wrap"> $"{{valorPagoRef}}"</ion-label>
+                  </ion-col>
+                  <ion-col size="10">
+                    <ion-input  type="number" name="valor" maxlength="15" required="true" [(ngModel)]="valorIngresadoDuenio" placeholder="Ingrese el pago"></ion-input>
+                  </ion-col>
+                </ion-row>
+
+              </ion-grid>
             </ion-item>
             <ion-item>
               <ion-label class="normal" position="floating">Observaciones: </ion-label>

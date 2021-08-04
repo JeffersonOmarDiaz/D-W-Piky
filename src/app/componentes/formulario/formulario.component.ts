@@ -116,6 +116,8 @@ export class FormularioComponent implements OnInit, OnDestroy {
     this.suscribreUserInfo = this.firestoreService.getDoc<Cliente>(path,uid).subscribe( res => {
       this.cliente = res;
       console.log('La informacion del cliente es: ', this.cliente);
+      //Verificar que las mascotas no repitan pendiente 
+      //console.log('Las mascotas del cliente son: ', this.cliente.mascotas[0].nombre);
     });
   }
 
@@ -203,9 +205,6 @@ export class FormularioComponent implements OnInit, OnDestroy {
             this.cliente.mascotas.splice(this.elimarArray, 1);
           }
           this.guardarCliente();
-          //this.limpiarCampos();
-          //window.location.assign('/perfil-mascota');
-          //this.router.navigate(['/perfil-mascota']);
           return true;
         }).catch(error => {
           console.log('No se pudo guardar el a ocurrido un error ->', error);

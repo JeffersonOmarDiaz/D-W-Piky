@@ -60,7 +60,7 @@ export class PetPaseoComponent implements OnInit {
   tarifaMinima = 2;
   tiempoPaseo : number;
   observacionesPaseo: string;
-  valorPagoRef: number;
+  valorPagoRef= 0;
   valorIngresadoDuenio: number;
   //FIN Para capturar los datos de notificación de mascota
   constructor(public firebaseauthS: FirebaseauthService,
@@ -138,7 +138,7 @@ export class PetPaseoComponent implements OnInit {
       //console.log(this.clientNotifi.mascotas);
     }
     this.cliente.mascotas = this.clientNotifiTemp.mascotas;
-    console.log('Información del cliente ==> ', this.cliente);
+    console.log('Información del cliente solicitud ==> ', this.cliente);
     //console.log('La información para la notificación es: ',this.clientNotifi);
     if(this.clientNotifiTemp.mascotas.length === 0){
       this.mostrarDialogo = false;
@@ -153,7 +153,7 @@ export class PetPaseoComponent implements OnInit {
       this.presentToast('Solo puede pasear un maximo de 4 mascotas', 4000);
       this.llenarSolicitudPaseo = false;
     }else{
-      console.log('Generando solicitud de paseo');
+      console.log('Generando solicitud de paseo...');
       this.llenarSolicitudPaseo = true;
     }
    // this.llenarSolicitudPaseo = false;
@@ -182,15 +182,17 @@ export class PetPaseoComponent implements OnInit {
       if(this.valorIngresadoDuenio < this.valorPagoRef || this.valorIngresadoDuenio === undefined){
         console.log("El valor debe ser superior o igual al referencial");
         console.log('PAgo del cliente ==> ', this.valorIngresadoDuenio);
+        this.presentToast('¡El valor a cancelar debe ser igual o superior al referencial!', 2500);
       }else{
         console.log('SE va ha generar una nueva solicitud');
       }
     }else{
       console.log('Escoja un tiempo de paseo', this.tiempoPaseo);
+      this.presentToast('¡Escoja un tiempo de paseo!', 2500);
     }
   }
   cancelarSolicitud(){
-    console.log('ancelarSolicitud()');
+    console.log('cancelarSolicitud()');
     this.numMascotaPaseo =0; 
     this.valorPagoRef =0;
     this.tiempoPaseo = 0;
