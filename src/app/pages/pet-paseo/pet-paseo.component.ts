@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Cliente, Mascota, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
@@ -64,12 +64,13 @@ export class PetPaseoComponent implements OnInit {
   valorIngresadoDuenio: number;
   //FIN Para capturar los datos de notificación de mascota
   direccionSolicitud = '';
-
+  loading: any;
   solicitud: Solicitud; 
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
-              public toastController: ToastController,) { }
+              public toastController: ToastController,
+              public loadingController: LoadingController,) { }
 
   ngOnInit() {
     this.tipoRol();
@@ -181,13 +182,14 @@ export class PetPaseoComponent implements OnInit {
   async generarSolicitudBD(){
     if(this.tiempoPaseo != 0 && this.tiempoPaseo != undefined){
       console.log('PAgo del cliente ==> ', this.valorIngresadoDuenio);
-      console.log('Observa  =>> ', this.observacionesPaseo);
+      console.log('Observa  =>> ', this.solicitud.observacion);
       console.log('Tiempo de paseo', this.tiempoPaseo);
       if(this.valorIngresadoDuenio < this.valorPagoRef || this.valorIngresadoDuenio === undefined){
         console.log("El valor debe ser superior o igual al referencial");
         console.log('PAgo del cliente ==> ', this.valorIngresadoDuenio);
         this.presentToast('¡El valor a cancelar debe ser igual o superior al referencial!', 2500);
       }else{
+       await this.presentLoading();
         console.log('SE va ha generar una nueva solicitud');
         //this.solicitud.duenio = this.cliente; //ok individual
         this.solicitud.duenio = Object.assign({}, this.cliente);
@@ -197,35 +199,42 @@ export class PetPaseoComponent implements OnInit {
         //this.solicitud.tiempo = Object.assign({},Number(this.tiempoPaseo));
         this.solicitud.valor = this.valorIngresadoDuenio;
         //this.solicitud.valor = Object.assign({}, this.valorIngresadoDuenio);
-        this.solicitud.observacion = '';
+        
         //this.solicitud.observacion = Object.assign({}, this.observacionesPaseo);
         this.solicitud.direccion = this.cliente.ubicacion.direccion;
         //this.solicitud.direccion = Object.assign({}, this.cliente.ubicacion.direccion);
         this.solicitud.id = this.firestoreService.getId();
         //this.solicitud.id = Object.assign({}, this.firestoreService.getId());
         const idSolicitud = this.solicitud.id;
-        // console.log('solID: ', this.solicitud.id);
-        // console.log('ID: ', idSolicitud);
-
-        console.log(this.solicitud.duenio);
-        console.log(this.solicitud.mascotasPaseo);
-        console.log(this.solicitud.tiempo);
-        console.log(this.solicitud.valor);
-        console.log(this.solicitud.observacion);
-        console.log(this.solicitud.direccion);
         
-
         const path = 'Cliente-dw/' + this.uid + '/solicitudes/';
         console.log(' solicitar() ->', this.solicitud, path, idSolicitud);
         await this.firestoreService.createDoc(this.solicitud, path, idSolicitud).then ( ()=>{
-          console.log('Solicitud exitosa');
-        });
+          console.log('!Solicitud generada de forma exitosa!');
+          this.presentToast('!Solicitud generada de forma exitosa!', 2500);
+          // url pendiente de revisar
+          this.router.navigate([`/solicitudes`], { replaceUrl: true });
+          this.dismissLoading();
+          });
+        }
+      }else{
+        console.log('Escoja un tiempo de paseo', this.tiempoPaseo);
+        this.presentToast('¡Escoja un tiempo de paseo!', 2500);
       }
-    }else{
-      console.log('Escoja un tiempo de paseo', this.tiempoPaseo);
-      this.presentToast('¡Escoja un tiempo de paseo!', 2500);
-    }
   }
+
+  async dismissLoading() {
+    await this.loading.dismiss();
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: 'Generando Solicitud...',
+    });
+    await this.loading.present();
+  }
+
   cancelarSolicitud(){
     console.log('cancelarSolicitud()');
     this.numMascotaPaseo =0; 
