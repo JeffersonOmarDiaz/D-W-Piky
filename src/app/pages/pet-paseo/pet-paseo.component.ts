@@ -63,6 +63,7 @@ export class PetPaseoComponent implements OnInit {
   valorPagoRef= 0;
   valorIngresadoDuenio: number;
   //FIN Para capturar los datos de notificación de mascota
+  direccionSolicitud = '';
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
@@ -110,6 +111,7 @@ export class PetPaseoComponent implements OnInit {
       this.cliente = res;
       this.clienteMascota = res.mascotas;
       console.log('La informacion del cliente es: ', this.cliente);
+      this.direccionSolicitud = this.cliente.ubicacion.direccion;
       console.log('La informacion de las mascotas cliente es: ', this.clienteMascota.sort(((unaMascota, otraMascota) => unaMascota.nombre.localeCompare( otraMascota.nombre))) );
     });
     return;

@@ -32,3 +32,28 @@ export interface Cliente{
 } 
 
 export type RolesExistentes = 'duenio' | 'paseador';
+
+//Solicitud que genera el el dueño 
+export interface Solicitud {
+    id: string;
+    fecha: any;
+    duenio: Cliente;
+    mascotasPaseo: Mascota[];
+    tiempo: number;
+    valor: number;
+    observación: string;
+    estado : EstadosSolicitud;
+    // valoracion: number;
+    // comentario: string;
+}
+
+export type EstadosSolicitud = 'nueva' | 'cancelada' | 'culminada'
+
+//calificación 
+export interface Calificacion {
+    id: string;
+    fecha: any;
+    usuarioComenta: Cliente;
+    comentario: string;
+    valoracion: number;
+}

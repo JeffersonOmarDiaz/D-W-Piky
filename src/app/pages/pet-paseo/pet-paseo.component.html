@@ -12,7 +12,6 @@
               <img src={{mascota.foto}} class="imgRedonda" onerror="this.src='../../../assets/images/icons/perfil-dog.png'">
               <ion-label class="itemMascota">{{mascota.nombre}}</ion-label>
               <ion-checkbox slot="end" (click)="estado($event, mascota)"></ion-checkbox>
-              <!-- <ion-checkbox slot="end" [(ngModel)]="entry.isChecked"></ion-checkbox> -->
             </ion-item>
           </ion-card>
           </ion-list>
@@ -29,6 +28,23 @@
       <ion-card>
       <ion-row *ngIf="llenarSolicitudPaseo">
           <ion-col >
+
+            <ion-item>
+              <ion-grid>
+                <ion-row class="ion-text-wrap" style="text-align: center;">
+                  <ion-col size="1">
+                    <ion-icon name="location-sharp" color="danger"></ion-icon>
+                  </ion-col>
+                  <ion-col>
+                    <ion-label>
+                    <h5>Mi Ubicación:</h5> 
+                    </ion-label>
+                      {{direccionSolicitud}}
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-item>
+
             <ion-item>
               <ion-icon name="walk-outline"></ion-icon>
               <h5>Pasear a: {{numMascotaPaseo}} mascotas</h5>
