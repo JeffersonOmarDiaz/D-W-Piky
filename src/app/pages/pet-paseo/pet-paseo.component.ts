@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { Cliente, Mascota } from 'src/app/modelBD';
+import { Cliente, Mascota, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 
@@ -59,11 +59,13 @@ export class PetPaseoComponent implements OnInit {
   mascotasNotificacionTemp : Mascota []=[];
   tarifaMinima = 2;
   tiempoPaseo : number;
-  observacionesPaseo: string;
+  observacionesPaseo: '';
   valorPagoRef= 0;
   valorIngresadoDuenio: number;
   //FIN Para capturar los datos de notificación de mascota
   direccionSolicitud = '';
+
+  solicitud: Solicitud; 
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
@@ -84,15 +86,15 @@ export class PetPaseoComponent implements OnInit {
             this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
               this.cliente = res;
               console.log('El rol actual es: ',res.role);
-              if(res.role === 'paseador'){
-                this.rolDuenio = false;
-                this.router.navigate([`/home-paseador`], { replaceUrl: true });
-                return true;
-              }else{
+              // if(res.role === 'paseador'){
+              //   this.rolDuenio = false;
+              //   this.router.navigate([`/home-paseador`], { replaceUrl: true });
+              //   return true;
+              // }else{
                 this.rolDuenio = true;
                 this.getUserInfo(this.uid);
-                return false;
-              }
+              //   return false;
+              // }
             });
         return;
       }
@@ -103,7 +105,6 @@ export class PetPaseoComponent implements OnInit {
   getUserInfo(uid :string){
     if(uid !== undefined){
       console.log('el id de que llega al getUSerInfo es: ',uid);
-      //return;
     }
     console.log('Suscrito a  la info');
     const path = "Cliente-dw";
@@ -157,6 +158,7 @@ export class PetPaseoComponent implements OnInit {
     }else{
       console.log('Generando solicitud de paseo...');
       this.llenarSolicitudPaseo = true;
+      this.initSolicitud();
     }
    // this.llenarSolicitudPaseo = false;
   }
@@ -176,7 +178,7 @@ export class PetPaseoComponent implements OnInit {
     console.log('calcularPagoRef()  ==>', this.valorPagoRef);
   }
 
-  generarSolicitudBD(){
+  async generarSolicitudBD(){
     if(this.tiempoPaseo != 0 && this.tiempoPaseo != undefined){
       console.log('PAgo del cliente ==> ', this.valorIngresadoDuenio);
       console.log('Observa  =>> ', this.observacionesPaseo);
@@ -187,6 +189,37 @@ export class PetPaseoComponent implements OnInit {
         this.presentToast('¡El valor a cancelar debe ser igual o superior al referencial!', 2500);
       }else{
         console.log('SE va ha generar una nueva solicitud');
+        //this.solicitud.duenio = this.cliente; //ok individual
+        this.solicitud.duenio = Object.assign({}, this.cliente);
+        // this.solicitud.mascotasPaseo = this.clientNotifiTemp.mascotas;
+        this.solicitud.mascotasPaseo = Object.assign({}, this.clientNotifiTemp.mascotas); //funciona en esta forma
+        this.solicitud.tiempo = Number(this.tiempoPaseo);
+        //this.solicitud.tiempo = Object.assign({},Number(this.tiempoPaseo));
+        this.solicitud.valor = this.valorIngresadoDuenio;
+        //this.solicitud.valor = Object.assign({}, this.valorIngresadoDuenio);
+        this.solicitud.observacion = '';
+        //this.solicitud.observacion = Object.assign({}, this.observacionesPaseo);
+        this.solicitud.direccion = this.cliente.ubicacion.direccion;
+        //this.solicitud.direccion = Object.assign({}, this.cliente.ubicacion.direccion);
+        this.solicitud.id = this.firestoreService.getId();
+        //this.solicitud.id = Object.assign({}, this.firestoreService.getId());
+        const idSolicitud = this.solicitud.id;
+        // console.log('solID: ', this.solicitud.id);
+        // console.log('ID: ', idSolicitud);
+
+        console.log(this.solicitud.duenio);
+        console.log(this.solicitud.mascotasPaseo);
+        console.log(this.solicitud.tiempo);
+        console.log(this.solicitud.valor);
+        console.log(this.solicitud.observacion);
+        console.log(this.solicitud.direccion);
+        
+
+        const path = 'Cliente-dw/' + this.uid + '/solicitudes/';
+        console.log(' solicitar() ->', this.solicitud, path, idSolicitud);
+        await this.firestoreService.createDoc(this.solicitud, path, idSolicitud).then ( ()=>{
+          console.log('Solicitud exitosa');
+        });
       }
     }else{
       console.log('Escoja un tiempo de paseo', this.tiempoPaseo);
@@ -203,6 +236,23 @@ export class PetPaseoComponent implements OnInit {
     this.mostrarDialogo = false;
     this.llenarSolicitudPaseo = false;
     this.valorIngresadoDuenio =0;
+  }
+
+  async initSolicitud(){
+    console.log('initSolicitud()');
+    this.solicitud = {
+      id: '',
+      fecha: new Date,
+      duenio: this.cliente,
+      mascotasPaseo: this.clientNotifiTemp.mascotas,
+      tiempo: null,
+      valor: null,
+      observacion: '',
+      direccion: '',
+      // ubicacion: null,
+      estado : 'nueva',
+    }
+
   }
   
 }

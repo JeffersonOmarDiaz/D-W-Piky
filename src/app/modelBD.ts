@@ -41,7 +41,13 @@ export interface Solicitud {
     mascotasPaseo: Mascota[];
     tiempo: number;
     valor: number;
-    observación: string;
+    observacion: string;
+    direccion: string;
+    // ubicacion: {
+    //     lat: number;
+    //     lng: number;
+    //     direccion: string;
+    // };
     estado : EstadosSolicitud;
     // valoracion: number;
     // comentario: string;
