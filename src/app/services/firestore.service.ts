@@ -40,7 +40,7 @@ export class FirestoreService {
   //get collection ayuda a traer toda la colecion y no solo documentos 
   getCollection<tipo>(path: string){
     const collection = this.database.collection<tipo>(path); // se define un tipo para set-mascota
-    return collection.valueChanges(); //value changues nos ayuda a estar penientes de los cambios realizados en
+    return collection.valueChanges(); //value changes nos ayuda a estar pendientes de los cambios realizados en
     //la bd en tiempo real
   }
 
@@ -84,4 +84,27 @@ export class FirestoreService {
   }
   /* funcion para retroceso con link */
 
+// traer toda la coleccíon mediante consultas 
+getCollectionAll<tipo>(path: string, parametro:string, condicion:any, busqueda:string, startAt: any){
+  if(startAt == null ){
+    startAt = new Date();
+  }
+  //si deseo traer las coleciones de solicites de en diferentes ubicaciones seria collectionGroup
+  const collection = this.database.collection<tipo>(path, 
+    ref => ref.where(parametro, condicion, busqueda )
+              .orderBy('fecha', 'desc')
+              .limit(2)
+              .startAfter(startAt)
+              //.startAt(startAt) 
+    ); 
+  return collection.valueChanges();  
+}
+// traer toda la coleccíon mediante consultas 
+
+/* getCollectionQuery<tipo>(path: string, parametro:string, condicion:any, busqueda:string){
+  const collection = this.database.collection<tipo>(path, 
+    //ref => ref.where('estado', '==', 'enviado' )); 
+    ref => ref.where(parametro, condicion, busqueda )); 
+  return collection.valueChanges();  
+} */
 }

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Cliente } from 'src/app/modelBD';
+import { Cliente, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 
@@ -32,6 +32,13 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     role: 'duenio'
   };
   rolDuenio: boolean;
+  
+  suscriberSolicitud: Subscription;
+  suscriberSolicitudCulminada: Subscription;
+  solicitudes: Solicitud []=[];
+  solicitudesCulmida: Solicitud []=[];
+  nuevos = true;
+
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router ) { }
@@ -48,10 +55,17 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     if(this.suscribreUserInfo){
       this.suscribreUserInfo.unsubscribe();
     }
+    if(this.suscriberSolicitud){
+      this.suscriberSolicitud.unsubscribe();
+    }
+    if(this.suscriberSolicitudCulminada){
+      this.suscriberSolicitudCulminada.unsubscribe();
+    }
+    
   }
 
-  tipoRol(){
-    this.suscribreUserInfo=this.firebaseauthS.stateAuth().subscribe(res => { 
+ tipoRol(){
+    this.suscribreUserInfo= this.firebaseauthS.stateAuth().subscribe(res => { 
       console.log(res);
       if (res !== null) {
         this.uid = res.uid;
@@ -66,6 +80,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
                 this.router.navigate([`/home-paseador`], { replaceUrl: true });
                 return true;
               }else{
+                this.getSolicitudNuevaPaseo();
                 this.rolDuenio = true;
                 return false;
               }
@@ -79,11 +94,55 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     console.log(' changeSegment()', ev.detail.value);
     const opc = ev.detail.value;
     if(opc === 'nuevos'){
+      this.getSolicitudNuevaPaseo();
+      this.nuevos=true;
       console.log('nueva');
     }
     if(opc === 'culminados'){
-      //this.getPedidosCulminados();
+      this.getSolicitudesCulminadaPaseo();
+      this.nuevos=false;
       console.log('culminados');
     }
+  }
+
+  async getSolicitudNuevaPaseo(){
+    console.log(' getPedidosNuevos()');
+    const path = 'Cliente-dw/' + this.uid + '/solicitudes';
+    console.log(' path() =>> ', path);
+    let startAt = null;
+    if(this.solicitudes.length){
+      //Para que tome la última fecha 
+      startAt = this.solicitudes[this.solicitudes.length -1].fecha;
+    }
+    this.suscriberSolicitud = this.firestoreService.getCollectionAll<Solicitud>(path, 'estado', '==', 'nueva', startAt).subscribe(res =>{
+      console.log("Ingresa a las solicitudes", res);
+      if(res.length){
+        res.forEach( solicitud =>{ 
+          this.solicitudes.push(solicitud);
+        });
+      }
+      console.log(this.solicitudes);
+    });
+  }
+
+  async getSolicitudesCulminadaPaseo(){
+    console.log(' getPedidosNuevos()');
+    const path = 'Cliente-dw/' + this.uid + '/solicitudes';
+    console.log(' path() =>> ', path);
+    let startAt = null;
+    if(this.solicitudesCulmida.length){
+      //Para que tome la última fecha 
+      startAt = this.solicitudesCulmida[this.solicitudesCulmida.length -1].fecha;
+    }
+    this.suscriberSolicitudCulminada = this.firestoreService.getCollectionAll<Solicitud>(path, 'estado', '==', 'culminada', startAt).subscribe(res =>{
+      console.log("Ingresa a las solicitudes", res);
+      if(res.length){
+        res.forEach( solicitud =>{ 
+          this.solicitudesCulmida.push(solicitud);
+        });
+        //this.solicitudes = res;
+      }
+      console.log(this.solicitudesCulmida);
+    });
   }
 }

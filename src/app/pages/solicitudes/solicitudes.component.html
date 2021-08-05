@@ -14,13 +14,29 @@
     </ion-segment>
   </div>
 
-  <!-- <ion-card >
-    <ion-item>
-      <ion-label class="normal">
-        Estado:
-        <p>Fecha: 
-      </ion-label>
-    </ion-item>
-    
-  </ion-card> -->
+  <div *ngIf="nuevos">
+    <ion-card >
+      <ion-item *ngFor="let solicitud of solicitudes">
+        <ion-label class="normal">
+          Fecha: {{solicitud.fecha.seconds*1000 | date:'short'}}
+          <p>Mascotas: {{solicitud.mascotasPaseo}}</p>
+          <p>Tiempo: {{solicitud.tiempo}} horas  Pago$ {{solicitud.valor}} </p>
+        </ion-label>
+      </ion-item>
+    </ion-card>
+  </div>
+
+  <div *ngIf="!nuevos">
+    <ion-card >
+      <ion-item *ngFor="let solicitud of solicitudesCulmida">
+        <ion-label class="normal">
+          Fecha: {{solicitud.fecha.seconds*1000 | date:'short'}}
+          <p>Mascotas: {{solicitud.mascotasPaseo}}</p>
+          <p>Tiempo: {{solicitud.tiempo}} horas  Pago$ {{solicitud.valor}} </p>
+        </ion-label>
+      </ion-item>
+      
+    </ion-card>
+  </div>
+
 </ion-content>
