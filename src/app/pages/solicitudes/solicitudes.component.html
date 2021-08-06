@@ -18,8 +18,9 @@
     <ion-card >
       <ion-item *ngFor="let solicitud of solicitudes">
         <ion-label class="normal">
-          Fecha: {{solicitud.fecha.seconds*1000 | date:'short'}}
-          <p>Mascotas: {{solicitud.mascotasPaseo}}</p>
+          <p>Fecha: {{solicitud.fecha.seconds*1000 | date}}</p>
+          Hora: {{solicitud.fecha.seconds*1000 | date:'shortTime'}}
+          <p>Mascotas: {{solicitud.numMascotas}}</p>
           <p>Tiempo: {{solicitud.tiempo}} horas  Pago$ {{solicitud.valor}} </p>
         </ion-label>
       </ion-item>

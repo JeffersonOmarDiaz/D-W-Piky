@@ -29,8 +29,8 @@ export class Home2Component implements OnInit, OnDestroy {
   constructor(public firestoreService: FirestoreService,
               public firebaseauthService: FirebaseauthService,
               private router: Router) {
-    this.firestoreService.setLink(this.pathRetorno);
-    
+              this.firestoreService.setLink(this.pathRetorno);
+              this.getSolicitudNuevaPaseo();
    }
  
   ngOnInit() {
@@ -70,7 +70,7 @@ export class Home2Component implements OnInit, OnDestroy {
             return false;
           } else {
             this.rolPaseador = true;
-            this.getSolicitudNuevaPaseo();
+            // this.getSolicitudNuevaPaseo();
             return false;
           }
         });
@@ -91,7 +91,7 @@ export class Home2Component implements OnInit, OnDestroy {
     }
     this.suscriberSolicitud = this.firestoreService.getCollectionAllPlace<Solicitud>(path, 'estado', '==', 'nueva', startAt).subscribe(res =>{
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
-      //this.solicitudes = [];
+      this.solicitudes = [];
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
       console.log("Ingresa a las solicitudes", res);
       if(res.length){
