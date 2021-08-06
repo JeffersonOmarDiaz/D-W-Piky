@@ -39,6 +39,7 @@ export interface Solicitud {
     fecha: any;
     duenio: Cliente;
     mascotasPaseo: Mascota[];
+    numMascotas: number;
     tiempo: number;
     valor: number;
     observacion: string;

@@ -47,13 +47,13 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     this.tipoRol();
   }
 
-  ngOnDestroy(){
+  async ngOnDestroy(){
     console.log('ngOnDestroy() ==>> Solicitudes');
     if(this.suscribreUserInfo){
       this.suscribreUserInfo.unsubscribe();
     }
-    if(this.suscribreUserInfo){
-      this.suscribreUserInfo.unsubscribe();
+    if(this.suscribreUserInfoRol){
+      this.suscribreUserInfoRol.unsubscribe();
     }
     if(this.suscriberSolicitud){
       this.suscriberSolicitud.unsubscribe();
@@ -80,8 +80,8 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
                 this.router.navigate([`/home-paseador`], { replaceUrl: true });
                 return true;
               }else{
-                this.getSolicitudNuevaPaseo();
                 this.rolDuenio = true;
+                this.getSolicitudNuevaPaseo();
                 return false;
               }
             });
@@ -94,12 +94,22 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     console.log(' changeSegment()', ev.detail.value);
     const opc = ev.detail.value;
     if(opc === 'nuevos'){
-      this.getSolicitudNuevaPaseo();
+      //this.getSolicitudNuevaPaseo();
+      //this.navCtrl.setRoot(this.navCtrl.getActive().component);
+      if(this.suscriberSolicitudCulminada){
+        console.log('Estaba suscrito a Culminados');
+        this.suscriberSolicitudCulminada.unsubscribe();
+        this.getSolicitudesCulminadaPaseo();
+      }
       this.nuevos=true;
       console.log('nueva');
     }
     if(opc === 'culminados'){
       this.getSolicitudesCulminadaPaseo();
+      if(this.suscriberSolicitud){
+        console.log('Estaba suscrito a Nuevos');
+        this.suscriberSolicitud.unsubscribe();
+      }
       this.nuevos=false;
       console.log('culminados');
     }
@@ -115,6 +125,9 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       startAt = this.solicitudes[this.solicitudes.length -1].fecha;
     }
     this.suscriberSolicitud = this.firestoreService.getCollectionAll<Solicitud>(path, 'estado', '==', 'nueva', startAt).subscribe(res =>{
+      //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere vargar más
+      this.solicitudes = [];
+      //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere vargar más
       console.log("Ingresa a las solicitudes", res);
       if(res.length){
         res.forEach( solicitud =>{ 
@@ -123,6 +136,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       }
       console.log(this.solicitudes);
     });
+    startAt = null;
   }
 
   async getSolicitudesCulminadaPaseo(){
@@ -135,7 +149,10 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       startAt = this.solicitudesCulmida[this.solicitudesCulmida.length -1].fecha;
     }
     this.suscriberSolicitudCulminada = this.firestoreService.getCollectionAll<Solicitud>(path, 'estado', '==', 'culminada', startAt).subscribe(res =>{
-      console.log("Ingresa a las solicitudes", res);
+      //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere vargar más
+      //this.solicitudesCulmida = [];
+      //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere vargar más
+      console.log("Solicitudes Culminadas", res);
       if(res.length){
         res.forEach( solicitud =>{ 
           this.solicitudesCulmida.push(solicitud);

@@ -143,6 +143,7 @@ export class PetPaseoComponent implements OnInit {
     }
     this.cliente.mascotas = this.clientNotifiTemp.mascotas;
     console.log('Información del cliente solicitud ==> ', this.cliente);
+    console.log('La información que esta cargando es: ', this.cliente.ubicacion.direccion);
     //console.log('La información para la notificación es: ',this.clientNotifi);
     if(this.clientNotifiTemp.mascotas.length === 0){
       this.mostrarDialogo = false;
@@ -191,6 +192,8 @@ export class PetPaseoComponent implements OnInit {
       }else{
        await this.presentLoading();
         console.log('SE va ha generar una nueva solicitud');
+        this.solicitud.numMascotas = this.numMascotaPaseo;
+        console.log('número de mascotas a pasear: ', this.solicitud.numMascotas);
         //this.solicitud.duenio = this.cliente; //ok individual
         this.solicitud.duenio = Object.assign({}, this.cliente);
         // this.solicitud.mascotasPaseo = this.clientNotifiTemp.mascotas;
@@ -201,7 +204,7 @@ export class PetPaseoComponent implements OnInit {
         //this.solicitud.valor = Object.assign({}, this.valorIngresadoDuenio);
         
         //this.solicitud.observacion = Object.assign({}, this.observacionesPaseo);
-        this.solicitud.direccion = this.cliente.ubicacion.direccion;
+        //this.solicitud.direccion = this.cliente.ubicacion.direccion;
         //this.solicitud.direccion = Object.assign({}, this.cliente.ubicacion.direccion);
         this.solicitud.id = this.firestoreService.getId();
         //this.solicitud.id = Object.assign({}, this.firestoreService.getId());
@@ -254,6 +257,7 @@ export class PetPaseoComponent implements OnInit {
       fecha: new Date,
       duenio: this.cliente,
       mascotasPaseo: this.clientNotifiTemp.mascotas,
+      numMascotas: null,
       tiempo: null,
       valor: null,
       observacion: '',

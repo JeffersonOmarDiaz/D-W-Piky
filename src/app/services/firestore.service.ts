@@ -99,6 +99,22 @@ getCollectionAll<tipo>(path: string, parametro:string, condicion:any, busqueda:s
     ); 
   return collection.valueChanges();  
 }
+
+//las colecciones pueden estar alojadas en diferentes subcoleciones
+getCollectionAllPlace<tipo>(path: string, parametro:string, condicion:any, busqueda:string, startAt: any){
+  if(startAt == null ){
+    startAt = new Date();
+  }
+  const collection = this.database.collectionGroup<tipo>(path, 
+    ref => ref.where(parametro, condicion, busqueda )
+              .orderBy('fecha', 'desc')
+              .limit(10)
+              .startAfter(startAt)
+              //.startAt(startAt) 
+    ); 
+  return collection.valueChanges();  
+}
+
 // traer toda la coleccíon mediante consultas 
 
 /* getCollectionQuery<tipo>(path: string, parametro:string, condicion:any, busqueda:string){

@@ -84,23 +84,22 @@
     <ion-content>
       <!-- <ion-menu-toggle autoHide=false></ion-menu-toggle> -->
       <ion-list>
-        <!-- <ion-item button=true detail=true href="/perfil-mascota">
-          <ion-label class="normal"> Mis Mascotas</ion-label>
-          <ion-icon slot="start" name="paw-outline"></ion-icon>
-        </ion-item> -->
+        <ion-item button=true detail=true routerLink="/home-paseador" routerDirection="root">
+          <ion-label class="normal"> Solicitudes</ion-label>
+          <ion-icon slot="start" name="send"></ion-icon>
+        </ion-item>
+        <ion-item button=true detail=true routerLink="/home-paseador" routerDirection="root">
+          <ion-label class="normal"> Historial</ion-label>
+          <ion-icon slot="start" name="folder-open"></ion-icon>
+        </ion-item>
         <ion-item button=true detail=true routerLink="/perfil-persona" routerDirection="root">
           <ion-label class="normal"> Mi Perfil</ion-label>
           <ion-icon slot="start" name="person-circle-outline"></ion-icon>
         </ion-item>
-        <ion-item button=true detail=true routerLink="/home-paseador" routerDirection="root">
-          <ion-label class="normal"> Solicitudes</ion-label>
-          <ion-icon slot="start" name="stopwatch-outline"></ion-icon>
+        <ion-item button=true detail=true>
+          <ion-label class="normal"> Valoración</ion-label>
+          <ion-icon slot="start" name="podium"></ion-icon>
         </ion-item>
-        <!-- <ion-item button=true detail=true href="/set-mascotas">
-          <ion-label class="normal"> Sacar a Pasear</ion-label>
-          <ion-icon slot="start" name="walk-outline"></ion-icon>
-        </ion-item> -->
-        <ion-item>Menu Item</ion-item>
         <ion-item>Menu Item</ion-item>
       </ion-list>
     </ion-content>
