@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, LoadingController, MenuController } from '@ionic/angular';
+import { AlertController, LoadingController, MenuController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Cliente } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
@@ -41,8 +41,9 @@ export class MenuComponent implements OnInit, OnDestroy {
               public  firestoreService: FirestoreService,
               public loadingController: LoadingController,
               public alertController:AlertController,
-              private router: Router,) { 
-                this.firebaseAuthS.stateAuth().subscribe( res => {
+              private router: Router,
+              public toastController: ToastController) { 
+                this.suscribreUserInfo = this.firebaseAuthS.stateAuth().subscribe( res => {
                   console.log('estado de autenticacion es: ',res);
                   if (res !== null){
                     this.uid = res.uid;
@@ -57,6 +58,9 @@ export class MenuComponent implements OnInit, OnDestroy {
     console.log('menú =>> ngOnDestroy');
     if (this.suscribreUserState) {
       this.suscribreUserState.unsubscribe();
+    }
+    if (this.suscribreUserInfo) {
+      this.suscribreUserInfo.unsubscribe();
     }
   }
 
@@ -94,12 +98,15 @@ export class MenuComponent implements OnInit, OnDestroy {
               if(this.cliente.role === 'duenio'){
                 this.menuController.close('principal');
                 this.router.navigate([`/home`], { replaceUrl: true });
+                this.presentToast('Ahora usted es dueño', 2000);
               }else if(this.cliente.role === 'paseador'){
                 this.menuController.close('principal');
                 this.router.navigate([`/home-paseador`], { replaceUrl: true });
+                this.presentToast('Ahora usted es paseador', 2000);
               }
             }).catch(error => {
               console.log('No se pudo Actulizar el cliente un error ->', error);
+              this.presentToast('No se pudo cambiar de rol', 2000);
             });
             return;
           }
@@ -109,6 +116,13 @@ export class MenuComponent implements OnInit, OnDestroy {
     await alert.present();
   }
 
+  async presentToast(mensaje: string, tiempo: number) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: tiempo 
+    });
+    toast.present();
+  }
 
   async presentLoading() {
     this.loading = await this.loadingController.create({

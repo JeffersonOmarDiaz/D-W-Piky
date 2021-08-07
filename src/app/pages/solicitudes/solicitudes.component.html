@@ -2,8 +2,8 @@
 
 
 <ion-content *ngIf="rolDuenio">
-  <div class="m-3">
-
+  <!-- creada con el objetivo de mostrar en dos seciones nuevos es historial  -->
+  <!-- <div class="m-3">
     <ion-segment mode="ios" (ionChange)="changeSegment($event)" value="nuevos">
       <ion-segment-button value="nuevos">
         <ion-label class="normal">Nuevos</ion-label>
@@ -38,6 +38,46 @@
       </ion-item>
       
     </ion-card>
+  </div> -->
+
+  <div>
+  
+    <ion-item *ngFor="let solicitud of solicitudes">
+      <ion-label class="normal">
+        Hora: {{solicitud.fecha.seconds*1000 | date:'shortTime'}}
+        <p>Fecha: {{solicitud.fecha.seconds*1000 | date}}</p>
+        <p>Mascotas: {{solicitud.numMascotas}}</p>
+        <p>Tiempo: {{solicitud.tiempo}} horas Pago$ {{solicitud.valor}} </p>
+      </ion-label>
+    </ion-item>
+  
+    <ion-grid>
+      <!-- <ion-card> -->
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="7">
+          <ion-button expand="block" shape="round" (click)="cancelarSolicitud()">Cancelar Solicitud</ion-button>
+        </ion-col>
+      </ion-row>
+      <!-- </ion-card> -->
+    </ion-grid>
   </div>
 
+  <div>
+    <ion-card>
+      <ion-card-header>
+        <!-- <ion-card-subtitle>Card Subtitle</ion-card-subtitle> -->
+        <ion-card-title style="text-align: center;">Paseadores Interesados</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <!-- <ion-item *ngFor="let solicitud of solicitudes">
+          <ion-label class="normal">
+            Hora: {{solicitud.fecha.seconds*1000 | date:'shortTime'}}
+            <p>Fecha: {{solicitud.fecha.seconds*1000 | date}}</p>
+            <p>Mascotas: {{solicitud.numMascotas}}</p>
+            <p>Tiempo: {{solicitud.tiempo}} horas  Pago$ {{solicitud.valor}} </p>
+          </ion-label>
+        </ion-item> -->
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

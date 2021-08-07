@@ -85,7 +85,7 @@ export class FirestoreService {
   /* funcion para retroceso con link */
 
 // traer toda la coleccíon mediante consultas 
-getCollectionAll<tipo>(path: string, parametro:string, condicion:any, busqueda:string, startAt: any){
+getCollectionAll<tipo>(path: string, parametro:string, condicion:any, busqueda:string, startAt: any, limite: number){
   if(startAt == null ){
     startAt = new Date();
   }
@@ -93,14 +93,14 @@ getCollectionAll<tipo>(path: string, parametro:string, condicion:any, busqueda:s
   const collection = this.database.collection<tipo>(path, 
     ref => ref.where(parametro, condicion, busqueda )
               .orderBy('fecha', 'desc')
-              .limit(2)
+              .limit(limite)
               .startAfter(startAt)
               //.startAt(startAt) 
     ); 
   return collection.valueChanges();  
 }
 
-//las colecciones pueden estar alojadas en diferentes subcoleciones
+//las colecciones pueden estar alojadas en diferentes lugares
 getCollectionAllPlace<tipo>(path: string, parametro:string, condicion:any, busqueda:string, startAt: any){
   if(startAt == null ){
     startAt = new Date();

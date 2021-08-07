@@ -204,7 +204,7 @@ export class PetPaseoComponent implements OnInit {
         //this.solicitud.valor = Object.assign({}, this.valorIngresadoDuenio);
         
         //this.solicitud.observacion = Object.assign({}, this.observacionesPaseo);
-        //this.solicitud.direccion = this.cliente.ubicacion.direccion;
+        this.solicitud.direccion = this.cliente.ubicacion.direccion;
         //this.solicitud.direccion = Object.assign({}, this.cliente.ubicacion.direccion);
         this.solicitud.id = this.firestoreService.getId();
         //this.solicitud.id = Object.assign({}, this.firestoreService.getId());

@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertController, MenuController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Cliente, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
@@ -39,9 +40,15 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
   solicitudesCulmida: Solicitud []=[];
   nuevos = true;
 
+  idSolicitud = ''; 
+  solicitudCancelar: Solicitud;
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
-              private router: Router ) { }
+              private router: Router,
+              public menuController:MenuController, 
+              public alertController:AlertController,
+              public toastController: ToastController) {
+               }
 
   ngOnInit() {
     this.tipoRol();
@@ -81,6 +88,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
                 return true;
               }else{
                 this.rolDuenio = true;
+                this.uid = res.uid;
                 this.getSolicitudNuevaPaseo();
                 return false;
               }
@@ -90,7 +98,9 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     });
     return false;
   }
-  changeSegment(ev: any){
+
+  // Comentado para la idea de segmentación el historial 
+  /* changeSegment(ev: any){
     console.log(' changeSegment()', ev.detail.value);
     const opc = ev.detail.value;
     if(opc === 'nuevos'){
@@ -113,7 +123,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       this.nuevos=false;
       console.log('culminados');
     }
-  }
+  } */
 
   async getSolicitudNuevaPaseo(){
     console.log(' getPedidosNuevos()');
@@ -124,7 +134,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       //Para que tome la última fecha 
       startAt = this.solicitudes[this.solicitudes.length -1].fecha;
     }
-    this.suscriberSolicitud = this.firestoreService.getCollectionAll<Solicitud>(path, 'estado', '==', 'nueva', startAt).subscribe(res =>{
+    this.suscriberSolicitud = this.firestoreService.getCollectionAll<Solicitud>(path, 'estado', '==', 'nueva', startAt, 1).subscribe(res =>{
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere vargar más
       this.solicitudes = [];
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere vargar más
@@ -132,14 +142,69 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       if(res.length){
         res.forEach( solicitud =>{ 
           this.solicitudes.push(solicitud);
+          this.idSolicitud =  this.solicitudes[0].id;
+          this.solicitudCancelar = this.solicitudes[0];
         });
       }
-      console.log(this.solicitudes);
+      //console.log(this.solicitudes); líneas para test
     });
     startAt = null;
   }
 
-  async getSolicitudesCulminadaPaseo(){
+  async cancelarSolicitud(){
+    console.log('cancelarSolicitud()');
+    const alert = await this.alertController.create({
+      cssClass: 'normal',
+      header: 'Advertencia!',
+      message: 'Seguro que desea <strong>Cancelar la solicitud</strong>!!!',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'normal',
+          handler: (blah) => {
+            console.log('Canceló la solicitud: blah');
+          }
+        }, 
+        {
+          text: 'Ok',
+          role: 'okay',
+          handler: () => {
+            console.log('Canceló la solicitud ==> ', this.idSolicitud);
+            console.log('idSolicitud', this.idSolicitud);
+            console.log('idDueño', this.cliente.uid);
+            const path = 'Cliente-dw/' + this.cliente.uid + '/solicitudes';
+            this.solicitudCancelar.estado = 'cancelada';
+            console.log('Datos de la solicitud modificar ==> ', this.solicitudCancelar);
+             this.modificaEstadoSolicitud(this.solicitudCancelar, path, this.idSolicitud);
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async modificaEstadoSolicitud(data: any, path: string, idSolicitud: string){
+    await this.firestoreService.createDoc(data, path, idSolicitud).then(res => {
+      console.log('Solicitud cancelada con éxito');
+      this.presentToast('', 2000);
+    }).catch(error => {
+      //console.log('No se pudo Actulizar el cliente un error ->', error);
+      console.log('No se pudo cancelar la solicitud');
+      this.presentToast('No se pudo cancelar la solicitud', 2000);
+    });
+    return;
+  }
+
+  async presentToast(mensaje: string, tiempo: number) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: tiempo 
+    });
+    toast.present();
+  }
+
+  /* async getSolicitudesCulminadaPaseo(){
     console.log(' getPedidosNuevos()');
     const path = 'Cliente-dw/' + this.uid + '/solicitudes';
     console.log(' path() =>> ', path);
@@ -148,7 +213,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       //Para que tome la última fecha 
       startAt = this.solicitudesCulmida[this.solicitudesCulmida.length -1].fecha;
     }
-    this.suscriberSolicitudCulminada = this.firestoreService.getCollectionAll<Solicitud>(path, 'estado', '==', 'culminada', startAt).subscribe(res =>{
+    this.suscriberSolicitudCulminada = this.firestoreService.getCollectionAll<Solicitud>(path, 'estado', '==', 'culminada', startAt, 10).subscribe(res =>{
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere vargar más
       //this.solicitudesCulmida = [];
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere vargar más
@@ -161,5 +226,5 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       }
       console.log(this.solicitudesCulmida);
     });
-  }
+  } */
 }

@@ -54,7 +54,7 @@ export interface Solicitud {
     // comentario: string;
 }
 
-export type EstadosSolicitud = 'nueva' | 'cancelada' | 'culminada'
+export type EstadosSolicitud = 'nueva' | 'cancelada' | 'culminada' | 'proceso'
 
 //calificación 
 export interface Calificacion {
