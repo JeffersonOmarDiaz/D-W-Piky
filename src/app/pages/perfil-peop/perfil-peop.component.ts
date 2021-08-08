@@ -70,36 +70,35 @@ export class PerfilPeopComponent implements OnInit {
     }); */
     /* REvisar función para retroceso */
     //Retroceso con link
-    this.pathRetorno = this.firestoreService.getLink();
-    console.log('retorna a: ', this.pathRetorno);
+    /* this.pathRetorno = this.firestoreService.getLink();
+    console.log('retorna a: ', this.pathRetorno); */
     //Retroceso con link
   }
 
   ngOnInit() { }
 
   //Retroceso con link revisar
-  retrocederLink() {
-    console.log('retorna a: ', this.pathRetorno);
-    if (this.pathRetorno === '') {
-      if (this.cliente.role === 'paseador') {
-        console.log('El rol es paseador');
-        this.router.navigate(['/home-paseador']);
-        this.firestoreService.setLink('');
-      } else if(this.cliente.role === 'duenio'){
-        console.log('El rol es dueño');
-        this.router.navigate(['/home']);
-        this.firestoreService.setLink('');
-      }else{
-        this.router.navigate(['/login']);
-
-      }
+  // retrocederLink() {
+  //   console.log('retorna a: ', this.pathRetorno);
+  //   if (this.pathRetorno === '') {
+  //     if (this.cliente.role === 'paseador') {
+  //       console.log('El rol es paseador');
+  //       this.router.navigate(['/home-paseador']);
+  //       this.firestoreService.setLink('');
+  //     } else if(this.cliente.role === 'duenio'){
+  //       console.log('El rol es dueño');
+  //       this.router.navigate(['/home']);
+  //       this.firestoreService.setLink('');
+  //     }else{
+  //       this.router.navigate(['/login']);
+  //     }
       
-    } else {
-      this.router.navigate([this.pathRetorno]);
-      this.firestoreService.setLink('');
-      console.log('Queda en cache: ', this.firestoreService.getLink());
-    }
-  }
+  //   } else {
+  //     this.router.navigate([this.pathRetorno]);
+  //     this.firestoreService.setLink('');
+  //     console.log('Queda en cache: ', this.firestoreService.getLink());
+  //   }
+  // }
   //Retroceso con link
 
   getUserInfo(uid: string) {
@@ -376,5 +375,13 @@ export class PerfilPeopComponent implements OnInit {
       console.log('this.cliente -> ', this.cliente);
     }
 
+  }
+
+  retroceder(){
+    if(this.cliente.role === 'duenio'){
+      this.router.navigate(['/home']);
+    }else if(this.cliente.role === 'paseador'){
+      this.router.navigate(['/home-paseador']);
+    }
   }
 }

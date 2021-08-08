@@ -29,7 +29,7 @@ export class Home2Component implements OnInit, OnDestroy {
   constructor(public firestoreService: FirestoreService,
               public firebaseauthService: FirebaseauthService,
               private router: Router) {
-              this.firestoreService.setLink(this.pathRetorno);
+              //this.firestoreService.setLink(this.pathRetorno);
               this.getSolicitudNuevaPaseo();
    }
  

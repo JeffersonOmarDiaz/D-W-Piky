@@ -2,7 +2,8 @@
 <ion-header style=" text-align:center;">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="retrocederLink()">
+      <!-- <ion-button (click)="retrocederLink()"> -->
+      <ion-button color="primary" (click)="retroceder()">
         <ion-icon name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -127,7 +128,8 @@
       <ion-row class="ion-justify-content-center">
         <ion-col size="5">
           <ion-button style="margin: 20px;" shape="round" expand="full" (click)="validarGuardar()">Guardar</ion-button>
-          <ion-button style="margin: 20px;" shape="round" expand="full" (click)="retrocederLink()">Volver</ion-button>
+          <!-- <ion-button style="margin: 20px;" shape="round" expand="full" (click)="retrocederLink()">Volver</ion-button> -->
+          <ion-button style="margin: 20px;" shape="round" expand="full" (click)="retroceder()">Volver</ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>
