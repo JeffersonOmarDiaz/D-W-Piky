@@ -54,7 +54,7 @@ export interface Solicitud {
     // comentario: string;
 }
 
-export type EstadosSolicitud = 'nueva' | 'cancelada' | 'culminada' | 'proceso'
+export type EstadosSolicitud = 'nueva' | 'cancelada' | 'culminada' | 'proceso' | 'aceptada'
 
 //calificación 
 export interface Calificacion {
@@ -63,4 +63,15 @@ export interface Calificacion {
     usuarioComenta: Cliente;
     comentario: string;
     valoracion: number;
+}
+
+//ofertando
+export interface Ofrecer {
+    id: string;
+    fecha: any;
+    paseador: Cliente;
+    valor: number;
+    estado: EstadosSolicitud;
+    //Estado necesario para aceptar respuesta de confirmación
+    
 }

@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { NuevaOfertaComponent } from 'src/app/componentes/nueva-oferta/nueva-oferta.component';
 import { Cliente, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
@@ -25,16 +27,19 @@ export class Home2Component implements OnInit, OnDestroy {
   solicitudes: Solicitud []=[];
   suscriberSolicitud: Subscription;
   mascotas: 0;
+  infoPaseadorInput: any;
   // variables de solicitudes
   constructor(public firestoreService: FirestoreService,
               public firebaseauthService: FirebaseauthService,
-              private router: Router) {
+              private router: Router,
+              private modalController: ModalController) {
               //this.firestoreService.setLink(this.pathRetorno);
-              this.getSolicitudNuevaPaseo();
+              
    }
  
   ngOnInit() {
     this.tipoRol();
+    this.getSolicitudNuevaPaseo();
   }
  
   ngOnDestroy(){
@@ -50,7 +55,8 @@ export class Home2Component implements OnInit, OnDestroy {
     }
   }
   refrescarPagina(){
-    window.location.assign('/home-paseador');
+    // window.location.assign('/home-paseador');
+    this.router.navigate(['/home'], { replaceUrl: true });
   }
 
 
@@ -64,6 +70,8 @@ export class Home2Component implements OnInit, OnDestroy {
         this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
           this.cliente = res;
           console.log('El rol actual es: ', res.role);
+          this.infoPaseadorInput = res;
+          console.log('Información del paseador: ', this.infoPaseadorInput);
           if (res.role === 'duenio') {
             this.rolPaseador = false;
             this.router.navigate(['/home'], { replaceUrl: true });
@@ -84,12 +92,15 @@ export class Home2Component implements OnInit, OnDestroy {
     console.log(' getSolicitudesNuevas()');
     const path = 'solicitudes'
     console.log(' path() =>> ', path);
-    let startAt = null;
-    if(this.solicitudes.length){
-      //Para que tome la última fecha 
-      startAt = this.solicitudes[this.solicitudes.length -1].fecha;
-    }
-    this.suscriberSolicitud = this.firestoreService.getCollectionAllPlace<Solicitud>(path, 'estado', '==', 'nueva', startAt).subscribe(res =>{
+    let startAt = new Date;
+    // if(this.solicitudes.length){
+    //   //Para que tome la última fecha 
+    //   console.log('Obtiene la nueva fecha');
+    //   startAt = this.solicitudes[this.solicitudes.length -1].fecha;
+    // }
+    startAt.setMinutes(startAt.getMinutes() + 10); //sección para obtener los datos en tiempo real
+    this.suscriberSolicitud = await this.firestoreService.getCollectionAllPlace<Solicitud>(path, 'estado', '==', 'nueva', startAt).subscribe(res =>{
+      console.log('=========> FEcha aparente',startAt);
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
       this.solicitudes = [];
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
@@ -105,4 +116,33 @@ export class Home2Component implements OnInit, OnDestroy {
     //startAt = null;
   }
 
+  async verMascotasPaseo(infoSolicitudInput: any){
+    console.log('verMascotasPaseo() ==> ', infoSolicitudInput);
+
+    const ubicacion = this.cliente.ubicacion;
+    let positionInput = {  //Ubicación del dueño
+      lat: infoSolicitudInput[0].duenio.ubicacion.lat,
+      lng: infoSolicitudInput[0].duenio.ubicacion.lng
+    };
+    console.log(positionInput);
+    // if (ubicacion !== null) {
+    //     positionInput = ubicacion; 
+    // }
+
+    const modalAdd  = await this.modalController.create({
+      component: NuevaOfertaComponent,
+      mode: 'ios',
+      swipeToClose: true,
+      componentProps: {position: positionInput, infoDuenio: infoSolicitudInput[0], infoPaseador: this.infoPaseadorInput} //pasa la ubicación a nuevaoferta
+    });
+    await modalAdd.present();
+
+    // const {data} = await modalAdd.onWillDismiss();
+    // if (data) {
+    //   console.log('data -> ', data);
+    //   this.cliente.ubicacion = data.pos;
+    //   console.log('this.cliente -> ', this.cliente);
+    // }
+
+  }
 }

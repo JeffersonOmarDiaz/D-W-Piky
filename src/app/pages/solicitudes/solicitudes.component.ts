@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, MenuController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { Cliente, Solicitud } from 'src/app/modelBD';
+import { Cliente, Ofrecer, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 
@@ -37,8 +37,9 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
   suscriberSolicitud: Subscription;
   suscriberSolicitudCulminada: Subscription;
   solicitudes: Solicitud []=[];
-  solicitudesCulmida: Solicitud []=[];
-  nuevos = true;
+  ofertas: Ofrecer []=[];
+  idOferta = '';
+  btnCancelarVisible = false;
 
   idSolicitud = ''; 
   solicitudCancelar: Solicitud;
@@ -53,7 +54,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.tipoRol();
   }
-
+ 
   async ngOnDestroy(){
     console.log('ngOnDestroy() ==>> Solicitudes');
     if(this.suscribreUserInfo){
@@ -140,11 +141,15 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere vargar más
       console.log("Ingresa a las solicitudes", res);
       if(res.length){
+        this.btnCancelarVisible = true;
         res.forEach( solicitud =>{ 
           this.solicitudes.push(solicitud);
           this.idSolicitud =  this.solicitudes[0].id;
           this.solicitudCancelar = this.solicitudes[0];
         });
+        this.getOfertasPaseo();
+      }else{
+        this.btnCancelarVisible = false;
       }
       //console.log(this.solicitudes); líneas para test
     });
@@ -187,7 +192,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
   async modificaEstadoSolicitud(data: any, path: string, idSolicitud: string){
     await this.firestoreService.createDoc(data, path, idSolicitud).then(res => {
       console.log('Solicitud cancelada con éxito');
-      this.presentToast('', 2000);
+      this.presentToast('Solicitud cancelada con éxito', 2000);
     }).catch(error => {
       //console.log('No se pudo Actulizar el cliente un error ->', error);
       console.log('No se pudo cancelar la solicitud');
@@ -227,4 +232,31 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       console.log(this.solicitudesCulmida);
     });
   } */
+
+  async getOfertasPaseo(){
+    console.log('getOfertasPaseo() id de la solicitud ', this.idSolicitud);
+    // console.log(' getPedidosNuevos()');
+    const path = 'Cliente-dw/' + this.uid + '/solicitudes/' + this.idSolicitud + '/ofertas';
+    console.log(' path() =>> ', path);
+    let startAt = null;
+    if(this.ofertas.length){
+      //Para que tome la última fecha 
+      startAt = this.ofertas[this.ofertas.length -1].fecha;
+    }
+    this.suscriberSolicitud = this.firestoreService.getCollectionAll<Ofrecer>(path, 'estado', '==', 'proceso', startAt, 10).subscribe(res =>{
+      //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere vargar más
+      this.ofertas = [];
+      //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere vargar más
+      console.log("Ingresa a las Ofertas de paseadores", res);
+      if(res.length){
+        res.forEach( ofrecer =>{ 
+          this.ofertas.push(ofrecer);
+          this.idOferta =  this.ofertas[0].id;
+          // this.solicitudCancelar = this.ofertas[0];
+        });
+      }
+      //console.log(this.solicitudes); líneas para test
+    });
+    startAt = null;
+  }
 }

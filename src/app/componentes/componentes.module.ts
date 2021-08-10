@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from '../app-routing.module';
 import { FormsModule } from '@angular/forms';
+import { NuevaOfertaComponent } from './nueva-oferta/nueva-oferta.component';
 
 
 
@@ -13,6 +14,7 @@ import { FormsModule } from '@angular/forms';
   declarations: [
     MenuComponent,
     FormularioComponent,
+    NuevaOfertaComponent
   ],
   imports: [
     CommonModule,
@@ -25,6 +27,7 @@ import { FormsModule } from '@angular/forms';
   exports: [
     MenuComponent,
     FormularioComponent,
+    NuevaOfertaComponent
   ],
 })
 export class ComponentesModule { }

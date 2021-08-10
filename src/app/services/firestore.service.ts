@@ -94,7 +94,7 @@ getCollectionAll<tipo>(path: string, parametro:string, condicion:any, busqueda:s
     ref => ref.where(parametro, condicion, busqueda )
               .orderBy('fecha', 'desc')
               .limit(limite)
-              .startAfter(startAt)
+              //.startAfter(startAt)
               //.startAt(startAt) 
     ); 
   return collection.valueChanges();  

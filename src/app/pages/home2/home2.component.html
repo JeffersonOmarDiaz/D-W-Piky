@@ -7,7 +7,7 @@
         <ion-card >
           <ion-item *ngFor="let solicitud of solicitudes">
             <!-- <ion-grid> -->
-              <ion-row>
+              <ion-row (click)="verMascotasPaseo([solicitud])">
 
                 <ion-col size="4">
                   <ion-row>
