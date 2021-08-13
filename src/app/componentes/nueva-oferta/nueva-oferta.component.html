@@ -1,20 +1,22 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="ion-text-wrap">
     <ion-buttons slot="start">
       <ion-button (click)="modalController.dismiss()">
         <ion-icon name="arrow-back" color="dark"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title class="normal ion-text-wrap">
-      Ubicación
+    <ion-title>
+      Información Solicitud
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div #map class="map">
+  <!-- <div #map class="map">
 
-  </div>
+  </div> -->
+  <div id="map"></div>
+  
   <!-- <ion-chip class="aceptar" (click)="aceptar()">
     <ion-label class="normal"> Aceptar</ion-label>
     <ion-icon name="checkmark"></ion-icon>
@@ -25,44 +27,19 @@
     <ion-icon name="locate"></ion-icon>
   </ion-chip> -->
 
-  <ion-card>
-  <ion-grid>
-      <ion-row class="ion-justify-content-center">
-        <ion-col size="6">
-          <ion-button shape="round" class="aceptarValor" (click)="aceptarOferta(infoDuenio.valor)" >Aceptar por$ {{infoDuenio.valor}} </ion-button>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-label>Ofrecer: $ 
-        </ion-label>
-        <!-- </ion-col>
-        <ion-col> -->
-          <ion-button class="ofertarValor" (click)="aceptarOferta(adcional1)">{{adcional1}}</ion-button>
-        <!-- </ion-col>
-        <ion-col> -->
-          <ion-button class="ofertarValor" (click)="aceptarOferta(adcional2)">{{adcional2}}</ion-button>
-        <!-- </ion-col>
-        <ion-col> -->
-          <ion-button class="ofertarValor" (click)="aceptarOferta(adcional3)">{{adcional3}}</ion-button>
-          <!-- <ion-button class="ofertarValor" (click)="aceptarOferta(2)"></ion-button> -->
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-card>
-
   <!-- <div> -->
     <!-- <ion-card> -->
       <ion-grid>
         <ion-row>
           <ion-col size="4">
             <ion-item>
+              <!-- <ion-label class="ion-text-wrap">Solicitante</ion-label> -->
               <img class="image" [src]="infoDuenio.duenio.foto" onerror="this.src='../../../assets/images/icons/nofotoerfil.png'">
             </ion-item>
             <ion-item >
               <ion-label class="ion-text-wrap"><h4 style=" text-align: center"> {{infoDuenio.duenio.nombre}} {{infoDuenio.duenio.apellido}}</h4>
-                <p>celular: {{infoDuenio.duenio.celular}}</p>
-                <p>direccíon: {{infoDuenio.direccion}}</p>
+                <p>Celular: {{infoDuenio.duenio.celular}}</p>
+                <p>Direccíon: {{infoDuenio.direccion}}</p>
                 <p>Referencia: {{infoDuenio.duenio.referncia}}</p>
               </ion-label>
             </ion-item>
@@ -75,6 +52,7 @@
           <ion-col size="8">
             <ion-grid fixed>
               <ion-row class="ion-justify-content-center">
+                <!-- <ion-label class="ion-text-wrap">Mascotas</ion-label> -->
                 <ion-item *ngFor="let mascota of infoDuenio.duenio.mascotas"  >
                       <!-- <ion-col> -->
                       <img src={{mascota.foto}} class="imgMascota" onerror="this.src='../../../assets/images/icons/perfil-dog.png'">
@@ -102,4 +80,37 @@
     <!-- </ion-card> -->
   <!-- </div> -->
 
+  <ion-card>
+    <ion-grid>
+        <ion-row class="ion-justify-content-center">
+          <ion-col size="6">
+            <!-- <ion-button (click)="verInidicaciones(true)" class="aceptarValor" shape="round" *ngIf="!verGuia">
+              Ver como llegar
+            </ion-button>
+            <ion-button (click)="verInidicaciones(false)" class="aceptarValor" shape="round" *ngIf="verGuia">
+              Ocultar indicaciones
+            </ion-button> -->
+            <ion-button shape="round" class="aceptarValor" (click)="aceptarOferta(infoDuenio.valor)" >Aceptar por$ {{infoDuenio.valor}} </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label>Ofrecer: $ 
+          </ion-label>
+          <!-- </ion-col>
+          <ion-col> -->
+            <ion-button class="ofertarValor" (click)="aceptarOferta(adcional1)">{{adcional1}}</ion-button>
+          <!-- </ion-col>
+          <ion-col> -->
+            <ion-button class="ofertarValor" (click)="aceptarOferta(adcional2)">{{adcional2}}</ion-button>
+          <!-- </ion-col>
+          <ion-col> -->
+            <ion-button class="ofertarValor" (click)="aceptarOferta(adcional3)">{{adcional3}}</ion-button>
+            <!-- <ion-button class="ofertarValor" (click)="aceptarOferta(2)"></ion-button> -->
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+<h4 style="text-align: center;">¿Cómo llegar?</h4>
+  <div id="indicators" ></div>
 </ion-content>

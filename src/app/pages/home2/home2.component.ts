@@ -6,7 +6,9 @@ import { NuevaOfertaComponent } from 'src/app/componentes/nueva-oferta/nueva-ofe
 import { Cliente, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
- 
+//para capturar geoloccaclización apenas comience la aplicación
+import { Plugins } from '@capacitor/core';
+const {Geolocation} = Plugins;
 @Component({
   selector: 'app-home2',
   templateUrl: './home2.component.html',
@@ -15,7 +17,7 @@ import { FirestoreService } from 'src/app/services/firestore.service';
 export class Home2Component implements OnInit, OnDestroy {
 
   menuDW = true;
-  private pathRetorno = '/home-paseador'
+  // private pathRetorno = '/home-paseador'
 
   uid = '';
   suscribreUserInfo: Subscription;
@@ -29,6 +31,12 @@ export class Home2Component implements OnInit, OnDestroy {
   mascotas: 0;
   infoPaseadorInput: any;
   // variables de solicitudes
+
+  //obtiene la dirección de la ubicación actual
+  positionInputPaseador = {
+    lat: null,
+    lng: null,
+  };
   constructor(public firestoreService: FirestoreService,
               public firebaseauthService: FirebaseauthService,
               private router: Router,
@@ -40,6 +48,7 @@ export class Home2Component implements OnInit, OnDestroy {
   ngOnInit() {
     this.tipoRol();
     this.getSolicitudNuevaPaseo();
+    this.mylocation();
   }
  
   ngOnDestroy(){
@@ -59,6 +68,23 @@ export class Home2Component implements OnInit, OnDestroy {
     this.router.navigate(['/home'], { replaceUrl: true });
   }
 
+  async mylocation() {
+
+    console.log('mylocation() click')
+    // Se debe ocupar el plugin de capacitor hacer la importacion de plugins
+    Geolocation.getCurrentPosition().then((res) => {
+  
+      console.log('mylocation() -> get ', res);
+  
+      this.positionInputPaseador = {
+        lat: res.coords.latitude,
+        lng: res.coords.longitude
+      }
+      // this.addMarker(position);
+      // this.geocodePosition(this.marker.getPosition());
+    });
+  
+  }
 
   tipoRol() {
     this.suscribreUserInfo = this.firebaseauthService.stateAuth().subscribe(res => {
@@ -133,7 +159,7 @@ export class Home2Component implements OnInit, OnDestroy {
       component: NuevaOfertaComponent,
       mode: 'ios',
       swipeToClose: true,
-      componentProps: {position: positionInput, infoDuenio: infoSolicitudInput[0], infoPaseador: this.infoPaseadorInput} //pasa la ubicación a nuevaoferta
+      componentProps: {position: positionInput, infoDuenio: infoSolicitudInput[0], infoPaseador: this.infoPaseadorInput, positionPaseador: this.positionInputPaseador} //pasa la ubicación a nuevaoferta
     });
     await modalAdd.present();
 
