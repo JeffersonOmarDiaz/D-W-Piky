@@ -52,13 +52,23 @@
     </ion-item>
   
     <ion-grid *ngIf="btnCancelarVisible">
-      <!-- <ion-card> -->
+      <ion-card>
+        <ion-row class="ion-justify-content-center">
+          <ion-col>
+          <!-- <ion-item> -->
+            <ion-label>Aumentar valor a: </ion-label>
+          <!-- </ion-item> -->
+          <ion-button class="aceptarValor" (click)="subirOferta(adcional1)">{{adcional1}}</ion-button>
+          <ion-button class="aceptarValor" (click)="subirOferta(adcional2)">{{adcional2}}</ion-button>
+          <ion-button class="aceptarValor" (click)="subirOferta(adcional3)">{{adcional3}}</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card>
       <ion-row class="ion-justify-content-center">
         <ion-col size="7">
           <ion-button expand="block" shape="round" (click)="cancelarSolicitud()">Cancelar Solicitud</ion-button>
         </ion-col>
       </ion-row>
-      <!-- </ion-card> -->
     </ion-grid>
   </div>
 

@@ -43,6 +43,10 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
 
   idSolicitud = ''; 
   solicitudCancelar: Solicitud;
+  adcional1 = 0;
+  adcional2 = 0;
+  adcional3 = 0;
+  valorInicial = 0;
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
@@ -146,6 +150,11 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
           this.solicitudes.push(solicitud);
           this.idSolicitud =  this.solicitudes[0].id;
           this.solicitudCancelar = this.solicitudes[0];
+          this.valorInicial = this.solicitudes[0].valor;
+          // console.log('VAlor a pagar ==> ', this.solicitudes[0].valor);
+          this.adcional1 = this.valorInicial + 0.5;
+          this.adcional2 = this.valorInicial + 1;
+          this.adcional3 = this.valorInicial + 1.5;
         });
         this.getOfertasPaseo();
       }else{
@@ -154,6 +163,39 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       //console.log(this.solicitudes); líneas para test
     });
     startAt = null;
+  }
+
+  async subirOferta(valor: number){
+    console.log('subirOferta', (valor));
+    const alert = await this.alertController.create({
+      cssClass: 'normal',
+      header: 'Advertencia!',
+      message: 'Desea mejorar<strong> el valor del paseo</strong>!!!',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'normal',
+          handler: (blah) => {
+            console.log('Mejorará la oferta: blah');
+          }
+        }, 
+        {
+          text: 'Ok',
+          role: 'okay',
+          handler: () => {
+            // console.log('Canceló la solicitud ==> ', this.idSolicitud);
+            console.log('idSolicitud', this.idSolicitud);
+            console.log('idDueño', this.cliente.uid);
+            const path = 'Cliente-dw/' + this.cliente.uid + '/solicitudes';
+            this.solicitudCancelar.valor = valor;
+            this.solicitudCancelar.fecha = new Date;
+            this.modificaEstadoSolicitud(this.solicitudCancelar, path, this.idSolicitud);
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   async cancelarSolicitud(){
@@ -191,12 +233,12 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
 
   async modificaEstadoSolicitud(data: any, path: string, idSolicitud: string){
     await this.firestoreService.createDoc(data, path, idSolicitud).then(res => {
-      console.log('Solicitud cancelada con éxito');
-      this.presentToast('Solicitud cancelada con éxito', 2000);
+      console.log('Proceso realizado con éxito');
+      this.presentToast('Proceso realizado con éxito', 2000);
     }).catch(error => {
       //console.log('No se pudo Actulizar el cliente un error ->', error);
       console.log('No se pudo cancelar la solicitud');
-      this.presentToast('No se pudo cancelar la solicitud', 2000);
+      this.presentToast('No se pudo realizar el proceso', 2000);
     });
     return;
   }
