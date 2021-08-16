@@ -1,11 +1,12 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, ElementRef, Inject, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 import { Plugins } from '@capacitor/core';
 
 import { GooglemapsService } from './../../googlemaps/googlemaps.service';
 import { Cliente, Mascota, Ofrecer, Solicitud } from 'src/app/modelBD';
 import { FirestoreService } from 'src/app/services/firestore.service';
+import { Subscription } from 'rxjs';
 const {Geolocation} = Plugins;
 declare var google: any;
 
@@ -22,7 +23,7 @@ interface Marker {
   templateUrl: './nueva-oferta.component.html',
   styleUrls: ['./nueva-oferta.component.scss'],
 })
-export class NuevaOfertaComponent implements OnInit {
+export class NuevaOfertaComponent implements OnInit, OnDestroy {
 
   //coordenadas quito para abrir con una posición pre cargada
   @Input() position = {
@@ -85,40 +86,13 @@ export class NuevaOfertaComponent implements OnInit {
     lng: null,
   }
 
-  markers: Marker[] = [
-    {
-      position: {
-        lat: 4.658383846282959,
-        lng: -74.09394073486328,
-      },
-      title: 'Parque Simón Bolivar'
-    },
-    {
-      position: {
-        lat: 4.667945861816406,
-        lng: -74.09964752197266,
-      },
-      title: 'Jardín Botánico'
-    },
-    {
-      position: {
-        lat: 4.676802158355713,
-        lng: -74.04825592041016,
-      },
-      title: 'Parque la 93'
-    },
-    {
-      position: {
-        lat: 4.6554284,
-        lng: -74.1094989,
-      },
-      title: 'Maloka'
-    },
-  ]
+  
   directionsService: any;
   directionsDisplay: any;
   verGuia = false;
   datosGuia : any;
+  suscribtionOfertas: Subscription;
+  idOferta: string;
   constructor(private renderer: Renderer2,
               @Inject(DOCUMENT) private document, 
               private googlemapsService: GooglemapsService, 
@@ -137,6 +111,12 @@ ngOnInit(): void{
   // this.mylocation();
   // this.loadMap();
   
+}
+
+ngOnDestroy(){
+  if(this.suscribtionOfertas){
+    this.suscribtionOfertas.unsubscribe();
+  }
 }
 
 loadMap() {
@@ -362,7 +342,7 @@ async init(){
 
 // }
 
-
+ 
 
 async presentToast(mensaje: string, tiempo: number) {
   const toast = await this.toastController.create({
@@ -384,21 +364,54 @@ async aceptarOferta(valor: number){
   const uidSolicitud = this.infoDuenio.id;
   console.log(this.ofertar);
   console.log(this.infoDuenio.duenio.uid);
-  this.ofertar.id = this.firestoreService.getId();
-  const idOfertar = this.ofertar.id;
+  
+  this.validarSolicitudAnterior(uidDuenio, uidSolicitud);
+  
   const path = 'Cliente-dw/' + uidDuenio + '/solicitudes/' + uidSolicitud + '/ofertas/';
   console.log(path);
-  console.log(' solicitar() ->', this.ofertar, path, idOfertar);
-  await this.firestoreService.createDoc(this.ofertar, path, idOfertar).then(() => {
+  this.idOferta = this.firestoreService.getId();
+  console.log(' solicitar() ->', this.ofertar, path, this.idOferta);
+  this.ofertar.id = this.idOferta;
+  await this.firestoreService.createDoc(this.ofertar, path, this.idOferta).then(() => {
     this.modalController.dismiss();
-  
-  const smsExito = "!Ha ofertado con éxito¡";
+    
+    const smsExito = "!Ha ofertado con éxito¡";
     console.log(smsExito);
     this.presentToast(smsExito, 2500);
-    // url pendiente de revisar
-    //this.router.navigate([`/solicitudes`], { replaceUrl: true });
-    // this.dismissLoading();
+    
   });
 }
+     //Verificar si la sentencia se comple del lado del dueño 
+  validarSolicitudAnterior(uidDuenio: string, uidSolicitud: string) {
+    let array=[];
+    const path = 'Cliente-dw/' + uidDuenio + '/solicitudes/' + uidSolicitud + '/ofertas/';
+    this.suscribtionOfertas = this.firestoreService.getCollection<Ofrecer>(path).subscribe(res => {
+      console.log('los parámetros alojados en las ofertas del cliente son: =>> ', res.length);
+      for (let index = 0; index < res.length; index++) {
+        const element = res[index];
+        console.log(element.paseador.uid);
+        if(this.infoPaseador.uid === element.paseador.uid){
+          console.log('Similitud ', index);
+          array.push(res[index]);
+          if(index > 0 ){
+            console.log(array);
+            console.log(array[array.length -1]);
+            if(array[array.length -1].fecha > array[0].fecha){
+              this.firestoreService.deleteDoc(path, array[0].id);
+              console.log('array[array.length -1].fecha > array[0].fecha');
+            }else if(array[array.length -1].fecha < array[0].fecha){
+              this.firestoreService.deleteDoc(path, array[array.length -1].id);
+              console.log('(array[array.length -1].fecha < array[0].fecha');
+            }else if(array[ 1].fecha < array[0].fecha){
+              this.firestoreService.deleteDoc(path, array[1].id);
+              console.log('array[ 1].fecha < array[0].fecha');
+            }
+            this.suscribtionOfertas.unsubscribe();
+          }
+        }
+      }
+    });
 
+
+  }
 }
