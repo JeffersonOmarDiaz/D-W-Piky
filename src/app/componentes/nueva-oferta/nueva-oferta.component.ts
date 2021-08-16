@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 const {Geolocation} = Plugins;
 declare var google: any;
 
-
+//Interface necesario mover a modelosBD
 interface Marker {
   position: {
     lat: number,

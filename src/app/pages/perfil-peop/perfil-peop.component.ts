@@ -108,8 +108,12 @@ export class PerfilPeopComponent implements OnInit {
       this.suscribreUserInfo = this.firestoreService.getDoc<Cliente>(path, uid).subscribe(res => {
         this.cliente = res;
         console.log('La informacion del cliente es: ', this.cliente);
-        this.direccionLabel = this.cliente.ubicacion.direccion;
-        console.log('La direción del cliente es: ', this.cliente.ubicacion.direccion);
+        if(this.cliente.ubicacion === null){
+          this.direccionLabel = '';
+        }else{
+          this.direccionLabel = this.cliente.ubicacion.direccion;
+          console.log('La direción del cliente es: ', this.cliente.ubicacion.direccion);
+        }
 
         /* if(this.cliente.role === null || this.cliente.role=== undefined){
           this.router.navigate(['/login']);
@@ -159,7 +163,7 @@ export class PerfilPeopComponent implements OnInit {
     }
     console.log('Fin de la función nuevaImagenUpload');
     
-    this.loading.dismiss();
+    // this.loading.dismiss();
   }
 
   async presentLoading() {
@@ -172,15 +176,15 @@ export class PerfilPeopComponent implements OnInit {
     console.log('Loading dismissed!'); */
   }
 
-  async galeria() {
-    this.loading = await this.loadingController.create({
-      cssClass: 'my-custom-class',
-      message: 'Abriendo Galería...',
-    });
-    await this.loading.present();
-    /* const { role, data } = await loading.onDidDismiss();
-    console.log('Loading dismissed!'); */
-  }
+  // async galeria() {
+  //   this.loading = await this.loadingController.create({
+  //     cssClass: 'my-custom-class',
+  //     message: 'Abriendo Galería...',
+  //   });
+  //   await this.loading.present();
+  //   /* const { role, data } = await loading.onDidDismiss();
+  //   console.log('Loading dismissed!'); */
+  // }
 
   async presentToast(mensaje: string, tiempo: number) {
     const toast = await this.toastController.create({

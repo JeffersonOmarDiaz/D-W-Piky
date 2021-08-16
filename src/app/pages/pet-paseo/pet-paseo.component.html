@@ -5,7 +5,7 @@
     <ion-card *ngIf="!llenarSolicitudPaseo">
       <ion-row>
         <ion-col>
-          <h6 style=" text-align: center;">¿A quien pasearas?</h6>
+          <h6 style=" text-align: center;" *ngIf="listaMascotas" >¿A quien pasearas?</h6>
           <ion-list>
             <ion-card >
             <ion-item *ngFor="let mascota of clienteMascota">
@@ -110,5 +110,13 @@
       </ion-row>
     </ion-card>
     <!--   -->
+
+    <ion-row class="ion-justify-content-center" *ngIf="!listaMascotas" >
+      <ion-card> 
+          <ion-col size="6">
+              <h3>No tiene mascotas registradas, registrelas en la sección <a routerLink="/perfil-mascota" routerDirection="root">"Mis Mascotas"</a></h3>
+          </ion-col>
+      </ion-card>
+  </ion-row>
     </ion-grid>
 </ion-content>

@@ -66,6 +66,8 @@ export class PetPaseoComponent implements OnInit {
   direccionSolicitud = '';
   loading: any;
   solicitud: Solicitud; 
+  //Para mostar mensaje si no hay mascotas
+  listaMascotas = false;
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
@@ -114,6 +116,10 @@ export class PetPaseoComponent implements OnInit {
       this.clienteMascota = res.mascotas;
       console.log('La informacion del cliente es: ', this.cliente);
       this.direccionSolicitud = this.cliente.ubicacion.direccion;
+      if(this.clienteMascota.length > 0){
+        console.log('No esta recistrada ninguna mascota');
+        this.listaMascotas = true;
+      }
       console.log('La informacion de las mascotas cliente es: ', this.clienteMascota.sort(((unaMascota, otraMascota) => unaMascota.nombre.localeCompare( otraMascota.nombre))) );
     });
     return;
