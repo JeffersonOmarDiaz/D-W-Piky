@@ -79,7 +79,7 @@
       </ion-card-header>
       <!-- <ion-card-content> -->
         <!-- <ion-button (click)="getOfertasPaseo()">Id de la solicitud</ion-button> -->
-        <ion-item *ngFor="let oferta of ofertas">
+        <ion-item *ngFor="let oferta of ofertas" (click)="paseadorInteresado(oferta)">
           <ion-grid fixed>
             <ion-row>
               <ion-col size="6">
@@ -87,7 +87,7 @@
                   onerror="this.src='../../../assets/images/icons/nofotoerfil.png'">
               </ion-col>
               <ion-col size="6">
-                <ion-label class="normal">
+                <ion-label class="normal; ion-text-wrap">
                   {{oferta.paseador.nombre}} {{oferta.paseador.apellido}}
                   <br>
                   Aceptará por $ {{oferta.valor}}

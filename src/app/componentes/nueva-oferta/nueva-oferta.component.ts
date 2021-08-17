@@ -78,7 +78,12 @@ export class NuevaOfertaComponent implements OnInit, OnDestroy {
     fecha: new Date,
     paseador: this.paseadorOfertar,
     valor: null,
-    estado: 'proceso'
+    estado: 'proceso',
+    ubicacion: {
+      lat: null,
+      lng: null,
+      direccion: '',
+    },
   }
   
   @Input() positionPaseador ={
@@ -99,7 +104,9 @@ export class NuevaOfertaComponent implements OnInit, OnDestroy {
               public modalController: ModalController,
               public toastController: ToastController,
               public firestoreService: FirestoreService,
-) { }
+) {
+  this.obtenerUbicacionPaseador();
+ }
 
 ngOnInit(): void{
   this.init();
@@ -107,6 +114,8 @@ ngOnInit(): void{
   console.log('position ->', this.position);
   console.log('datosDuenio ->', this.infoDuenio);
   console.log('Ubicación Actual del paseador ->', this.positionPaseador);
+  // this.ubicacionPaseador.lat =  this.positionPaseador.lat;
+  // this.ubicacionPaseador.lng = this.positionPaseador.lng;
   this.cargaMascotas();
   // this.mylocation();
   // this.loadMap();
@@ -117,6 +126,10 @@ ngOnDestroy(){
   if(this.suscribtionOfertas){
     this.suscribtionOfertas.unsubscribe();
   }
+}
+
+async obtenerUbicacionPaseador(){
+  await this.positionPaseador;
 }
 
 loadMap() {
@@ -132,7 +145,7 @@ loadMap() {
     disableDefaultUI: true,
     clickableIcons: true,
   });
-
+  
   this.directionsDisplay.setMap(this.map);
   this.directionsDisplay.setPanel(indicatorsEle);
   google.maps.event.addListenerOnce(this.map, 'idle', () => {
@@ -140,34 +153,41 @@ loadMap() {
     this.calculateRoute();
     // this.renderMarkers();
     // const marker = {
-    //   position: {
-    //     lat: 4.658383846282959, 
-    //     lng: -74.09394073486328
-    //   },
-    //   title: 'punto uno'
-    //   };
-    // this.addMarker(marker);
-  });
-}
-
-
-async verInidicaciones(entrada: boolean){
-  this.verGuia = entrada;
-  await this.init();
-  this.directionsDisplay.setDirections(this.datosGuia);
-  console.log('verInidicaciones, datos Guia: ==> ', this.datosGuia);
-}
-
-private calculateRoute() {
-  this.directionsService.route({
-    origin: this.positionPaseador,
-    destination: this.position,
-    travelMode: google.maps.TravelMode.WALKING,
-  }, (response, status)  => {
-    if (status === google.maps.DirectionsStatus.OK) {
-      this.directionsDisplay.setDirections(response);
-      this.datosGuia = response;
-      console.log('CAlculando Ruta ==> ', response);
+      //   position: {
+        //     lat: 4.658383846282959, 
+        //     lng: -74.09394073486328
+        //   },
+        //   title: 'punto uno'
+        //   };
+        // this.addMarker(marker);
+      });
+    }
+    
+    
+    async verInidicaciones(entrada: boolean){
+      this.verGuia = entrada;
+      await this.init();
+      this.directionsDisplay.setDirections(this.datosGuia);
+      console.log('verInidicaciones, datos Guia: ==> ', this.datosGuia);
+    }
+    
+    private calculateRoute() {
+      this.directionsService.route({
+        origin: this.positionPaseador,
+        destination: this.position,
+        travelMode: google.maps.TravelMode.WALKING,
+      }, (response, status)  => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          this.directionsDisplay.setDirections(response);
+          this.datosGuia = response;
+          console.log('CAlculando Ruta ==> ', response);
+          console.log('Position paseador ==> ', this.positionPaseador);
+          if(this.positionPaseador != null){
+            console.log('Position paseador ==> ', this.positionPaseador);
+            this.ofertar.ubicacion.lat = this.positionPaseador.lat;
+            this.ofertar.ubicacion.lng = this.positionPaseador.lng; 
+            // console.log(this.ofertar.ubicacion);
+          }
     } else {
       alert('No se pudo calcular la ruta: ' + status);
     }

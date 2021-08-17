@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from '../app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { NuevaOfertaComponent } from './nueva-oferta/nueva-oferta.component';
+import { VerPropuestaComponent } from './ver-propuesta/ver-propuesta.component';
 
 
 
@@ -14,7 +15,8 @@ import { NuevaOfertaComponent } from './nueva-oferta/nueva-oferta.component';
   declarations: [
     MenuComponent,
     FormularioComponent,
-    NuevaOfertaComponent
+    NuevaOfertaComponent,
+    VerPropuestaComponent
   ],
   imports: [
     CommonModule,

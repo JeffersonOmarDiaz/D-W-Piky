@@ -44,14 +44,7 @@ export interface Solicitud {
     valor: number;
     observacion: string;
     direccion: string;
-    // ubicacion: {
-    //     lat: number;
-    //     lng: number;
-    //     direccion: string;
-    // };
     estado : EstadosSolicitud;
-    // valoracion: number;
-    // comentario: string;
 }
 
 export type EstadosSolicitud = 'nueva' | 'cancelada' | 'culminada' | 'proceso' | 'aceptada'
@@ -73,5 +66,10 @@ export interface Ofrecer {
     valor: number;
     estado: EstadosSolicitud;
     //Estado necesario para aceptar respuesta de confirmación
+    ubicacion: {
+        lat: number;
+        lng: number;
+        direccion: string;
+    };
     
 }

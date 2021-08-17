@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, MenuController, ToastController } from '@ionic/angular';
+import { AlertController, MenuController, ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { VerPropuestaComponent } from 'src/app/componentes/ver-propuesta/ver-propuesta.component';
 import { Cliente, Ofrecer, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
@@ -47,12 +48,18 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
   adcional2 = 0;
   adcional3 = 0;
   valorInicial = 0;
+
+  ubicacionMascota ={
+    lat : null,
+    lng : null,
+  }
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
               public menuController:MenuController, 
               public alertController:AlertController,
-              public toastController: ToastController) {
+              public toastController: ToastController,
+              private modalController: ModalController) {
                }
 
   ngOnInit() {
@@ -151,10 +158,13 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
           this.idSolicitud =  this.solicitudes[0].id;
           this.solicitudCancelar = this.solicitudes[0];
           this.valorInicial = this.solicitudes[0].valor;
+          // console.log('Lat mascota ==> ',  this.solicitudes[0].duenio.ubicacion.lat);
+          this.ubicacionMascota.lat = this.solicitudes[0].duenio.ubicacion.lat;
+          this.ubicacionMascota.lng = this.solicitudes[0].duenio.ubicacion.lng;
           // console.log('VAlor a pagar ==> ', this.solicitudes[0].valor);
-          this.adcional1 = this.valorInicial + 0.5;
-          this.adcional2 = this.valorInicial + 1;
-          this.adcional3 = this.valorInicial + 1.5;
+          this.adcional1 = this.valorInicial + 1;
+          this.adcional2 = this.valorInicial + 1.5;
+          this.adcional3 = this.valorInicial + 2;
         });
         this.getOfertasPaseo();
       }else{
@@ -300,5 +310,31 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       //console.log(this.solicitudes); líneas para test
     });
     startAt = null;
+  }
+
+  async paseadorInteresado(informacionPaseador: any){
+    console.log('paseadorInteresado() ==>', informacionPaseador);
+
+    // const ubicacion = this.cliente.ubicacion;
+    // let positionInput = {  //Ubicación del dueño paseador definir si es de domicilio o actual
+    //   lat: informacionPaseador.paseador.ubicacion.lat, //Ubicación domiciliaria del paseador
+    //   lng: informacionPaseador.paseador.ubicacion.lng
+    // };
+    let positionInput = { 
+      lat: informacionPaseador.ubicacion.lat, //Ubicación actual del paseador
+      lng: informacionPaseador.ubicacion.lng
+    };
+    console.log(positionInput);
+    // if (ubicacion !== null) {
+    //     positionInput = ubicacion; 
+    // }
+
+    const modalAdd  = await this.modalController.create({
+      component: VerPropuestaComponent,
+      mode: 'ios',
+      swipeToClose: true,
+      componentProps: {position: positionInput, positionMascota: this.ubicacionMascota, infoPaseador: informacionPaseador} //pasa la ubicación a nuevaoferta
+    });
+    await modalAdd.present();
   }
 }
