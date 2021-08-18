@@ -316,14 +316,14 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     console.log('paseadorInteresado() ==>', informacionPaseador);
 
     // const ubicacion = this.cliente.ubicacion;
-    // let positionInput = {  //Ubicación del dueño paseador definir si es de domicilio o actual
-    //   lat: informacionPaseador.paseador.ubicacion.lat, //Ubicación domiciliaria del paseador
-    //   lng: informacionPaseador.paseador.ubicacion.lng
-    // };
-    let positionInput = { 
-      lat: informacionPaseador.ubicacion.lat, //Ubicación actual del paseador
-      lng: informacionPaseador.ubicacion.lng
+    let positionInput = {  //Ubicación del dueño paseador definir si es de domicilio o actual
+      lat: informacionPaseador.paseador.ubicacion.lat, //Ubicación domiciliaria del paseador
+      lng: informacionPaseador.paseador.ubicacion.lng
     };
+    // let positionInput = { 
+    //   lat: informacionPaseador.ubicacion.lat, //Ubicación actual del paseador
+    //   lng: informacionPaseador.ubicacion.lng
+    // };
     console.log(positionInput);
     // if (ubicacion !== null) {
     //     positionInput = ubicacion; 

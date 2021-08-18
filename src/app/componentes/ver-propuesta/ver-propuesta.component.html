@@ -2,32 +2,41 @@
   <ion-toolbar class="ion-text-wrap">
     <ion-buttons slot="start">
       <ion-button (click)="modalController.dismiss()">
-        <ion-icon name="arrow-back" color="dark"></ion-icon>
+        <ion-icon name="arrow-back" color="primary"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>
-      Paseador Interesado
+      Información
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-fab vertical="top" horizontal="start" slot="fixed">
+    <ion-chip (click)="aceptar()" style=" background: #80d894">
+      <ion-icon name="walk"></ion-icon>
+      <ion-label>Aceptar</ion-label>
+    </ion-chip>
+  </ion-fab>
 
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <ion-chip (click)="rechazar()" style=" background: #eb5a5a">
+      <ion-label>Rechazar</ion-label>
+      <ion-icon name="close-circle"></ion-icon>
+    </ion-chip>
+  </ion-fab>
   <!-- <div id="map"></div> -->
   <ion-grid fixed>
-    <ion-row class="ion-justify-content-center">
+    <!-- <ion-row class="ion-justify-content-center">
       <ion-col size="5">
         <ion-button  expand="block" shape="round" color="success">
           Aceptar
-        </ion-button>
-        <ion-button  expand="block" shape="round" >
-          Ver Perfil
         </ion-button>
         <ion-button  expand="block" shape="round" color="danger">
           Rechazar
         </ion-button>
       </ion-col>
-    </ion-row>
+    </ion-row> -->
     <ion-row class="ion-justify-content-center">
       <ion-card>
         <ion-col>
@@ -46,13 +55,15 @@
             <ion-label class=" ion-text-wrap" style="text-align: center;">Celular: {{infoPaseador.paseador.celular}}</ion-label>
           </ion-item>
           <ion-item>
-            <ion-icon name="location-sharp" color="danger"></ion-icon>
+            <ion-icon name="home-outline" color="primary"></ion-icon>
             <ion-label class=" ion-text-wrap" style="text-align: center;">Direción: {{infoPaseador.paseador.ubicacion.direccion}}</ion-label>
           </ion-item>
         </ion-col>
       </ion-card>
-      <!-- <ion-col size="6"></ion-col> -->
     </ion-row>
   </ion-grid>
 
+  <div #map class="map">
+
+  </div>
 </ion-content>
