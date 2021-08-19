@@ -14,6 +14,7 @@ import { PerfilPetsComponent } from './perfil-pets/perfil-pets.component';
 import { ComponentesModule } from '../componentes/componentes.module';
 import { PetPaseoComponent } from './pet-paseo/pet-paseo.component';
 import { SolicitudesComponent } from './solicitudes/solicitudes.component';
+import { ProgresoDuenioComponent } from './progreso-duenio/progreso-duenio.component';
 
 
 
@@ -28,6 +29,7 @@ import { SolicitudesComponent } from './solicitudes/solicitudes.component';
     PerfilPetsComponent,
     PetPaseoComponent,
     SolicitudesComponent,
+    ProgresoDuenioComponent,
   ],
   imports: [
     CommonModule,

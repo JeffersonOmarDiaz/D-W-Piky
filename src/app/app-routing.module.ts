@@ -12,6 +12,7 @@ import { SolicitudesComponent } from './pages/solicitudes/solicitudes.component'
 
 //Usuario Logueado INCIO
 import { canActivate, redirectUnauthorizedTo, redirectLoggedInTo } from '@angular/fire/auth-guard';
+import { ProgresoDuenioComponent } from './pages/progreso-duenio/progreso-duenio.component';
 const isLogged = () => redirectLoggedInTo(['/home']);
 
 const redirectUnauthorizedToLogin = () =>
@@ -19,6 +20,10 @@ const redirectUnauthorizedToLogin = () =>
 //Usuario Logueado FIN
 
 const routes: Routes = [
+  {
+    path: 'progreso-duenio',
+    component: ProgresoDuenioComponent, ...canActivate(redirectUnauthorizedToLogin),
+  },
   {
     path: 'solicitudes',
     component: SolicitudesComponent, ...canActivate(redirectUnauthorizedToLogin),
