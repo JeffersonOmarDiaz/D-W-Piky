@@ -296,9 +296,9 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       startAt = this.ofertas[this.ofertas.length -1].fecha;
     }
     this.suscriberSolicitud = this.firestoreService.getCollectionAll<Ofrecer>(path, 'estado', '==', 'proceso', startAt, 10).subscribe(res =>{
-      //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere vargar más
+      //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
       this.ofertas = [];
-      //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere vargar más
+      //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
       console.log("Ingresa a las Ofertas de paseadores", res);
       if(res.length){
         res.forEach( ofrecer =>{ 
@@ -316,24 +316,26 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     console.log('paseadorInteresado() ==>', informacionPaseador);
 
     // const ubicacion = this.cliente.ubicacion;
-    let positionInput = {  //Ubicación del dueño paseador definir si es de domicilio o actual
-      lat: informacionPaseador.paseador.ubicacion.lat, //Ubicación domiciliaria del paseador
-      lng: informacionPaseador.paseador.ubicacion.lng
-    };
-    // let positionInput = { 
-    //   lat: informacionPaseador.ubicacion.lat, //Ubicación actual del paseador
-    //   lng: informacionPaseador.ubicacion.lng
+    // let positionInput = {  //Ubicación del dueño paseador definir si es de domicilio o actual
+    //   lat: informacionPaseador.paseador.ubicacion.lat, //Ubicación domiciliaria del paseador
+    //   lng: informacionPaseador.paseador.ubicacion.lng
     // };
+    //La ubicación del domicilio del paseador se pasa en informacionPaseador
+    let positionInput = { 
+      lat: informacionPaseador.ubicacion.lat, //Ubicación actual del paseador
+      lng: informacionPaseador.ubicacion.lng
+    };
     console.log(positionInput);
-    // if (ubicacion !== null) {
-    //     positionInput = ubicacion; 
-    // }
+
+    const pathModificaEstado = 'Cliente-dw/' + this.cliente.uid + '/solicitudes';
+    const idSolicitudModificar = this.idSolicitud;
 
     const modalAdd  = await this.modalController.create({
       component: VerPropuestaComponent,
       mode: 'ios',
       swipeToClose: true,
-      componentProps: {position: positionInput, positionMascota: this.ubicacionMascota, infoPaseador: informacionPaseador} //pasa la ubicación a nuevaoferta
+      componentProps: {position: positionInput, positionMascota: this.ubicacionMascota, infoPaseador: informacionPaseador, 
+        pathEditar: pathModificaEstado, idSolicitud: idSolicitudModificar} //pasa la ubicación a nuevaoferta
     });
     await modalAdd.present();
   }

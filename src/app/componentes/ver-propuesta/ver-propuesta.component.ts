@@ -1,8 +1,10 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, ElementRef, Inject, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ModalController, ToastController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { GooglemapsService } from 'src/app/googlemaps/googlemaps.service';
-import { Cliente, Ofrecer } from 'src/app/modelBD';
+import { Cliente, Ofrecer, Solicitud } from 'src/app/modelBD';
+import { FirestoreService } from 'src/app/services/firestore.service';
 
 declare var google: any;
 @Component({
@@ -10,7 +12,7 @@ declare var google: any;
   templateUrl: './ver-propuesta.component.html',
   styleUrls: ['./ver-propuesta.component.scss'],
 })
-export class VerPropuestaComponent implements OnInit {
+export class VerPropuestaComponent implements OnInit, OnDestroy {
 
   //coordenadas quito para abrir con una posición pre cargada si no hay posicion referencial 
   //
@@ -36,30 +38,56 @@ export class VerPropuestaComponent implements OnInit {
   @ViewChild('map') divMap: ElementRef;
 
   @Input () infoPaseador: Ofrecer;
-  // datosPaseador :Cliente = {
-  //   uid: '',
-  //   email: '',
-  //   celular: '',
-  //   foto: '',
-  //   referncia: '',
-  //   ubicacion: null,
-  //   edad: null,
-  //   nombre: '',
-  //   apellido: '',
-  //   cedula: '',
-  //   mascotas: [],
-  //   role: 'duenio',
-  // }
+  @Input () pathEditar = '';
+  @Input () idSolicitud = '';
+  cliente: Cliente;
+  suscribeSolicitud: Subscription;
+  datosPaseador :Cliente = {
+    uid: '',
+    email: '',
+    celular: '',
+    foto: '',
+    referncia: '',
+    ubicacion: null,
+    edad: null,
+    nombre: '',
+    apellido: '',
+    cedula: '',
+    mascotas: [],
+    role: 'duenio',
+  }
+  solicitudModificar: Solicitud = {
+    id: '',
+    fecha: new Date,
+    duenio: this.datosPaseador,
+    mascotasPaseo: [],
+    numMascotas: null,
+    tiempo: null,
+    valor: null,
+    observacion: '',
+    direccion: '',
+    estado : 'nueva'
+  };
   
   constructor(public modalController: ModalController,
               private renderer: Renderer2,
               @Inject(DOCUMENT) private document, 
-              private googlemapsService: GooglemapsService,) { }
+              private googlemapsService: GooglemapsService,
+              public firestoreService: FirestoreService,
+              public toastController: ToastController,) { }
 
   ngOnInit(): void {
 
     console.log('infoPaseador ==> ', this.infoPaseador);
+    console.log('uid Dueño ==> ', this.pathEditar);
+    console.log('uid Dueño ==> ', this.idSolicitud);
     this.init();
+  }
+
+  ngOnDestroy(){
+    if(this.suscribeSolicitud){
+      this.suscribeSolicitud.unsubscribe();
+    }
   }
 
   async init(){
@@ -73,7 +101,7 @@ export class VerPropuestaComponent implements OnInit {
 
   initMap() {
 
-    // this.position = this.infoPaseador.paseador.ubicacion;
+    this.position = this.infoPaseador.paseador.ubicacion;
     const position = this.position;
 
     let latLng = new google.maps.LatLng(position.lat, position.lng);
@@ -121,8 +149,72 @@ export class VerPropuestaComponent implements OnInit {
     this.infowindow.open(this.map, marker);
   }
 
-  aceptar(){
+  async aceptar(){
     console.log('aceptar()');
+    console.log('infoPaseador ==> ', this.infoPaseador);
+    console.log('infoPaseador ==> ', this.infoPaseador.paseador.uid);
+    const uid = this.infoPaseador.paseador.uid;
+    const id = this.infoPaseador.id;
+    const pathDuenio = this.pathEditar + '/' + this.idSolicitud + '/ofertas/'+id+'/proceso-duenio'; 
+    console.log(pathDuenio);
+    const pathDW = 'Cliente-dw/' + uid + '/procesos-dw';
+    await this.modificaEstadoSolicitud(this.pathEditar, this.idSolicitud);
+    // await this.firestoreService.createDoc(this.infoPaseador, path, id).then(res => {
+    // await this.firestoreService.createDoc(this.infoPaseador, pathDuenio, id).then(res => {
+    //   console.log('Paseador aceptado');
+    //   this.presentToast('Paseador aceptado', 2500);
+    // }).catch(error => {
+    //   console.log('Ocurrión un error');
+    //   this.presentToast('No se pudo realizar el proceso', 2000);
+    // });
+    await this.crearProcesos(this.infoPaseador, pathDuenio, id).finally( ()=>{
+      this.crearProcesos(this.solicitudModificar, pathDW, id);
+    }
+      
+    );
+  }
+
+  async crearProcesos(data: any, path: string, id: string){
+    await this.firestoreService.createDoc(data, path, id).then(res => {
+      console.log('Paseador aceptado');
+      this.presentToast('Paseador aceptado', 2500);
+    }).catch(error => {
+      console.log('Ocurrión un error');
+      this.presentToast('No se pudo realizar el proceso', 2000);
+    });
+  }
+
+  async modificaEstadoSolicitud(path: string, id: string){
+    this.suscribeSolicitud = this.firestoreService.getDoc<Solicitud>(path, id).subscribe( res => {
+      this.solicitudModificar = res;
+      console.log(this.solicitudModificar);
+      this.solicitudModificar.estado = 'proceso';
+      this.solicitudModificar.valor = this.infoPaseador.valor;
+      this.enviaData(res);
+      this.suscribeSolicitud.unsubscribe();
+    });
+    console.log('modificaEstadoSolicitud', this.solicitudModificar);
+    return;
+  }
+
+  async enviaData(data: any){
+    // const data = this.solicitudModificar;
+    await this.firestoreService.createDoc(data, this.pathEditar, this.idSolicitud).then(res => {
+      console.log('Proceso realizado con éxito');
+      this.presentToast('Proceso realizado con éxito', 2000);
+    }).catch(error => {
+      //console.log('No se pudo Actulizar el cliente un error ->', error);
+      console.log('No se pudo cancelar la solicitud');
+      this.presentToast('No se pudo realizar el proceso', 2000);
+    });
+  }
+
+  async presentToast(mensaje: string, tiempo: number) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: tiempo 
+    });
+    toast.present();
   }
 
   rechazar(){
