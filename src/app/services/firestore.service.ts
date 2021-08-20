@@ -9,7 +9,7 @@ export class FirestoreService {
 
   editMascota: Mascota;
   valorEliminar: number;
-  link = '';
+  pathOferta = '';
   constructor(public database:AngularFirestore) { }
 
   createDoc(data: any, path: string, id: string){
@@ -75,14 +75,14 @@ export class FirestoreService {
   /* Funciones creadas para editar y eliminar Fin */
 
 
-  /* funcion para retroceso con link */
-  setLink(path :string){
-    this.link = path;
-  }
-  getLink(){
-    return this.link;
-  }
-  /* funcion para retroceso con link */
+  /* funcion para llamar a los proicesos */
+  // setpathOferta(path :string, idDoc: string){
+  //   this.pathOferta = path;
+  // }
+  // getpathOferta(){
+  //   return this.pathOferta;
+  // }
+  /* funcion para retroceso con pathOferta */
 
 // traer toda la coleccíon mediante consultas 
 getCollectionAll<tipo>(path: string, parametro:string, condicion:any, busqueda:string, startAt: any, limite: number){
@@ -99,6 +99,21 @@ getCollectionAll<tipo>(path: string, parametro:string, condicion:any, busqueda:s
     ); 
   return collection.valueChanges();  
 }
+//si deseo traer las coleciones que sean diferentes de nuevo
+getCollectionProcesoDuenio<tipo>(path: string, parametro:string, condicion:any, busqueda:string, startAt: any, limite: number){
+  if(startAt == null ){
+    startAt = new Date();
+  }
+  //si deseo traer las coleciones de solicites de en diferentes ubicaciones seria collectionGroup
+  const collection = this.database.collection<tipo>(path, 
+    ref => ref.where(parametro, condicion, busqueda )
+              // .orderBy('fecha', 'desc')
+              .limit(limite)
+              //.startAfter(startAt)
+              //.startAt(startAt) 
+    ); 
+  return collection.valueChanges();  
+}
 
 //las colecciones pueden estar alojadas en diferentes lugares
 getCollectionAllPlace<tipo>(path: string, parametro:string, condicion:any, busqueda:string, startAt: any){
@@ -108,8 +123,8 @@ getCollectionAllPlace<tipo>(path: string, parametro:string, condicion:any, busqu
   const collection = this.database.collectionGroup<tipo>(path, 
     ref => ref.where(parametro, condicion, busqueda )
               .orderBy('fecha', 'desc')
-              .limit(10)
-              .startAfter(startAt)
+              // .limit(10)
+              // .startAfter(startAt) //Consultar 
               //.startAt(startAt) 
     ); 
   return collection.valueChanges();  

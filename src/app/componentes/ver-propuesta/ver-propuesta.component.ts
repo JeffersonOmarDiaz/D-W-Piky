@@ -40,6 +40,7 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
   @Input () infoPaseador: Ofrecer;
   @Input () pathEditar = '';
   @Input () idSolicitud = '';
+  @Input () pathDuenioColec = '';
   cliente: Cliente;
   suscribeSolicitud: Subscription;
   datosPaseador :Cliente = {
@@ -81,6 +82,7 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
     console.log('infoPaseador ==> ', this.infoPaseador);
     console.log('uid Dueño ==> ', this.pathEditar);
     console.log('uid Dueño ==> ', this.idSolicitud);
+    console.log('uid Dueño ==> ', this.pathDuenioColec);
     this.init();
   }
 
@@ -155,7 +157,7 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
     console.log('infoPaseador ==> ', this.infoPaseador.paseador.uid);
     const uid = this.infoPaseador.paseador.uid;
     const id = this.infoPaseador.id;
-    const pathDuenio = this.pathEditar + '/' + this.idSolicitud + '/ofertas/'+id+'/proceso-duenio'; 
+    const pathDuenio = this.pathDuenioColec +'/proceso-duenio'; 
     console.log(pathDuenio);
     const pathDW = 'Cliente-dw/' + uid + '/procesos-dw';
     await this.modificaEstadoSolicitud(this.pathEditar, this.idSolicitud);

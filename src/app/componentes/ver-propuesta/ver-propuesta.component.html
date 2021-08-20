@@ -44,11 +44,11 @@
             <img class="image" [src]="infoPaseador.paseador.foto" onerror="this.src='../../../assets/images/icons/nofotoerfil.png'">
           </ion-item>
           <ion-item>
-            <ion-label class=" ion-text-wrap" style="text-align: center;">{{infoPaseador.paseador.nombre}}  {{infoPaseador.paseador.apellido}}</ion-label>
+            <ion-label class=" ion-text-wrap" style="text-align: center;">{{infoPaseador.paseador.nombre}}  {{infoPaseador.paseador.apellido}},  {{infoPaseador.paseador.edad}} años</ion-label>
           </ion-item>
           <ion-item>
-            <ion-icon name="calendar-outline" color="primary"></ion-icon> 
-            <ion-label class=" ion-text-wrap" style="text-align: center;">Edad: {{infoPaseador.paseador.edad}} años</ion-label>
+            <ion-icon name="id-card-outline" color="primary"></ion-icon>
+            <ion-label class=" ion-text-wrap" style="text-align: center;">Cédula: {{infoPaseador.paseador.cedula}}</ion-label>
           </ion-item>
           <ion-item>
             <ion-icon name="call-outline" color="success"></ion-icon>

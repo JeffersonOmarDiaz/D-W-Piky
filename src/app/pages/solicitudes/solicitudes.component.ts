@@ -328,6 +328,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     console.log(positionInput);
 
     const pathModificaEstado = 'Cliente-dw/' + this.cliente.uid + '/solicitudes';
+    const pathDuenio = 'Cliente-dw/' + this.cliente.uid;
     const idSolicitudModificar = this.idSolicitud;
 
     const modalAdd  = await this.modalController.create({
@@ -335,7 +336,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       mode: 'ios',
       swipeToClose: true,
       componentProps: {position: positionInput, positionMascota: this.ubicacionMascota, infoPaseador: informacionPaseador, 
-        pathEditar: pathModificaEstado, idSolicitud: idSolicitudModificar} //pasa la ubicación a nuevaoferta
+        pathEditar: pathModificaEstado, idSolicitud: idSolicitudModificar, pathDuenioColec: pathDuenio} //pasa la ubicación a nuevaoferta
     });
     await modalAdd.present();
   }

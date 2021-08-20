@@ -38,9 +38,6 @@ export class Home1Component implements OnInit, OnDestroy {
     }
   }
 
-  enviarLink(path: string){
-    this.firestoreService.setLink(path);
-  }
 
   tipoRol(){
     this.suscribreUserInfo=this.firebaseauthService.stateAuth().subscribe(res => { 

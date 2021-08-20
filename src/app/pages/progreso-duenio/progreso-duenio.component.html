@@ -8,22 +8,24 @@
   <ion-grid fixed>
     <ion-row>
       <ion-col size="12">
-        <img src="../../../assets/images/icons/mismascotas.png" class="iconMenu" alt="Mis mascotas">
+        <ion-item>
+          <img class="image" [src]="procesos.paseador.foto" onerror="this.src='../../../assets/images/icons/nofotoerfil.png'">
+        </ion-item>
       </ion-col>
     </ion-row>
     <ion-card>
     <ion-row>
         <!-- <ion-col size="6"></ion-col> -->
         <ion-col size="6">
-          <ion-label>nombre</ion-label>
+          <ion-label>nombre:{{procesos.paseador.nombre}} {{procesos.paseador.apellido}}</ion-label>
           <br>
-          <ion-label>Teléfono</ion-label>
+          <ion-label>Teléfono:{{procesos.paseador.celular}}</ion-label>
           <br>
-          <ion-label>Cédula</ion-label>
+          <ion-label>Cédula: {{procesos.paseador.cedula}}</ion-label>
           <br>
-          <ion-label>Edad</ion-label>
+          <ion-label>Edad: {{procesos.paseador.edad}}</ion-label>
           <br>
-          <ion-label>Direccion Damicilio</ion-label>
+          <ion-label>Direccion domicilio: {{procesos.paseador.ubicacion.direccion}}</ion-label>
         </ion-col>
       </ion-row>
     </ion-card>

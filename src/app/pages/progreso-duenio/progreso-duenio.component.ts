@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Cliente } from 'src/app/modelBD';
+import { Cliente, Ofrecer } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 
@@ -23,7 +23,11 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
     celular: '',
     foto: '',
     referncia: '',
-    ubicacion: null,
+    ubicacion: {
+      lat: null,
+      lng: null,
+      direccion: '',
+    },
     edad: null,
     nombre: '',
     apellido: '',
@@ -32,6 +36,23 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
     role: 'duenio'
   };
 
+  ofertas: Ofrecer []=[];
+  idOferta = '';
+  suscribreUserProceso: Subscription;
+  suscribreUserDocProceso: Subscription;
+  procesos: Ofrecer={
+    id: '',
+    fecha: new Date,
+    paseador: this.cliente,
+    valor: null,
+    estado: 'proceso',
+    //Estado necesario para aceptar respuesta de confirmación
+    ubicacion: {
+      lat: null,
+      lng: null,
+      direccion: '',
+    },
+  };
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
@@ -49,6 +70,14 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
     if(this.suscribreUserInfoRol){
       this.suscribreUserInfoRol.unsubscribe();
     }
+    if(this.suscribreUserDocProceso){
+      this.suscribreUserDocProceso.unsubscribe();
+    }
+    if(this.suscribreUserProceso){
+      this.suscribreUserProceso.unsubscribe();
+    }
+
+    
   }
 
   tipoRol(){
@@ -69,7 +98,7 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
               }else{
                 this.rolDuenio = true;
                 this.uid = res.uid;
-                // this.getSolicitudNuevaPaseo();
+                this.getDatosOferta();
                 return false;
               }
             });
@@ -77,5 +106,39 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
       }
     });
     return false;
+  }
+
+  getDatosOferta(){
+    console.log('getDatosOferta()');
+    const path = 'Cliente-dw/' + this.uid + '/proceso-duenio';
+    let startAt = null;
+    this.suscribreUserProceso = this.firestoreService.getCollectionProcesoDuenio<Ofrecer>(path, 'estado', '!=', 'nuevo', startAt, 1).subscribe(res =>{
+      //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
+      this.ofertas = [];
+      //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
+      console.log("Ingresa a las Ofertas de paseadores", res);
+      if(res.length){
+        res.forEach( ofrecer =>{ 
+          this.ofertas.push(ofrecer);
+          this.idOferta =  this.ofertas[0].id;
+          // this.solicitudCancelar = this.ofertas[0];
+          this.suscribreUserProceso.unsubscribe();
+        });
+      }
+      // console.log(this.ofertas); //líneas para test
+      if(this.ofertas.length != 0){
+        this.obtenerDocumento();
+      }
+    });
+  }
+
+  obtenerDocumento(){
+    const path = 'Cliente-dw/' + this.uid + '/proceso-duenio';
+    console.log(path);
+    this.suscribreUserDocProceso = this.firestoreService.getDoc<Ofrecer>(path, this.idOferta).subscribe(res => {
+      console.log(res);
+      this.procesos = res;
+      console.log(this.procesos.estado);
+    });
   }
 }
