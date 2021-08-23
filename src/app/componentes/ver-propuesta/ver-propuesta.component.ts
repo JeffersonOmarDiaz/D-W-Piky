@@ -196,6 +196,7 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
       console.log(this.solicitudModificar);
       this.solicitudModificar.estado = 'proceso';
       this.solicitudModificar.valor = this.infoPaseador.valor;
+      this.solicitudModificar.fecha = new Date;
       this.enviaData(res);
       this.suscribeSolicitud.unsubscribe();
     });

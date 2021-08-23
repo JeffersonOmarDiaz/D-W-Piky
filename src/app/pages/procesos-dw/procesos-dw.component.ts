@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Cliente } from 'src/app/modelBD';
+import { Cliente, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 
@@ -20,6 +20,9 @@ export class ProcesosDwComponent implements OnInit, OnDestroy {
   cliente : Cliente;
   infoPaseadorInput: any;
 
+  //Variables para ver si existen Procesos
+  procesosDw: Solicitud []= [];
+  suscriberProceso : Subscription;
   constructor(public firebaseauthService: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,) { }
@@ -35,6 +38,9 @@ export class ProcesosDwComponent implements OnInit, OnDestroy {
     }
     if (this.suscribreUserInfoRol) {
       this.suscribreUserInfoRol.unsubscribe();
+    }
+    if (this.suscriberProceso) {
+      this.suscriberProceso.unsubscribe();
     }
   }
 
@@ -56,7 +62,7 @@ export class ProcesosDwComponent implements OnInit, OnDestroy {
             return false;
           } else {
             this.rolPaseador = true;
-            // this.getSolicitudNuevaPaseo();
+            this.paseosProceso();
             return false;
           }
         });
@@ -64,5 +70,17 @@ export class ProcesosDwComponent implements OnInit, OnDestroy {
       }
     });
     return false;
+  }
+
+  paseosProceso(){
+    console.log(' paseosProceso()');
+    const path = 'Cliente-dw/' + this.uid + '/procesos-dw';
+    console.log(' path() =>> ', path);
+    let startAt = null;
+    this.suscriberProceso = this.firestoreService.getCollectionProcesoDuenio<Solicitud>(path, 'estado', '!=', 'culminada', startAt, 10).subscribe(res => {
+      console.log(res);
+      this.procesosDw = res;
+      
+    });
   }
 }
