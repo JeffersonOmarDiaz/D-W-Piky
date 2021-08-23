@@ -37,6 +37,7 @@ export class Home2Component implements OnInit, OnDestroy {
     lat: null,
     lng: null,
   };
+  btnVerSolicitudes = false;
   constructor(public firestoreService: FirestoreService,
               public firebaseauthService: FirebaseauthService,
               private router: Router,
@@ -105,6 +106,10 @@ export class Home2Component implements OnInit, OnDestroy {
           } else {
             this.rolPaseador = true;
             // this.getSolicitudNuevaPaseo();
+            if(this.cliente.cedula != ''){
+              console.log('Si tiene cédula');
+              this.btnVerSolicitudes = true;
+            }
             return false;
           }
         });
@@ -170,5 +175,11 @@ export class Home2Component implements OnInit, OnDestroy {
     //   console.log('this.cliente -> ', this.cliente);
     // }
 
+  }
+
+  eventoToggle(estado: any){
+    console.log('eventoToggle() ==> ',estado);
+    console.log('eventoToggle() ==> ',estado.path[0].ariaChecked);
+    //si es falso mostramos las solicitudes  
   }
 }

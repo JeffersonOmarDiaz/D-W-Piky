@@ -1,6 +1,9 @@
 <app-menu paginaTitulo="Solicitudes" [menuDW]="menuDW" *ngIf="rolPaseador"></app-menu>
-<ion-content>
-  
+<ion-content *ngIf="btnVerSolicitudes">
+  <ion-item>
+    <ion-label>Recibir Solicitudes</ion-label>
+    <ion-toggle (click) ="eventoToggle($event)"></ion-toggle>
+  </ion-item>
   <ion-grid fixed *ngIf="rolPaseador">
     <ion-row>
       <ion-col>
@@ -50,15 +53,24 @@
   </ion-grid>
 </ion-content> 
 
-<ion-footer >
+<ion-content *ngIf="!btnVerSolicitudes">
+  <ion-row class="ion-justify-content-center" >
+    <ion-card> 
+        <ion-col size="6">
+            <h3>Para ver las solicitudes asegúrese de completar su perfil en la sección <a routerLink="/perfil-persona" routerDirection="root">"Mi Perfil"</a></h3>
+        </ion-col>
+    </ion-card>
+</ion-row>
+</ion-content>
+<!-- <ion-footer >
   <ion-grid fixed *ngIf="rolPaseador">
     <ion-row class="ion-justify-content-center">
       <ion-card>
       <ion-col >
-          <ion-button shape="round" (click)="refrescarPagina()">Refrescar</ion-button>
+          <ion-button shape="round" (click)="refrescarPagina()">Refrescar</ion-button> -->
           <!-- <ion-button (click)="refrescarPagina()">Refrescar</ion-button> -->
-        </ion-col>
+        <!-- </ion-col>
       </ion-card>
       </ion-row>
     </ion-grid>
-</ion-footer>
+</ion-footer> -->
