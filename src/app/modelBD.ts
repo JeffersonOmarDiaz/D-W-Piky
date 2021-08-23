@@ -6,7 +6,7 @@ export interface Mascota {
     sexo: string;
     tamanio: string;
     agresivo: string;
-    observaciones: string;
+    // observaciones: string;
     id: string;
     fechaCreacionMas: Date; 
     idDuenio: string;

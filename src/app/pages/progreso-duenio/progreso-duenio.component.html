@@ -1,4 +1,4 @@
-<app-menu paginaTitulo="Progreso" [menuCliente]="verMC" *ngIf="rolDuenio"></app-menu>
+<app-menu paginaTitulo="Progreso Paseo" [menuCliente]="verMC" *ngIf="rolDuenio"></app-menu>
 
 <ion-content *ngIf="rolDuenio">
 
@@ -16,18 +16,40 @@
     <ion-card>
     <ion-row>
         <!-- <ion-col size="6"></ion-col> -->
-        <ion-col size="6">
-          <ion-label>nombre:{{procesos.paseador.nombre}} {{procesos.paseador.apellido}}</ion-label>
+        <ion-col size="8">
+          <ion-icon slot="start" name="cash-outline"></ion-icon>
+          <ion-label>Cancelar $ {{procesos.valor}}</ion-label>
           <br>
-          <ion-label>Teléfono:{{procesos.paseador.celular}}</ion-label>
+          
+          <ion-label>
+            <ion-icon slot="start" name="walk-outline"></ion-icon>
+            Paseador:{{procesos.paseador.nombre}} {{procesos.paseador.apellido}}
+          </ion-label>
           <br>
-          <ion-label>Cédula: {{procesos.paseador.cedula}}</ion-label>
+          
+          <ion-label>
+            <ion-icon slot="start" name="call-outline"></ion-icon>
+            Teléfono:{{procesos.paseador.celular}}
+          </ion-label>
           <br>
-          <ion-label>Edad: {{procesos.paseador.edad}}</ion-label>
+          
+          <ion-label>
+            <ion-icon slot="start" name="id-card-outline"></ion-icon>
+            Cédula: {{procesos.paseador.cedula}}
+          </ion-label>
           <br>
-          <ion-label>Direccion domicilio: {{procesos.paseador.ubicacion.direccion}}</ion-label>
+          <!-- <ion-label>Edad: {{procesos.paseador.edad}}</ion-label>
+          <br> -->
+          
+          <ion-label>
+            <ion-icon slot="start" name="home-outline"></ion-icon> 
+            Direccion domicilio: {{procesos.paseador.ubicacion.direccion}}
+          </ion-label>
         </ion-col>
       </ion-row>
+      <ion-button expand="block" shape="round">
+        El paseador
+      </ion-button>
     </ion-card>
     <ion-row>
       <ion-col size="12">

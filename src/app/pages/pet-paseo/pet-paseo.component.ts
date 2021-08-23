@@ -115,7 +115,9 @@ export class PetPaseoComponent implements OnInit {
       this.cliente = res;
       this.clienteMascota = res.mascotas;
       console.log('La informacion del cliente es: ', this.cliente);
-      this.direccionSolicitud = this.cliente.ubicacion.direccion;
+      if(this.cliente.ubicacion != null){
+        this.direccionSolicitud = this.cliente.ubicacion.direccion;
+      }
       if(this.clienteMascota.length > 0){
         console.log('No esta recistrada ninguna mascota');
         this.listaMascotas = true;

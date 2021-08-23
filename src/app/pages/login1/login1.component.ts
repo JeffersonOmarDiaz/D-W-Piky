@@ -62,6 +62,7 @@ export class Login1Component implements OnInit, OnDestroy {
   async ngOnInit() {
     const uid = await this.firebaseauthS.getUid();
     console.log('Un id enviado es: ',uid);
+    this.initCliente();
   }
 
   ngOnDestroy(){
@@ -137,7 +138,7 @@ export class Login1Component implements OnInit, OnDestroy {
     console.log('El correo que llega para guardar es: ', this.cliente.email);
     console.log('La información del cliente a guardar es: ',this.cliente.uid);
     await this.firestoreService.createDoc(this.cliente, path, this.cliente.uid).then(res => {
-      this.router.navigate(['/login']);
+      this.router.navigate([`/home`], { replaceUrl: true });
       /* window.location.assign('/home'); */
       console.log('CLIENTE Guardado con exitos!!!');
     }).catch(error => {
@@ -184,6 +185,7 @@ export class Login1Component implements OnInit, OnDestroy {
         const recorreArray = (arr) => {
           for(let i=0; i<=arr.length-1; i++){
           console.log(arr[i].nombre);
+          console.log('this.cliente.uid ==>',this.cliente.uid);
           if(arr[i].uid === this.cliente.uid){
             console.log('hay una similitud'); 
             userExit = true;
@@ -191,10 +193,12 @@ export class Login1Component implements OnInit, OnDestroy {
           }
           }
         }
-        recorreArray(res);
+        if(this.cliente != undefined){
+          recorreArray(res);
+        }
         if(userExit === true){
-          console.log('Devolvió un true '); 
-          this.router.navigate(['/home']);
+          console.log('Devolvió un true ');
+          this.router.navigate([`/home`], { replaceUrl: true });
           return;
         }else{
           console.log('No existe el usuario se lo registrará '); 

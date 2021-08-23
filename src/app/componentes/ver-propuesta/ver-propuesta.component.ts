@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { GooglemapsService } from 'src/app/googlemaps/googlemaps.service';
@@ -75,7 +76,8 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
               @Inject(DOCUMENT) private document, 
               private googlemapsService: GooglemapsService,
               public firestoreService: FirestoreService,
-              public toastController: ToastController,) { }
+              public toastController: ToastController,
+              private router: Router,) { }
 
   ngOnInit(): void {
 
@@ -171,6 +173,8 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
     // });
     await this.crearProcesos(this.infoPaseador, pathDuenio, id).finally( ()=>{
       this.crearProcesos(this.solicitudModificar, pathDW, id);
+      this.router.navigate([`/progreso-duenio`], { replaceUrl: true });
+      this.modalController.dismiss();
     }
       
     );
@@ -219,7 +223,7 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
     toast.present();
   }
 
-  rechazar(){
-    console.log('rechazar()()');
-  }
+  // rechazar(){
+  //   console.log('rechazar()()');
+  // }
 }

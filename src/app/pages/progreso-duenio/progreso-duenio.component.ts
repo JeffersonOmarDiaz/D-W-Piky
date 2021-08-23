@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Cliente, Ofrecer } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
@@ -56,6 +57,7 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
+              public toastController:ToastController,
     ) { }
 
   ngOnInit() {
@@ -128,8 +130,19 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
       // console.log(this.ofertas); //líneas para test
       if(this.ofertas.length != 0){
         this.obtenerDocumento();
+      }else{
+        this.router.navigate([`/home`], { replaceUrl: true });
+        this.presentToast('Aún no ha generado solicitudes!!', 2000);
       }
     });
+  }
+
+  async presentToast(mensaje: string, tiempo:number) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: tiempo 
+    });
+    toast.present();
   }
 
   obtenerDocumento(){

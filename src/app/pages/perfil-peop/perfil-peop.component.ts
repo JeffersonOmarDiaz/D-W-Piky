@@ -136,6 +136,7 @@ export class PerfilPeopComponent implements OnInit {
       this.loading.dismiss();
       this.presentToast('Guardado con exito', 2000);
       //this.limpiarCampos();
+      this.retroceder();
     }).catch(error => {
       console.log('No se pudo guardar el a ocurrido un error ->', error);
       this.presentToast('Error al guardar!!', 2000);
@@ -202,8 +203,9 @@ export class PerfilPeopComponent implements OnInit {
     const referencia = this.cliente.referncia;
     const cedula = this.cliente.cedula;
     const ubicacion = this.cliente.ubicacion;
+    const foto = this.cliente.foto;
 
-    if (nombre != '' && apellido != "" && celular != "" && edad != null && referencia != "" && cedula != "" && ubicacion != null) {
+    if (nombre != '' && apellido != "" && celular != "" && edad != null && referencia != "" && cedula != "" && ubicacion != null && foto !="") {
       console.log('Todos los campos estan llenos');
 
       if (cedula.length === 10) {
@@ -341,9 +343,9 @@ export class PerfilPeopComponent implements OnInit {
       };
 
     } else {
-      const sms = 'Llenar todos los campos requeridos (*)';
+      const sms = 'Todos los datos son obligatorios (*)';
       console.log(sms);
-      this.presentToast(sms, 2000);
+      this.presentToast(sms, 2500);
       return;
     };
 
