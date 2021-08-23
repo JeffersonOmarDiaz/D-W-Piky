@@ -38,6 +38,7 @@ export class Home2Component implements OnInit, OnDestroy {
     lng: null,
   };
   btnVerSolicitudes = false;
+  btnSolicitudesVisibles = false;
   constructor(public firestoreService: FirestoreService,
               public firebaseauthService: FirebaseauthService,
               private router: Router,
@@ -48,7 +49,7 @@ export class Home2Component implements OnInit, OnDestroy {
  
   ngOnInit() {
     this.tipoRol();
-    this.getSolicitudNuevaPaseo();
+    // this.getSolicitudNuevaPaseo();
     this.mylocation();
   }
  
@@ -64,10 +65,10 @@ export class Home2Component implements OnInit, OnDestroy {
       this.suscriberSolicitud.unsubscribe();
     }
   }
-  refrescarPagina(){
-    // window.location.assign('/home-paseador');
-    this.router.navigate(['/home'], { replaceUrl: true });
-  }
+  // refrescarPagina(){
+  //   // window.location.assign('/home-paseador');
+  //   this.router.navigate(['/home'], { replaceUrl: true });
+  // }
 
   async mylocation() {
 
@@ -177,9 +178,15 @@ export class Home2Component implements OnInit, OnDestroy {
 
   }
 
-  eventoToggle(estado: any){
-    console.log('eventoToggle() ==> ',estado);
-    console.log('eventoToggle() ==> ',estado.path[0].ariaChecked);
-    //si es falso mostramos las solicitudes  
+  async eventoToggle(estado: any){
+    console.log(estado.currentTarget.checked);
+    if(!estado.currentTarget.checked){
+      console.log('Va ha mostrar las solicitudes');
+      this.getSolicitudNuevaPaseo();
+      this.btnSolicitudesVisibles = true
+    }else{
+      console.log('Va ha OCULTAR las solicitudes');
+      this.btnSolicitudesVisibles = false;
+    }
   }
 }

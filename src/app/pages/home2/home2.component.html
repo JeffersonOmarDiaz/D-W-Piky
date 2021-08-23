@@ -1,13 +1,13 @@
 <app-menu paginaTitulo="Solicitudes" [menuDW]="menuDW" *ngIf="rolPaseador"></app-menu>
 <ion-content *ngIf="btnVerSolicitudes">
   <ion-item>
-    <ion-label>Recibir Solicitudes</ion-label>
-    <ion-toggle (click) ="eventoToggle($event)"></ion-toggle>
+    <ion-label>Disponible</ion-label>
+    <ion-toggle (click)="eventoToggle($event)" mode="ios" color="success"></ion-toggle>
   </ion-item>
   <ion-grid fixed *ngIf="rolPaseador">
     <ion-row>
       <ion-col>
-        <ion-card >
+        <ion-card *ngIf="btnSolicitudesVisibles">
           <div *ngFor="let solicitud of solicitudes">
             
           <ion-item (click)="verMascotasPaseo([solicitud])">
