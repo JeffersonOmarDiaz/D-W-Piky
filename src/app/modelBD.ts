@@ -47,7 +47,8 @@ export interface Solicitud {
     estado : EstadosSolicitud;
 }
 
-export type EstadosSolicitud = 'nueva' | 'cancelada' | 'culminada' | 'proceso' | 'aceptada'
+export type EstadosSolicitud = 'nueva' | 'cancelada' | 'culminada' | 'proceso' | 'aceptada' | 'Llego en 5 minutos' | 'Llego en 10 minutos'
+                             | 'Estoy fuera' | 'Ya no estoy activo'
 
 //calificación 
 export interface Calificacion {

@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { UbicacionMascotasPaseoComponent } from 'src/app/componentes/ubicacion-mascotas-paseo/ubicacion-mascotas-paseo.component';
 import { Cliente, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
@@ -25,7 +27,8 @@ export class ProcesosDwComponent implements OnInit, OnDestroy {
   suscriberProceso : Subscription;
   constructor(public firebaseauthService: FirebaseauthService,
               public firestoreService: FirestoreService,
-              private router: Router,) { }
+              private router: Router,
+              private modalController: ModalController) { }
 
   ngOnInit() {
     this.tipoRol();
@@ -82,5 +85,29 @@ export class ProcesosDwComponent implements OnInit, OnDestroy {
       this.procesosDw = res;
       
     });
+  }
+
+  async verUbicacionDuenio(infoSolicitudInput: any){
+    console.log('verUbicacionDuenio() ==> ', infoSolicitudInput);
+
+
+    const ubicacion = this.cliente.ubicacion;
+    let positionInput = {  //Ubicación del dueño
+      lat: infoSolicitudInput.duenio.ubicacion.lat,
+      lng: infoSolicitudInput.duenio.ubicacion.lng
+    };
+    console.log(positionInput);
+    // if (ubicacion !== null) {
+    //     positionInput = ubicacion; 
+    // }
+
+    const modalAdd  = await this.modalController.create({
+      component: UbicacionMascotasPaseoComponent,
+      mode: 'ios',
+      swipeToClose: true,
+      componentProps: {position: positionInput, infoDuenio: infoSolicitudInput, infoPaseador: this.infoPaseadorInput} //pasa la ubicación a nuevaoferta
+      // componentProps: {position: positionInput, infoDuenio: infoSolicitudInput[0], infoPaseador: this.infoPaseadorInput, positionPaseador: this.positionInputPaseador} //pasa la ubicación a nuevaoferta
+    });
+    await modalAdd.present();
   }
 }

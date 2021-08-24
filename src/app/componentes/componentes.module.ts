@@ -8,6 +8,7 @@ import { AppRoutingModule } from '../app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { NuevaOfertaComponent } from './nueva-oferta/nueva-oferta.component';
 import { VerPropuestaComponent } from './ver-propuesta/ver-propuesta.component';
+import { UbicacionMascotasPaseoComponent } from './ubicacion-mascotas-paseo/ubicacion-mascotas-paseo.component';
 
 
 
@@ -16,7 +17,8 @@ import { VerPropuestaComponent } from './ver-propuesta/ver-propuesta.component';
     MenuComponent,
     FormularioComponent,
     NuevaOfertaComponent,
-    VerPropuestaComponent
+    VerPropuestaComponent,
+    UbicacionMascotasPaseoComponent
   ],
   imports: [
     CommonModule,
