@@ -19,6 +19,7 @@ export class UbicacionMascotasPaseoComponent implements OnInit {
   estadoFuera = 'Estoy fuera';
   estadoFinalizado = 'Paseo Finalizado';
   estadoNoActivo = 'Ya no estoy activo';
+  verMascotasList = false;
   constructor(public modalController: ModalController,
             )
   { }
@@ -45,5 +46,9 @@ export class UbicacionMascotasPaseoComponent implements OnInit {
     }
     console.log('btnEstados() ',this.estadoProceso.estado);
 
+  }
+
+  verMascotas(ver: boolean){
+    this.verMascotasList = ver;
   }
 }

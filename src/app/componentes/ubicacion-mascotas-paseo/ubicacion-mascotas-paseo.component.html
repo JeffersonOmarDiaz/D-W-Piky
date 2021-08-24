@@ -14,12 +14,42 @@
 <ion-content>
   <ion-grid fixed>
     <ion-row>
+      <ion-col size="4" class="ion-justify-content-center">
+        <img src={{estadoProceso.duenio.foto}} class="imgRedonda"
+          onerror="this.src='../../../assets/images/icons/nofotoerfil.png'">
+        <ion-label class="ion-text-wrap">
+          {{estadoProceso.duenio.nombre}} {{estadoProceso.duenio.apellido}}
+        </ion-label>
+      </ion-col>
+      <ion-col>
+        <ion-label class="ion-text-wrap">Pago ha recibir$ {{estadoProceso.valor}}
+          <p>Mascotas: {{estadoProceso.numMascotas}}</p>
+          <p>Dirección: {{estadoProceso.direccion}}</p>
+          <p>Celular: {{estadoProceso.duenio.celular}}</p>
+        </ion-label>
+        <ion-button class="estados" (click)="verMascotas(true)" *ngIf="!verMascotasList">Ver Mascotas</ion-button>
+        <ion-button class="estados" (click)="verMascotas(false)" *ngIf="verMascotasList" >Ocultar Mascotas</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="verMascotasList">
+      <ion-col size="12">
+        <ion-label  class="ion-text-wrap">Observaciones: {{estadoProceso.observacion}}</ion-label>
+        <ion-item *ngFor="let mascota of estadoProceso.duenio.mascotas">
+          <img src={{mascota.foto}} class="imgMascota" onerror="this.src='../../../assets/images/icons/perfil-dog.png'">
+          <ion-label  class="ion-text-wrap">{{mascota.nombre}}
+            <p>Edad: {{mascota.edad}}</p>
+            <p>Agresivo: {{mascota.agresivo}}</p>
+          </ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
       <ion-col>
         <ion-button class="estados" *ngIf="btnTiempo" (click)="btnEstados(estadoCincoMin)" >{{estadoCincoMin}}</ion-button>
-        <ion-button class="estados" *ngIf="btnTiempo" (click)="btnEstados(estadoDiezMin)">Llego en 10 minutos</ion-button>
-        <ion-button class="estados" (click)="btnEstados(estadoFuera)" >Estoy fuera</ion-button>
-        <ion-button class="estados" (click)="btnEstados(estadoFinalizado)">Paseo Finalizado</ion-button>
-        <ion-button class="estados" *ngIf="btnTiempo" color = "danger" (click)="btnEstados(estadoNoActivo)">Ya no estoy activo</ion-button>
+        <ion-button class="estados" *ngIf="btnTiempo" (click)="btnEstados(estadoDiezMin)">{{estadoDiezMin}}</ion-button>
+        <ion-button class="estados" (click)="btnEstados(estadoFuera)" >{{estadoFuera}}</ion-button>
+        <ion-button class="estados" *ngIf="!btnTiempo" (click)="btnEstados(estadoFinalizado)">{{estadoFinalizado}}</ion-button>
+        <ion-button class="estados" *ngIf="btnTiempo" color = "danger" (click)="btnEstados(estadoNoActivo)">{{estadoNoActivo}}</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
