@@ -7,55 +7,68 @@
 
   <ion-grid fixed>
     <ion-row>
-      <ion-col size="12">
-        <ion-item>
-          <img class="image" [src]="procesos.paseador.foto" onerror="this.src='../../../assets/images/icons/nofotoerfil.png'">
-        </ion-item>
+      <ion-col size="4">
+        <img class="imgRedonda" [src]="procesos.paseador.foto"
+          onerror="this.src='../../../assets/images/icons/nofotoerfil.png'">
+        <ion-label class="normal; ion-text-wrap">
+          {{procesos.paseador.nombre}} {{procesos.paseador.apellido}}
+        </ion-label>
       </ion-col>
-    </ion-row>
-    <ion-card>
-    <ion-row>
-        <!-- <ion-col size="6"></ion-col> -->
-        <ion-col size="8">
-          <ion-icon slot="start" name="cash-outline"></ion-icon>
-          <ion-label>Cancelar $ {{procesos.valor}}</ion-label>
-          <br>
-          
-          <ion-label>
-            <ion-icon slot="start" name="walk-outline"></ion-icon>
-            Paseador:{{procesos.paseador.nombre}} {{procesos.paseador.apellido}}
-          </ion-label>
-          <br>
-          
-          <ion-label>
+      <ion-col>
+        <ion-label>
+          <ion-icon slot="start" name="cash-outline"></ion-icon> Cancelar $ {{procesos.valor}}
+          <p>
             <ion-icon slot="start" name="call-outline"></ion-icon>
-            Teléfono:{{procesos.paseador.celular}}
-          </ion-label>
-          <br>
-          
-          <ion-label>
+            Celular:{{procesos.paseador.celular}}
+          </p>
+          <p>
             <ion-icon slot="start" name="id-card-outline"></ion-icon>
             Cédula: {{procesos.paseador.cedula}}
-          </ion-label>
-          <br>
-          <!-- <ion-label>Edad: {{procesos.paseador.edad}}</ion-label>
-          <br> -->
-          
-          <ion-label>
-            <ion-icon slot="start" name="home-outline"></ion-icon> 
+          </p>
+          <p>
+            <ion-icon slot="start" name="home-outline"></ion-icon>
             Direccion domicilio: {{procesos.paseador.ubicacion.direccion}}
-            <p>Estado: {{procesos.estado}}</p>
-          </ion-label>
-        </ion-col>
-      </ion-row>
-      <ion-button expand="block" shape="round">
-        El paseador
-      </ion-button>
-    </ion-card>
+          </p>
+          <p>Estado: {{procesos.estado}}</p>
+        </ion-label>
+      </ion-col>
+    </ion-row>
+    <!-- <ion-card> -->
     <ion-row>
-      <ion-col size="12">
+      <ion-col>
+        <ion-button class="accionDuenio" color="danger">
+          El paseador no llegó
+        </ion-button>
+        <ion-button class="accionDuenio">
+          Empieza el paseo
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <!-- </ion-card> -->
+    <ion-row>
+      <ion-col size="3" align="center">
         <!-- <ion-progress-bar value="0.25" buffer="0.5"></ion-progress-bar> -->
-        <ion-progress-bar color="primary" value="0.5"></ion-progress-bar>
+        <ion-progress-bar color="success" value="1"></ion-progress-bar>
+        <img src="../../../assets/images/gifs/voyCaminoDW.gif" alt="caminando" style="height: 35px;">
+        <!-- voy en camino -->
+      </ion-col>
+      <ion-col size="3" align="center">
+        <!-- <ion-progress-bar value="0.25" buffer="0.5"></ion-progress-bar> -->
+        <ion-progress-bar color="success" value="1"></ion-progress-bar>
+        <img src="../../../assets/images/gifs/estoyFuera.gif" alt="golpea puerta" style="height: 35px;">
+        <!-- Estoy Fuera -->
+      </ion-col>
+      <ion-col size="3" align="center">
+        <!-- <ion-progress-bar value="0.25" buffer="0.5"></ion-progress-bar> -->
+        <!-- Empieza el paseo -->
+        <ion-progress-bar color="success" value="1"></ion-progress-bar>
+        <img src="../../../assets/images/gifs/caminandoDwIzquierda.gif" alt="caminando" style="height: 35px;">
+      </ion-col>
+      <ion-col size="3" align="center">
+        <!-- <ion-progress-bar value="0.25" buffer="0.5"></ion-progress-bar> -->
+        <ion-progress-bar color="success" value="1"></ion-progress-bar>
+        <img src="../../../assets/images/gifs/retiroDW.gif" alt="fin paseo" style="height: 35px;">
+        <!-- Fin denuevo en casa -->
       </ion-col>
     </ion-row>
   </ion-grid>
