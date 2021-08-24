@@ -82,9 +82,10 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     console.log('infoPaseador ==> ', this.infoPaseador);
+    console.log('infoPaseador ==> ', this.infoPaseador.id);
     console.log('uid Dueño ==> ', this.pathEditar);
-    console.log('uid Dueño ==> ', this.idSolicitud);
-    console.log('uid Dueño ==> ', this.pathDuenioColec);
+    // console.log('id solicitud ==> ', this.idSolicitud);
+    console.log('pathDuenioColec ==> ', this.pathDuenioColec);
     this.init();
   }
 
@@ -197,6 +198,7 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
       this.solicitudModificar.estado = 'proceso';
       this.solicitudModificar.valor = this.infoPaseador.valor;
       this.solicitudModificar.fecha = new Date;
+      this.solicitudModificar.id = this.infoPaseador.id;
       this.enviaData(res);
       this.suscribeSolicitud.unsubscribe();
     });
