@@ -2,9 +2,6 @@
 
 <ion-content *ngIf="rolDuenio">
 
-
-
-
   <ion-grid fixed>
     <ion-row>
       <ion-col size="4">
@@ -36,35 +33,32 @@
     <!-- <ion-card> -->
     <ion-row>
       <ion-col>
-        <ion-button class="accionDuenio" color="danger">
-          El paseador no llegó
-        </ion-button>
-        <ion-button class="accionDuenio">
-          Empieza el paseo
-        </ion-button>
+        <ion-button class="accionDuenio" color="danger" (click)="paseadorNollego()" *ngIf="btnPaseadorNoLlego">El paseador no llegó</ion-button>
+        <ion-button class="accionDuenio" (click)="empiezaPaseo()" *ngIf="btnEmpieza">Empieza el paseo</ion-button>
+        <ion-button class="accionDuenio" (click)="empiezaPaseo()" *ngIf="avance3">Finalizar el paseo</ion-button>
       </ion-col>
     </ion-row>
     <!-- </ion-card> -->
     <ion-row>
-      <ion-col size="3" align="center">
+      <ion-col size="3" align="center" *ngIf="avance1">
         <!-- <ion-progress-bar value="0.25" buffer="0.5"></ion-progress-bar> -->
         <ion-progress-bar color="success" value="1"></ion-progress-bar>
         <img src="../../../assets/images/gifs/voyCaminoDW.gif" alt="caminando" style="height: 35px;">
         <!-- voy en camino -->
       </ion-col>
-      <ion-col size="3" align="center">
+      <ion-col size="3" align="center" *ngIf="avance2">
         <!-- <ion-progress-bar value="0.25" buffer="0.5"></ion-progress-bar> -->
         <ion-progress-bar color="success" value="1"></ion-progress-bar>
         <img src="../../../assets/images/gifs/estoyFuera.gif" alt="golpea puerta" style="height: 35px;">
         <!-- Estoy Fuera -->
       </ion-col>
-      <ion-col size="3" align="center">
+      <ion-col size="3" align="center" *ngIf="avance3">
         <!-- <ion-progress-bar value="0.25" buffer="0.5"></ion-progress-bar> -->
         <!-- Empieza el paseo -->
         <ion-progress-bar color="success" value="1"></ion-progress-bar>
         <img src="../../../assets/images/gifs/caminandoDwIzquierda.gif" alt="caminando" style="height: 35px;">
       </ion-col>
-      <ion-col size="3" align="center">
+      <ion-col size="3" align="center" *ngIf="avance4">
         <!-- <ion-progress-bar value="0.25" buffer="0.5"></ion-progress-bar> -->
         <ion-progress-bar color="success" value="1"></ion-progress-bar>
         <img src="../../../assets/images/gifs/retiroDW.gif" alt="fin paseo" style="height: 35px;">

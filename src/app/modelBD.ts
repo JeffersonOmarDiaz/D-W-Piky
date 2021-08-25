@@ -48,16 +48,18 @@ export interface Solicitud {
 }
 
 export type EstadosSolicitud = 'nueva' | 'cancelada' | 'culminada' | 'proceso' | 'aceptada' | 'Llego en 5 minutos' | 'Llego en 10 minutos'
-                             | 'Estoy fuera' | 'Ya no estoy activo'
+                             | 'Estoy fuera' | 'Ya no estoy activo' | 'Paseando' | 'Paseo Finalizado';
 
 //calificación 
 export interface Calificacion {
     id: string;
     fecha: any;
-    usuarioComenta: Cliente;
+    // usuarioComenta: Cliente;
     comentario: string;
     valoracion: number;
 }
+
+export type Puntejes = 1 | 2 | 3 | 4 | 5;
 
 //ofertando
 export interface Ofrecer {

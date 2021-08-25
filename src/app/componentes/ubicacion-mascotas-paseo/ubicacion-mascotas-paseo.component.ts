@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { Cliente, Ofrecer, Solicitud } from 'src/app/modelBD';
+import { Calificacion, Cliente, Ofrecer, Solicitud } from 'src/app/modelBD';
 import { FirestoreService } from 'src/app/services/firestore.service';
 
 @Component({
@@ -14,6 +14,10 @@ export class UbicacionMascotasPaseoComponent implements OnInit, OnDestroy {
   @Input() infoDuenio: Solicitud;
   @Input() infoPaseador: Cliente;
   btnTiempo = true;
+  btnFuera = true;
+  btnPaseando = false;
+  btnDisponible = true;
+  btnPaseoFinalizado = false;
   ClientePaseo: Cliente;
   estadoProceso : Solicitud;
   estadoCincoMin = 'Llego en 5 minutos';
@@ -21,9 +25,18 @@ export class UbicacionMascotasPaseoComponent implements OnInit, OnDestroy {
   estadoFuera = 'Estoy fuera';
   estadoFinalizado = 'Paseo Finalizado';
   estadoNoActivo = 'Ya no estoy activo';
+  estadoPaseando = 'Paseando';
   verMascotasList = false;
   ofertas: Ofrecer; 
   suscribeInfoPaseador: Subscription;
+
+  //Calificacione Modelo
+  calificacion: Calificacion = {
+    id: '',
+    fecha: new Date,
+    comentario: '',
+    valoracion: 5
+}
   constructor(public modalController: ModalController,
               public firestoreService: FirestoreService,
               public toastController: ToastController,
@@ -34,7 +47,8 @@ export class UbicacionMascotasPaseoComponent implements OnInit, OnDestroy {
     console.log('datosDuenio ->', this.infoDuenio);
     this.estadoProceso = this.infoDuenio;
     console.log('datos Paseador ->', this.infoPaseador);
-    // this.initOfertas();
+    
+    this.btnsEstados();
   }
 
   ngOnDestroy(){
@@ -58,6 +72,13 @@ export class UbicacionMascotasPaseoComponent implements OnInit, OnDestroy {
       this.estadoProceso.estado = 'culminada';
     }else if(estado === 'Ya no estoy activo'){
       this.estadoProceso.estado = 'Ya no estoy activo';
+    }else if(estado === 'Paseando'){
+      this.estadoProceso.estado = 'Paseando';
+      this.btnTiempo = false;
+      this.btnFuera = true;
+      this.btnPaseando = true;
+      this.btnDisponible = false;
+      this.btnPaseoFinalizado = true;
     }
     console.log('btnEstados() ',this.estadoProceso.estado);
     //Para modificar paseador
@@ -70,10 +91,33 @@ export class UbicacionMascotasPaseoComponent implements OnInit, OnDestroy {
     const idDocDuenio = this.infoDuenio.id;
     const pathDuenio = 'Cliente-dw/' + uidDuenio + '/proceso-duenio';
     
-    await this.obtenerDocDuenio();
+    if(estado === 'Paseo Finalizado'){
+      this.estadoProceso.estado = 'Paseo Finalizado'
+      await this.obtenerDocDuenio();
+      await this.crearCalificacion();
+    }else{
+      await this.obtenerDocDuenio();
+    }
     
   }
 
+  async crearCalificacion(){
+    console.log('crearCalificacion()');
+    const uidDw = this.infoPaseador.uid;
+    const id = this.infoDuenio.id;
+    const path = 'Cliente-dw/'+ uidDw + '/calificaciones';
+    this.calificacion.id = id;
+    this.calificacion.valoracion;
+    const data = this.calificacion;
+    await this.firestoreService.createDoc(data, path, id).then(() => {
+      this.modalController.dismiss();
+      
+      const smsExito = "!Paseo concluido con éxito¡";
+      console.log(smsExito);
+      this.presentToast(smsExito, 2500);
+      
+    });
+  }
   async obtenerDocDuenio(){
     const uidDuenio = this.infoDuenio.duenio.uid;
     const idDocDuenio = this.infoDuenio.id;
@@ -126,5 +170,21 @@ export class UbicacionMascotasPaseoComponent implements OnInit, OnDestroy {
 
   verMascotas(ver: boolean){
     this.verMascotasList = ver;
+  }
+
+  async btnsEstados(){
+    console.log('btnsEstados()');
+    if(this.infoDuenio.estado === 'Llego en 10 minutos' || this.infoDuenio.estado === 'Llego en 5 minutos'){
+      this.btnTiempo = true;
+    }else if(this.infoDuenio.estado === 'Estoy fuera'){
+      this.btnTiempo = false;
+      this.btnPaseando = true;
+    }else if(this.infoDuenio.estado === 'Paseando'){
+      this.btnTiempo = false;
+      this.btnFuera = false;
+      this.btnPaseando = false;
+      this.btnDisponible = false;
+      this.btnPaseoFinalizado = true;
+    }
   }
 }

@@ -47,9 +47,10 @@
       <ion-col>
         <ion-button class="estados" *ngIf="btnTiempo" (click)="btnEstados(estadoCincoMin)" >{{estadoCincoMin}}</ion-button>
         <ion-button class="estados" *ngIf="btnTiempo" (click)="btnEstados(estadoDiezMin)">{{estadoDiezMin}}</ion-button>
-        <ion-button class="estados" (click)="btnEstados(estadoFuera)" >{{estadoFuera}}</ion-button>
-        <ion-button class="estados" *ngIf="!btnTiempo" (click)="btnEstados(estadoFinalizado)">{{estadoFinalizado}}</ion-button>
-        <ion-button class="estados" *ngIf="btnTiempo" color = "danger" (click)="btnEstados(estadoNoActivo)">{{estadoNoActivo}}</ion-button>
+        <ion-button class="estados" *ngIf="btnFuera" (click)="btnEstados(estadoFuera)" >{{estadoFuera}}</ion-button>
+        <ion-button class="estados" *ngIf="btnPaseando" (click)="btnEstados(estadoPaseando)" >{{estadoPaseando}}</ion-button>
+        <ion-button class="estados" *ngIf="btnPaseoFinalizado" (click)="btnEstados(estadoFinalizado)">{{estadoFinalizado}}</ion-button>
+        <ion-button class="estados"  *ngIf="btnDisponible" color = "danger" (click)="btnEstados(estadoNoActivo)">{{estadoNoActivo}}</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

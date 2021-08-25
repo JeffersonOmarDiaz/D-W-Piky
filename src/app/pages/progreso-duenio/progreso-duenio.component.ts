@@ -54,6 +54,13 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
       direccion: '',
     },
   };
+
+  avance1 = false;
+  avance2 = false;
+  avance3 = false;
+  avance4 = false;
+  btnPaseadorNoLlego = true;
+  btnEmpieza = false;
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
@@ -114,7 +121,7 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
     console.log('getDatosOferta()');
     const path = 'Cliente-dw/' + this.uid + '/proceso-duenio';
     let startAt = null;
-    this.suscribreUserProceso = this.firestoreService.getCollectionProcesoDuenio<Ofrecer>(path, 'estado', '!=', 'nuevo', startAt, 1).subscribe(res =>{
+    this.suscribreUserProceso = this.firestoreService.getCollectionProcesoDuenio<Ofrecer>(path, 'estado', '!=', 'culminada', startAt, 1).subscribe(res =>{
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
       this.ofertas = [];
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
@@ -152,6 +159,49 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
       console.log(res);
       this.procesos = res;
       console.log(this.procesos.estado);
+      this.VisibilidadProgreso();
     });
+  }
+
+  VisibilidadProgreso(){
+    console.log('VisibilidadProgreso()');
+    if(this.procesos.estado === 'Llego en 10 minutos' || this.procesos.estado === 'Llego en 5 minutos'){
+      //Activar img voyCaminando 1er avance
+      this.avance1 = true;
+      console.log();
+    }else if(this.procesos.estado === 'Estoy fuera'){
+      //Activar img estoyFuera 2do avance
+      this.avance2 = true;
+      this.avance1 = true;
+      this.btnEmpieza = true;
+    }else if(this.procesos.estado === 'Paseando'){
+      //Activar img caminandoDWIzquierda 3er avance
+      this.avance3 = true;
+      this.avance2 = true;
+      this.avance1 = true;
+      this.btnEmpieza = false;
+    }else if(this.procesos.estado === 'Paseo Finalizado'){
+      //Activar img retiroDW 4to avance
+      this.avance4 = true;
+      this.avance3 = true;
+      this.avance2 = true;
+      this.avance1 = true;
+    }
+    if(this.procesos.estado === 'Paseando'){
+      this.btnPaseadorNoLlego = false;
+    }
+  }
+
+  empiezaPaseo(){
+    this.procesos.estado = 'Paseando';
+    const path = 'Cliente-dw/' + this.uid + '/proceso-duenio';
+    const idDoc = this.procesos.id;
+    this.firestoreService.createDoc(this.procesos, path, idDoc).then( ()=>{
+      console.log('En paseo!');
+    });
+  }
+
+  paseadorNollego(){
+    console.log('paseadorNollego()');
   }
 }
