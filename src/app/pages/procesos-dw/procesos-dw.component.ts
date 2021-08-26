@@ -80,7 +80,7 @@ export class ProcesosDwComponent implements OnInit, OnDestroy {
     const path = 'Cliente-dw/' + this.uid + '/procesos-dw';
     console.log(' path() =>> ', path);
     let startAt = null;
-    this.suscriberProceso = this.firestoreService.getCollectionProcesoDuenio<Solicitud>(path, 'estado', '!=', 'culminada', startAt, 10).subscribe(res => {
+    this.suscriberProceso = this.firestoreService.getCollectionProcesoDuenio<Solicitud>(path, 'estado', '!=', 'Paseo Finalizado', startAt, 10).subscribe(res => {
       console.log(res);
       this.procesosDw = res;
       

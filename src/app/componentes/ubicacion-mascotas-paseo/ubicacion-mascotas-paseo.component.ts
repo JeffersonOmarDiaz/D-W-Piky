@@ -69,7 +69,7 @@ export class UbicacionMascotasPaseoComponent implements OnInit, OnDestroy {
       this.btnTiempo = false;
       this.estadoProceso.estado = 'Estoy fuera';
     }else if(estado === 'Paseo Finalizado'){
-      this.estadoProceso.estado = 'culminada';
+      this.estadoProceso.estado = 'Paseo Finalizado';
     }else if(estado === 'Ya no estoy activo'){
       this.estadoProceso.estado = 'Ya no estoy activo';
     }else if(estado === 'Paseando'){
@@ -79,6 +79,8 @@ export class UbicacionMascotasPaseoComponent implements OnInit, OnDestroy {
       this.btnPaseando = true;
       this.btnDisponible = false;
       this.btnPaseoFinalizado = true;
+    }else if(estado === 'Paseo Finalizado'){
+      this.estadoProceso.estado = 'Paseo Finalizado';
     }
     console.log('btnEstados() ',this.estadoProceso.estado);
     //Para modificar paseador

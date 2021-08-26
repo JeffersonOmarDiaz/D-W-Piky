@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { Cliente, Ofrecer } from 'src/app/modelBD';
+import { Calificacion, Cliente, Ofrecer, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 
@@ -61,6 +61,26 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
   avance4 = false;
   btnPaseadorNoLlego = true;
   btnEmpieza = false;
+  btnFinalizarPaseo = false;
+  activarCalificacion = false;
+  solicitud: Solicitud;
+  suscribeInfoPaseador: Subscription;
+  calificacion: Calificacion = {
+    id: '',
+    fecha: new Date,
+    comentario: '',
+    valoracion: 5
+  }
+  btncalificacion1 = 1;
+  btncalificacion2 = 2;
+  btncalificacion3 = 3;
+  btncalificacion4 = 4;
+  btncalificacion5 = 5;
+  colorBaseCalificacion1 = "none"
+  colorBaseCalificacion2 = "none"
+  colorBaseCalificacion3 = "none"
+  colorBaseCalificacion4 = "none"
+  colorBaseCalificacion5 = "none"
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
@@ -85,7 +105,9 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
     if(this.suscribreUserProceso){
       this.suscribreUserProceso.unsubscribe();
     }
-
+    if(this.suscribeInfoPaseador){
+      this.suscribeInfoPaseador.unsubscribe();
+    }
     
   }
 
@@ -121,7 +143,7 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
     console.log('getDatosOferta()');
     const path = 'Cliente-dw/' + this.uid + '/proceso-duenio';
     let startAt = null;
-    this.suscribreUserProceso = this.firestoreService.getCollectionProcesoDuenio<Ofrecer>(path, 'estado', '!=', 'culminada', startAt, 1).subscribe(res =>{
+    this.suscribreUserProceso = this.firestoreService.getCollectionProcesoDuenio<Ofrecer>(path, 'estado', '!=', 'Paseo Finalizado', startAt, 1).subscribe(res =>{
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
       this.ofertas = [];
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
@@ -168,40 +190,155 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
     if(this.procesos.estado === 'Llego en 10 minutos' || this.procesos.estado === 'Llego en 5 minutos'){
       //Activar img voyCaminando 1er avance
       this.avance1 = true;
+      this.avance4 = false;
+      this.avance3 = false;
+      this.avance2 = false;
+      this.activarCalificacion = false;
+      this.btnPaseadorNoLlego = true;
       console.log();
     }else if(this.procesos.estado === 'Estoy fuera'){
       //Activar img estoyFuera 2do avance
       this.avance2 = true;
       this.avance1 = true;
       this.btnEmpieza = true;
+      this.avance4 = false;
+      this.avance3 = false;
+      this.activarCalificacion = false;
+      this.btnPaseadorNoLlego = true;
     }else if(this.procesos.estado === 'Paseando'){
       //Activar img caminandoDWIzquierda 3er avance
       this.avance3 = true;
       this.avance2 = true;
       this.avance1 = true;
       this.btnEmpieza = false;
+      this.btnPaseadorNoLlego = false;
+      this.btnFinalizarPaseo = true;
     }else if(this.procesos.estado === 'Paseo Finalizado'){
       //Activar img retiroDW 4to avance
       this.avance4 = true;
       this.avance3 = true;
       this.avance2 = true;
       this.avance1 = true;
-    }
-    if(this.procesos.estado === 'Paseando'){
+      this.btnEmpieza = false;
+      this.btnFinalizarPaseo = false;
+      this.activarCalificacion = true;
+    }else if(this.procesos.estado === 'culminada'){
       this.btnPaseadorNoLlego = false;
+      this.activarCalificacion = true;
+      this.avance4 = true;
+      this.avance3 = true;
+      this.avance2 = true;
+      this.avance1 = true;
     }
   }
 
-  empiezaPaseo(){
+  async empiezaPaseo(){
     this.procesos.estado = 'Paseando';
     const path = 'Cliente-dw/' + this.uid + '/proceso-duenio';
     const idDoc = this.procesos.id;
-    this.firestoreService.createDoc(this.procesos, path, idDoc).then( ()=>{
-      console.log('En paseo!');
+    this.registrarAccion(this.procesos, path, idDoc);
+    await this.obtenerDocPaseador();
+  }
+
+  async registrarAccion(data: any, path:string, idDoc: string){
+    console.log(data);
+    this.firestoreService.createDoc(data, path, idDoc).then( ()=>{
+      console.log('Accion Exitosa!');
     });
   }
 
+  async obtenerDocPaseador(){
+    const uidPaseador = this.ofertas[0].paseador.uid;
+    const idDocPaseador = this.procesos.id;
+    const path = 'Cliente-dw/' + uidPaseador + '/procesos-dw';
+    console.log(path);
+    this.suscribeInfoPaseador = await this.firestoreService.getDoc<Solicitud>(path, idDocPaseador).subscribe( res => {
+      this.solicitud = res;
+      console.log(this.solicitud);
+      this.solicitud.estado = this.procesos.estado;
+      this.registrarAccion(this.solicitud, path, idDocPaseador);
+      this.suscribeInfoPaseador.unsubscribe();
+      return;
+    });
+  }
   paseadorNollego(){
     console.log('paseadorNollego()');
+  }
+
+  async finPaseo() {
+    this.btnFinalizarPaseo = false;
+    console.log('finPaseo()');
+    this.procesos.estado = 'Paseo Finalizado';
+    const path = 'Cliente-dw/' + this.uid + '/proceso-duenio';
+    const idDoc = this.procesos.id;
+    console.log(path);
+    console.log(idDoc);
+    await this.registrarAccion(this.procesos, path, idDoc);
+    // if (this.procesos.estado = 'culminada') {
+    //   this.solicitud.estado = 'Paseo Finalizado';
+    //   const uidPaseador = this.ofertas[0].paseador.uid;
+    //   const idDocPaseador = this.procesos.id;
+    //   const path = 'Cliente-dw/' + uidPaseador + '/procesos-dw';
+    //   console.log(path);
+    //   this.firestoreService.createDoc(this.solicitud, path, idDocPaseador).then( ()=>{
+    //     console.log('Accion Exitosa!');
+    //   });
+    // }
+    this.obtenerDocPaseador();
+  }
+
+  async calificarDw(){
+    console.log('calificarDw()');
+
+    const uidDw = this.ofertas[0].paseador.uid;
+    const idCalifPaseador = this.procesos.id;
+    const path = 'Cliente-dw/'+ uidDw + '/calificaciones';
+    this.calificacion.id = idCalifPaseador;
+    console.log(path);
+    console.log(this.calificacion.id);
+    // this.calificacion.valoracion;
+    // const data = this.calificacion;
+    // await this.firestoreService.createDoc(data, path, idCalifPaseador).then(() => {
+    //   const smsExito = "!Paseo concluido con éxito¡";
+    //   console.log(smsExito);
+    //   this.presentToast(smsExito, 2500);
+      
+    // });
+    
+  }
+  btnCalificar(calificacion: number){ 
+    console.log('btnCalificar ==>', calificacion);
+    //Rojo malo, naranja, amarillo, verdeclaro, verde obscuro
+    if(calificacion === 1){
+      this.colorBaseCalificacion1 = "danger";
+      this.colorBaseCalificacion2 = "none"
+      this.colorBaseCalificacion3 = "none"
+      this.colorBaseCalificacion4 = "none"
+      this.colorBaseCalificacion5 = "none"
+    }else if(calificacion === 2){
+      this.colorBaseCalificacion1 = "danger";
+      this.colorBaseCalificacion2 = "danger"
+      this.colorBaseCalificacion3 = "none"
+      this.colorBaseCalificacion4 = "none"
+      this.colorBaseCalificacion5 = "none"
+    }else if(calificacion === 3){
+      this.colorBaseCalificacion1 = "warning";
+      this.colorBaseCalificacion2 = "warning"
+      this.colorBaseCalificacion3 = "warning"
+      this.colorBaseCalificacion4 = "none"
+      this.colorBaseCalificacion5 = "none"
+    }else if(calificacion === 4){
+      this.colorBaseCalificacion1 = "warning";
+      this.colorBaseCalificacion2 = "warning"
+      this.colorBaseCalificacion3 = "warning"
+      this.colorBaseCalificacion4 = "warning"
+      this.colorBaseCalificacion5 = "none"
+    }else if(calificacion === 5){
+      this.colorBaseCalificacion1 = "success";
+      this.colorBaseCalificacion2 = "success"
+      this.colorBaseCalificacion3 = "success"
+      this.colorBaseCalificacion4 = "success"
+      this.colorBaseCalificacion5 = "success"
+    }
   }
 }
