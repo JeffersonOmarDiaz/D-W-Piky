@@ -37,11 +37,11 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
     role: 'duenio'
   };
 
-  ofertas: Ofrecer []=[];
+  ofertas: Ofrecer[] = [];
   idOferta = '';
   suscribreUserProceso: Subscription;
   suscribreUserDocProceso: Subscription;
-  procesos: Ofrecer={
+  procesos: Ofrecer = {
     id: '',
     fecha: new Date,
     paseador: this.cliente,
@@ -81,100 +81,102 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
   colorBaseCalificacion3 = "none"
   colorBaseCalificacion4 = "none"
   colorBaseCalificacion5 = "none"
+  btnCalificaPata = false;
+  calificacionFinal = null;
   constructor(public firebaseauthS: FirebaseauthService,
-              public firestoreService: FirestoreService,
-              private router: Router,
-              public toastController:ToastController,
-    ) { }
+    public firestoreService: FirestoreService,
+    private router: Router,
+    public toastController: ToastController,
+  ) { }
 
   ngOnInit() {
     this.tipoRol();
   }
 
-  async ngOnDestroy(){
+  async ngOnDestroy() {
     console.log('ngOnDestroy() ==>> Progreso Dueño');
-    if(this.suscribreUserInfo){
+    if (this.suscribreUserInfo) {
       this.suscribreUserInfo.unsubscribe();
     }
-    if(this.suscribreUserInfoRol){
+    if (this.suscribreUserInfoRol) {
       this.suscribreUserInfoRol.unsubscribe();
     }
-    if(this.suscribreUserDocProceso){
+    if (this.suscribreUserDocProceso) {
       this.suscribreUserDocProceso.unsubscribe();
     }
-    if(this.suscribreUserProceso){
+    if (this.suscribreUserProceso) {
       this.suscribreUserProceso.unsubscribe();
     }
-    if(this.suscribeInfoPaseador){
+    if (this.suscribeInfoPaseador) {
       this.suscribeInfoPaseador.unsubscribe();
     }
-    
+
   }
 
-  tipoRol(){
-    this.suscribreUserInfo= this.firebaseauthS.stateAuth().subscribe(res => { 
+  tipoRol() {
+    this.suscribreUserInfo = this.firebaseauthS.stateAuth().subscribe(res => {
       console.log(res);
       if (res !== null) {
         this.uid = res.uid;
         //comprobar TIPO de ROL
-          console.log('tipoRol =>');
-            const path = "Cliente-dw";
-            this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
-              this.cliente = res;
-              console.log('El rol actual es: ',res.role);
-              if(res.role === 'paseador'){
-                this.rolDuenio = false;
-                this.router.navigate([`/home-paseador`], { replaceUrl: true });
-                return true;
-              }else{
-                this.rolDuenio = true;
-                this.uid = res.uid;
-                this.getDatosOferta();
-                return false;
-              }
-            });
+        console.log('tipoRol =>');
+        const path = "Cliente-dw";
+        this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
+          this.cliente = res;
+          console.log('El rol actual es: ', res.role);
+          if (res.role === 'paseador') {
+            this.rolDuenio = false;
+            this.router.navigate([`/home-paseador`], { replaceUrl: true });
+            return true;
+          } else {
+            this.rolDuenio = true;
+            this.uid = res.uid;
+            this.getDatosOferta();
+            return false;
+          }
+        });
         return;
       }
     });
     return false;
   }
 
-  getDatosOferta(){
+  getDatosOferta() {
     console.log('getDatosOferta()');
     const path = 'Cliente-dw/' + this.uid + '/proceso-duenio';
     let startAt = null;
-    this.suscribreUserProceso = this.firestoreService.getCollectionProcesoDuenio<Ofrecer>(path, 'estado', '!=', 'Paseo Finalizado', startAt, 1).subscribe(res =>{
+    this.suscribreUserProceso = this.firestoreService.getCollectionProcesoDuenio<Ofrecer>(path, 'estado', '!=', 'culminada', startAt, 1).subscribe(res => {
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
       this.ofertas = [];
       //DEbo poner una condicionar para que esta sección no se llegue a vaciar si se requiere cargar más
       console.log("Ingresa a las Ofertas de paseadores", res);
-      if(res.length){
-        res.forEach( ofrecer =>{ 
+      if (res.length) {
+        res.forEach(ofrecer => {
           this.ofertas.push(ofrecer);
-          this.idOferta =  this.ofertas[0].id;
+          this.idOferta = this.ofertas[0].id;
           // this.solicitudCancelar = this.ofertas[0];
           this.suscribreUserProceso.unsubscribe();
         });
       }
       // console.log(this.ofertas); //líneas para test
-      if(this.ofertas.length != 0){
+      if (this.ofertas.length != 0) {
         this.obtenerDocumento();
-      }else{
+      } else {
         this.router.navigate([`/home`], { replaceUrl: true });
         this.presentToast('Aún no ha generado solicitudes!!', 2000);
       }
     });
   }
 
-  async presentToast(mensaje: string, tiempo:number) {
+  async presentToast(mensaje: string, tiempo: number) {
     const toast = await this.toastController.create({
       message: mensaje,
-      duration: tiempo 
+      duration: tiempo
     });
     toast.present();
   }
 
-  obtenerDocumento(){
+  obtenerDocumento() {
     const path = 'Cliente-dw/' + this.uid + '/proceso-duenio';
     console.log(path);
     this.suscribreUserDocProceso = this.firestoreService.getDoc<Ofrecer>(path, this.idOferta).subscribe(res => {
@@ -185,9 +187,9 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
     });
   }
 
-  VisibilidadProgreso(){
+  VisibilidadProgreso() {
     console.log('VisibilidadProgreso()');
-    if(this.procesos.estado === 'Llego en 10 minutos' || this.procesos.estado === 'Llego en 5 minutos'){
+    if (this.procesos.estado === 'Llego en 10 minutos' || this.procesos.estado === 'Llego en 5 minutos') {
       //Activar img voyCaminando 1er avance
       this.avance1 = true;
       this.avance4 = false;
@@ -196,7 +198,7 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
       this.activarCalificacion = false;
       this.btnPaseadorNoLlego = true;
       console.log();
-    }else if(this.procesos.estado === 'Estoy fuera'){
+    } else if (this.procesos.estado === 'Estoy fuera') {
       //Activar img estoyFuera 2do avance
       this.avance2 = true;
       this.avance1 = true;
@@ -205,7 +207,7 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
       this.avance3 = false;
       this.activarCalificacion = false;
       this.btnPaseadorNoLlego = true;
-    }else if(this.procesos.estado === 'Paseando'){
+    } else if (this.procesos.estado === 'Paseando') {
       //Activar img caminandoDWIzquierda 3er avance
       this.avance3 = true;
       this.avance2 = true;
@@ -213,7 +215,7 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
       this.btnEmpieza = false;
       this.btnPaseadorNoLlego = false;
       this.btnFinalizarPaseo = true;
-    }else if(this.procesos.estado === 'Paseo Finalizado'){
+    } else if (this.procesos.estado === 'Paseo Finalizado') {
       //Activar img retiroDW 4to avance
       this.avance4 = true;
       this.avance3 = true;
@@ -222,17 +224,42 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
       this.btnEmpieza = false;
       this.btnFinalizarPaseo = false;
       this.activarCalificacion = true;
-    }else if(this.procesos.estado === 'culminada'){
+      this.btnPaseadorNoLlego = false;
+    } else if (this.procesos.estado === 'culminada') {
       this.btnPaseadorNoLlego = false;
       this.activarCalificacion = true;
+      this.btnFinalizarPaseo = false;
       this.avance4 = true;
       this.avance3 = true;
       this.avance2 = true;
       this.avance1 = true;
+    } else if (this.procesos.estado === 'No llegó el pasedor'){
+      this.avance4 = false;
+      this.avance3 = false;
+      this.avance2 = false;
+      this.avance1 = false;
+      this.activarCalificacion = true;
+      this.btnFinalizarPaseo = false;
+      this.btnPaseadorNoLlego = false;
+      if(this.procesos.estado === 'No llegó el pasedor'){
+        this.procesos.estado = 'Paseo Finalizado';
+        this.obtenerDocPaseador();
+        if (this.suscribeInfoPaseador) {
+          this.suscribeInfoPaseador.unsubscribe();
+        }
+      }
+    }else if(this.procesos.estado === 'Ya no estoy activo'){
+      this.avance4 = false;
+      this.avance3 = false;
+      this.avance2 = false;
+      this.avance1 = false;
+      this.activarCalificacion = true;
+      this.btnFinalizarPaseo = false;
+      this.btnPaseadorNoLlego = false;
     }
   }
 
-  async empiezaPaseo(){
+  async empiezaPaseo() {
     this.procesos.estado = 'Paseando';
     const path = 'Cliente-dw/' + this.uid + '/proceso-duenio';
     const idDoc = this.procesos.id;
@@ -240,19 +267,19 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
     await this.obtenerDocPaseador();
   }
 
-  async registrarAccion(data: any, path:string, idDoc: string){
+  async registrarAccion(data: any, path: string, idDoc: string) {
     console.log(data);
-    this.firestoreService.createDoc(data, path, idDoc).then( ()=>{
+    this.firestoreService.createDoc(data, path, idDoc).then(() => {
       console.log('Accion Exitosa!');
     });
   }
 
-  async obtenerDocPaseador(){
+  async obtenerDocPaseador() {
     const uidPaseador = this.ofertas[0].paseador.uid;
     const idDocPaseador = this.procesos.id;
     const path = 'Cliente-dw/' + uidPaseador + '/procesos-dw';
     console.log(path);
-    this.suscribeInfoPaseador = await this.firestoreService.getDoc<Solicitud>(path, idDocPaseador).subscribe( res => {
+    this.suscribeInfoPaseador = await this.firestoreService.getDoc<Solicitud>(path, idDocPaseador).subscribe(res => {
       this.solicitud = res;
       console.log(this.solicitud);
       this.solicitud.estado = this.procesos.estado;
@@ -261,8 +288,29 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
       return;
     });
   }
-  paseadorNollego(){
+  async paseadorNollego() {
     console.log('paseadorNollego()');
+    this.btnFinalizarPaseo = false;
+    console.log('finPaseo()');
+    this.procesos.estado = 'No llegó el pasedor';
+    const path = 'Cliente-dw/' + this.uid + '/proceso-duenio';
+    const idDoc = this.procesos.id;
+    console.log(path);
+    console.log(idDoc);
+    await this.registrarAccion(this.procesos, path, idDoc);
+    await this.calificarNollego().catch( err =>{
+      console.log(err);
+    });
+  }
+  async calificarNollego() {
+    
+    const uidPaseador = this.ofertas[0].paseador.uid;
+    const idDocPaseador = this.procesos.id;
+    const pathDw = 'Cliente-dw/' + uidPaseador + '/procesos-dw';
+    console.log(pathDw);
+    await this.registrarAccion(this.solicitud, pathDw, idDocPaseador);
+    this.suscribeInfoPaseador.unsubscribe();
+    return;
   }
 
   async finPaseo() {
@@ -287,58 +335,90 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
     this.obtenerDocPaseador();
   }
 
-  async calificarDw(){
+  async calificarDw() {
     console.log('calificarDw()');
 
     const uidDw = this.ofertas[0].paseador.uid;
     const idCalifPaseador = this.procesos.id;
-    const path = 'Cliente-dw/'+ uidDw + '/calificaciones';
+    const path = 'Cliente-dw/' + uidDw + '/calificaciones';
     this.calificacion.id = idCalifPaseador;
     console.log(path);
     console.log(this.calificacion.id);
     // this.calificacion.valoracion;
-    // const data = this.calificacion;
-    // await this.firestoreService.createDoc(data, path, idCalifPaseador).then(() => {
-    //   const smsExito = "!Paseo concluido con éxito¡";
-    //   console.log(smsExito);
-    //   this.presentToast(smsExito, 2500);
-      
-    // });
-    
+    this.calificacion.fecha = new Date;
+    const data = this.calificacion;
+    await this.firestoreService.createDoc(data, path, idCalifPaseador).then(() => {
+      this.router.navigate([`/home`], { replaceUrl: true });
+      const smsExito = "!Proceso concluido¡";
+      console.log(smsExito);
+      this.presentToast(smsExito, 2500);
+
+    });
+
   }
-  btnCalificar(calificacion: number){ 
+  btnCalificar(calificacion: number) {
     console.log('btnCalificar ==>', calificacion);
     //Rojo malo, naranja, amarillo, verdeclaro, verde obscuro
-    if(calificacion === 1){
+    if (calificacion === 1) {
       this.colorBaseCalificacion1 = "danger";
       this.colorBaseCalificacion2 = "none"
       this.colorBaseCalificacion3 = "none"
       this.colorBaseCalificacion4 = "none"
       this.colorBaseCalificacion5 = "none"
-    }else if(calificacion === 2){
+      this.btnCalificaPata = true;
+    } else if (calificacion === 2) {
       this.colorBaseCalificacion1 = "danger";
       this.colorBaseCalificacion2 = "danger"
       this.colorBaseCalificacion3 = "none"
       this.colorBaseCalificacion4 = "none"
       this.colorBaseCalificacion5 = "none"
-    }else if(calificacion === 3){
+      this.btnCalificaPata = true;
+    } else if (calificacion === 3) {
       this.colorBaseCalificacion1 = "warning";
       this.colorBaseCalificacion2 = "warning"
       this.colorBaseCalificacion3 = "warning"
       this.colorBaseCalificacion4 = "none"
       this.colorBaseCalificacion5 = "none"
-    }else if(calificacion === 4){
+      this.btnCalificaPata = true;
+    } else if (calificacion === 4) {
       this.colorBaseCalificacion1 = "warning";
       this.colorBaseCalificacion2 = "warning"
       this.colorBaseCalificacion3 = "warning"
       this.colorBaseCalificacion4 = "warning"
       this.colorBaseCalificacion5 = "none"
-    }else if(calificacion === 5){
+      this.btnCalificaPata = true;
+    } else if (calificacion === 5) {
       this.colorBaseCalificacion1 = "success";
       this.colorBaseCalificacion2 = "success"
       this.colorBaseCalificacion3 = "success"
       this.colorBaseCalificacion4 = "success"
       this.colorBaseCalificacion5 = "success"
+      this.btnCalificaPata = true;
     }
+    this.calificacionFinal = calificacion;
+  }
+
+  async escribirCalificacion() {
+    console.log('escribirCalificacion ==> ', this.calificacionFinal);
+    this.calificacion.valoracion = this.calificacionFinal;
+    this.calificarDw();
+    this.procesos.estado = 'culminada';
+    const path = 'Cliente-dw/' + this.uid + '/proceso-duenio';
+    const idDoc = this.procesos.id;
+    console.log(path);
+    console.log(idDoc);
+    await this.registrarAccion(this.procesos, path, idDoc);
+  }
+
+  async calificacionDefault() {
+    console.log('calificacionDefault ==> ', this.btncalificacion5);
+    this.calificacion.valoracion = this.btncalificacion5;
+    this.calificarDw();
+    this.procesos.estado = 'culminada';
+    const path = 'Cliente-dw/' + this.uid + '/proceso-duenio';
+    const idDoc = this.procesos.id;
+    console.log(path);
+    console.log(idDoc);
+    await this.registrarAccion(this.procesos, path, idDoc);
   }
 }

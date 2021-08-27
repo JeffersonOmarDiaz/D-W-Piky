@@ -130,6 +130,14 @@ export class UbicacionMascotasPaseoComponent implements OnInit, OnDestroy {
       this.ofertas = res;
       console.log(this.ofertas);
       this.ofertas.estado = this.estadoProceso.estado;
+      if(this.ofertas.estado === 'Ya no estoy activo'){
+        this.estadoProceso.estado = 'Paseo Finalizado';
+        const uidDw = this.infoPaseador.uid;
+    const id = this.infoDuenio.id;
+    const pathDw = 'Cliente-dw/'+ uidDw + '/procesos-dw';
+        this.modificarEstadosBD(this.estadoProceso, pathDw, idDocDuenio);
+        this.suscribeInfoPaseador.unsubscribe();
+      }
       this.modificarEstadosBD(this.ofertas, pathDuenio, idDocDuenio);
       this.suscribeInfoPaseador.unsubscribe();
       return;

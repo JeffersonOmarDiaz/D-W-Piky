@@ -48,7 +48,7 @@ export interface Solicitud {
 }
 
 export type EstadosSolicitud = 'nueva' | 'cancelada' | 'culminada' | 'proceso' | 'aceptada' | 'Llego en 5 minutos' | 'Llego en 10 minutos'
-                             | 'Estoy fuera' | 'Ya no estoy activo' | 'Paseando' | 'Paseo Finalizado';
+                             | 'Estoy fuera' | 'Ya no estoy activo' | 'Paseando' | 'Paseo Finalizado' | 'No llegó el pasedor';
 
 //calificación 
 export interface Calificacion {
