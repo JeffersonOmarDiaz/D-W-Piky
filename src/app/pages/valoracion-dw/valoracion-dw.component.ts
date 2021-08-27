@@ -26,6 +26,8 @@ export class ValoracionDwComponent implements OnInit {
   calificacionTotal = 0;
   mostrarCalificacion = '';
   imagenRuta = '../../../assets/images/gifs/cargando.gif';
+  smsInicioDw = '';
+  pasedorRanking = '';
   constructor(public firebaseauthService: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,) { }
@@ -91,21 +93,29 @@ export class ValoracionDwComponent implements OnInit {
     let calificacionFuncion= Number(calificacion);
     if(calificacionFuncion > 0 && calificacionFuncion <= 2 ){
       this.imagenRuta ='../../../assets/images/gifs/tercerLugar.gif';
+      this.smsInicioDw = 'El éxito no está en vencer siempre sino en no desanimarse nunca. Napoleón Bonaparte.';
+      this.pasedorRanking = 'Bronce';
       console.log('Paseador bronce');
     }else if(calificacionFuncion > 2 && calificacionFuncion <= 4 ){
       this.imagenRuta ='../../../assets/images/gifs/segundoLugar.gif';
       console.log('Paseador pleteado');
+      this.smsInicioDw = 'Por muy alta que sea una montaña, siempre hay un camino hacia la cima. Anónimo.';
+      this.pasedorRanking = 'Plateado';
     }
     else if(calificacionFuncion > 4){
       console.log('Paseador dorado');
       this.imagenRuta ='../../../assets/images/gifs/primerLugar.gif';
+      this.smsInicioDw = 'Nunca pares, nunca te conformes, hasta que lo bueno sea mejor y lo mejor excelente. Anónimo.';
+      this.pasedorRanking = 'Dorado';
     }
   }
 
   rankingDefault(){
+    this.smsInicioDw = 'Por ser un paseador nuevo se te ha considerado como Paseador Dorado. Para mantenerte como paseador Dorado asegurate de brindar un servicio de calidad';
     console.log('Al ser un paseador nuevo se te ha considerado como Paseador Dorado. Para mantenerte como paseador dorado asegurate de brindar un servicio de calidad');
     this.imagenRuta ='../../../assets/images/gifs/primerLugar.gif';
     this.mostrarCalificacion = '0';
+    this.pasedorRanking = 'Dorado';
   }
 
 }

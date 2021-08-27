@@ -25,6 +25,7 @@ export class ProcesosDwComponent implements OnInit, OnDestroy {
   //Variables para ver si existen Procesos
   procesosDw: Solicitud []= [];
   suscriberProceso : Subscription;
+  sinProcesos = false;
   constructor(public firebaseauthService: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
@@ -83,7 +84,9 @@ export class ProcesosDwComponent implements OnInit, OnDestroy {
     this.suscriberProceso = this.firestoreService.getCollectionProcesoDuenio<Solicitud>(path, 'estado', '!=', 'Paseo Finalizado', startAt, 10).subscribe(res => {
       console.log(res);
       this.procesosDw = res;
-      
+      if(this.procesosDw.length === 0){
+        this.sinProcesos = true;
+      }
     });
   }
 
