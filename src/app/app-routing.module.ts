@@ -14,6 +14,7 @@ import { SolicitudesComponent } from './pages/solicitudes/solicitudes.component'
 import { canActivate, redirectUnauthorizedTo, redirectLoggedInTo } from '@angular/fire/auth-guard';
 import { ProgresoDuenioComponent } from './pages/progreso-duenio/progreso-duenio.component';
 import { ProcesosDwComponent } from './pages/procesos-dw/procesos-dw.component';
+import { ValoracionDwComponent } from './pages/valoracion-dw/valoracion-dw.component';
 const isLogged = () => redirectLoggedInTo(['/home']);
 
 const redirectUnauthorizedToLogin = () =>
@@ -21,6 +22,10 @@ const redirectUnauthorizedToLogin = () =>
 //Usuario Logueado FIN
 
 const routes: Routes = [
+  {
+    path: 'valoracion-dw',
+    component: ValoracionDwComponent, ...canActivate(redirectUnauthorizedToLogin),
+  },
   {
     path: 'procesos-dw',
     component: ProcesosDwComponent, ...canActivate(redirectUnauthorizedToLogin),

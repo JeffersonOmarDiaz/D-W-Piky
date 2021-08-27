@@ -16,6 +16,7 @@ import { PetPaseoComponent } from './pet-paseo/pet-paseo.component';
 import { SolicitudesComponent } from './solicitudes/solicitudes.component';
 import { ProgresoDuenioComponent } from './progreso-duenio/progreso-duenio.component';
 import { ProcesosDwComponent } from './procesos-dw/procesos-dw.component';
+import { ValoracionDwComponent } from './valoracion-dw/valoracion-dw.component';
 
 
 
@@ -32,6 +33,7 @@ import { ProcesosDwComponent } from './procesos-dw/procesos-dw.component';
     SolicitudesComponent,
     ProgresoDuenioComponent,
     ProcesosDwComponent,
+    ValoracionDwComponent,
   ],
   imports: [
     CommonModule,
