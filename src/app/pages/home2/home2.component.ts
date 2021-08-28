@@ -113,9 +113,11 @@ export class Home2Component implements OnInit, OnDestroy {
               this.btnVerSolicitudes = true;
               if(this.cliente.estadoPaseador === "inActivo"){
                 this.habilitarBusqueda = false;
+                this.btnSolicitudesVisibles = false;
               }else if(this.cliente.estadoPaseador === "activo"){
                 this.getSolicitudNuevaPaseo();
                 this.habilitarBusqueda = true;
+                this.btnSolicitudesVisibles = true;
               }
             }
             return false;

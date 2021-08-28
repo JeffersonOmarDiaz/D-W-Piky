@@ -227,9 +227,6 @@ export class FormularioComponent implements OnInit, OnDestroy {
       message: 'Guardando...',
     });
     await this.loading.present();
-    //this.router.navigate(['/perfil-mascota']);
-    /* const { role, data } = await loading.onDidDismiss();
-    console.log('Loading dismissed!'); */
   } 
 
   async mensajeRetorno(){
@@ -245,10 +242,7 @@ export class FormularioComponent implements OnInit, OnDestroy {
           handler: (blah) => {
             console.log('Cambio de ventana');
             this.estadoCliente();
-            //this.ngOnDestroy();
-            //this.router.navigate(['/perfil-mascota']);
             this.router.navigate([`/perfil-mascota`], { replaceUrl: true });
-            //window.location.assign('/perfil-mascota');
           }
         }
       ]

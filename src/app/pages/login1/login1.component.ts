@@ -38,6 +38,7 @@ export class Login1Component implements OnInit, OnDestroy {
 
   suscribreUserInfo: Subscription;
   suscribreUserInfoLogin: Subscription;
+  suscribeAuthUser: Subscription;
 
   clienter : Cliente []=[];
   loading: any;
@@ -46,7 +47,7 @@ export class Login1Component implements OnInit, OnDestroy {
               private router: Router,
               public loadingController: LoadingController,) {
 
-    this.firebaseauthS.stateAuth().subscribe( res => {
+    this.suscribeAuthUser = this.firebaseauthS.stateAuth().subscribe( res => {
       console.log('estado de autenticacion es: ',res);
       if (res !== null){
         this.uid = res.uid;
@@ -73,6 +74,9 @@ export class Login1Component implements OnInit, OnDestroy {
     }
     if(this.suscribreUserInfoLogin){
       this.suscribreUserInfoLogin.unsubscribe();
+    }
+    if(this.suscribeAuthUser){
+      this.suscribeAuthUser.unsubscribe();
     }
   }
 
@@ -116,7 +120,7 @@ export class Login1Component implements OnInit, OnDestroy {
     
   }
 
-  getUserInfo(uid :string){
+  async getUserInfo(uid :string){
     if(uid !== undefined){
       console.log('el id de que llega al getUSerInfo es: ',uid);
       const path = "Cliente-dw";
@@ -124,11 +128,15 @@ export class Login1Component implements OnInit, OnDestroy {
         this.cliente = res;
         console.log('La informacion del cliente es: ', this.cliente);
         //Para ingresar directo al rol asignado "home / home-paseador"
-        /* if(this.cliente.rol === 'duenio'){
-          window.location.assign('/home');
-        }else if(this.cliente.rol === 'paseador'){
-          window.location.assign('/home-paseador');
-        } */
+        if(this.cliente != undefined){
+          if(this.cliente.role === 'duenio'){
+            this.router.navigate(['/home'], { replaceUrl: true });
+            console.log('el rol es dueño');
+          }else if(this.cliente.role === 'paseador'){
+            this.router.navigate(['/home-paseador'], { replaceUrl: true });
+            console.log('el rol es paseador');
+          }
+        }
         //Para ingresar directo al rol asignado "home / home-paseador"
       });
     }
@@ -140,7 +148,7 @@ export class Login1Component implements OnInit, OnDestroy {
     console.log('El correo que llega para guardar es: ', this.cliente.email);
     console.log('La información del cliente a guardar es: ',this.cliente.uid);
     await this.firestoreService.createDoc(this.cliente, path, this.cliente.uid).then(res => {
-      this.router.navigate([`/home-paseador`], { replaceUrl: true });
+      this.router.navigate([`/home`], { replaceUrl: true });
       /* window.location.assign('/home'); */
       console.log('CLIENTE Guardado con exitos!!!');
     }).catch(error => {
@@ -200,12 +208,14 @@ export class Login1Component implements OnInit, OnDestroy {
         }
         if(userExit === true){
           console.log('Devolvió un true ');
-          this.router.navigate([`/home-paseador`], { replaceUrl: true });
+          this.router.navigate([`/home`], { replaceUrl: true });
           return;
         }else{
           console.log('No existe el usuario se lo registrará '); 
-          this.cliente.uid = uid;
-          this.guardarUser();
+          if(this.cliente != undefined){
+            this.cliente.uid = uid;
+            this.guardarUser();
+          }
         }
       });
     }
