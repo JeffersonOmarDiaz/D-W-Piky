@@ -72,6 +72,7 @@ export class NuevaOfertaComponent implements OnInit, OnDestroy {
     cedula: '',
     mascotas: [],
     role: 'duenio',
+    estadoPaseador: 'inActivo',
   };
   ofertar: Ofrecer ={
     id: '',

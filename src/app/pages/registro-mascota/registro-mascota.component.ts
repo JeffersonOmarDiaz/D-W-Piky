@@ -31,7 +31,8 @@ export class RegistroMascotaComponent implements OnInit, OnDestroy {
     apellido: '',
     cedula: '',
     mascotas: [],
-    role: 'duenio'
+    role: 'duenio',
+    estadoPaseador: 'inActivo',
   };
 
   constructor(public firestoreService:FirestoreService,

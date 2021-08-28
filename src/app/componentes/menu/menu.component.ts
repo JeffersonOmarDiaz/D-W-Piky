@@ -32,7 +32,8 @@ export class MenuComponent implements OnInit, OnDestroy {
     apellido: '',
     cedula: '',
     mascotas: [],
-    role: 'duenio'
+    role: 'duenio',
+    estadoPaseador: 'inActivo',
   };
 
   loading: any;
@@ -149,6 +150,6 @@ export class MenuComponent implements OnInit, OnDestroy {
     console.log('Cerror al salir');
     await this.firebaseAuthS.logout();
     this.menuController.close('principal');
-    this.router.navigate([`/login`]);
+    this.router.navigate(['/'], { replaceUrl: true });
   }
 }

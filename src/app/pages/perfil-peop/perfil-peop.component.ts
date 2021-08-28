@@ -28,7 +28,8 @@ export class PerfilPeopComponent implements OnInit {
     apellido: '',
     cedula: '',
     mascotas: [],
-    role: 'duenio'
+    role: 'duenio',
+    estadoPaseador: 'inActivo',
   };
 
   uid = '';

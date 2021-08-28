@@ -55,6 +55,7 @@ export class FormularioComponent implements OnInit, OnDestroy {
     cedula: '',
     mascotas: [],
     role: 'duenio',
+    estadoPaseador: 'inActivo',
   };
   
   uid = '';

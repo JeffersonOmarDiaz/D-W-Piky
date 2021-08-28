@@ -51,7 +51,8 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
     apellido: '',
     cedula: '',
     mascotas: [],
-    role: 'duenio'
+    role: 'duenio',
+    estadoPaseador: 'inActivo',
   };
   suscribreUserInfo: Subscription;
   suscribreUserPet: Subscription;

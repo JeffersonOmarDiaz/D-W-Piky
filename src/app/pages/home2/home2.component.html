@@ -2,7 +2,7 @@
 <ion-content *ngIf="btnVerSolicitudes">
   <ion-item>
     <ion-label>Disponible</ion-label>
-    <ion-toggle (click)="eventoToggle($event)" mode="ios" color="success"></ion-toggle>
+    <ion-toggle (click)="eventoToggle($event)" mode="ios" color="success" checked="{{habilitarBusqueda}}"></ion-toggle>
   </ion-item>
   <ion-grid fixed *ngIf="rolPaseador">
     <ion-row>

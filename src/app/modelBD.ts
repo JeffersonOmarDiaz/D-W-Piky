@@ -29,9 +29,11 @@ export interface Cliente{
     cedula: string;
     mascotas: Mascota[];
     role: RolesExistentes;
+    estadoPaseador: EstadosPaseador;
 } 
 
 export type RolesExistentes = 'duenio' | 'paseador';
+export type EstadosPaseador = 'activo' | 'inActivo';
 
 //Solicitud que genera el el dueño 
 export interface Solicitud {

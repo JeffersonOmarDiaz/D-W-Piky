@@ -30,6 +30,7 @@ export class Login1Component implements OnInit, OnDestroy {
   cedula: '',
   mascotas: [],
   role: 'duenio',
+  estadoPaseador: 'inActivo',
 }
 
   uid ='';
@@ -90,6 +91,7 @@ export class Login1Component implements OnInit, OnDestroy {
       cedula: '',
       mascotas: [],
       role:'duenio', 
+      estadoPaseador: 'inActivo',
     }
   }
 
@@ -138,7 +140,7 @@ export class Login1Component implements OnInit, OnDestroy {
     console.log('El correo que llega para guardar es: ', this.cliente.email);
     console.log('La información del cliente a guardar es: ',this.cliente.uid);
     await this.firestoreService.createDoc(this.cliente, path, this.cliente.uid).then(res => {
-      this.router.navigate([`/home`], { replaceUrl: true });
+      this.router.navigate([`/home-paseador`], { replaceUrl: true });
       /* window.location.assign('/home'); */
       console.log('CLIENTE Guardado con exitos!!!');
     }).catch(error => {
@@ -198,7 +200,7 @@ export class Login1Component implements OnInit, OnDestroy {
         }
         if(userExit === true){
           console.log('Devolvió un true ');
-          this.router.navigate([`/home`], { replaceUrl: true });
+          this.router.navigate([`/home-paseador`], { replaceUrl: true });
           return;
         }else{
           console.log('No existe el usuario se lo registrará '); 
@@ -206,9 +208,6 @@ export class Login1Component implements OnInit, OnDestroy {
           this.guardarUser();
         }
       });
-      //console.log('El uid a usar capacitor es: ',this.cliente.uid);
-      //this.guardarUser();
-      //console.log(uid);
     }
     
   }

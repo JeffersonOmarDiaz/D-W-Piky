@@ -34,7 +34,8 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
     apellido: '',
     cedula: '',
     mascotas: [],
-    role: 'duenio'
+    role: 'duenio',
+    estadoPaseador: 'inActivo',
   };
 
   ofertas: Ofrecer[] = [];

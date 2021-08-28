@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { NuevaOfertaComponent } from 'src/app/componentes/nueva-oferta/nueva-oferta.component';
 import { Cliente, Solicitud } from 'src/app/modelBD';
@@ -39,10 +39,15 @@ export class Home2Component implements OnInit, OnDestroy {
   };
   btnVerSolicitudes = false;
   btnSolicitudesVisibles = false;
+
+  //Para activar el la recepcion de solicitudes
+  habilitarBusqueda = false;
+  loading: any;
   constructor(public firestoreService: FirestoreService,
               public firebaseauthService: FirebaseauthService,
               private router: Router,
-              private modalController: ModalController) {
+              private modalController: ModalController,
+              public loadingController: LoadingController,) {
               //this.firestoreService.setLink(this.pathRetorno);
               
    }
@@ -65,10 +70,6 @@ export class Home2Component implements OnInit, OnDestroy {
       this.suscriberSolicitud.unsubscribe();
     }
   }
-  // refrescarPagina(){
-  //   // window.location.assign('/home-paseador');
-  //   this.router.navigate(['/home'], { replaceUrl: true });
-  // }
 
   async mylocation() {
 
@@ -110,6 +111,12 @@ export class Home2Component implements OnInit, OnDestroy {
             if(this.cliente.cedula != ''){
               console.log('Si tiene cédula');
               this.btnVerSolicitudes = true;
+              if(this.cliente.estadoPaseador === "inActivo"){
+                this.habilitarBusqueda = false;
+              }else if(this.cliente.estadoPaseador === "activo"){
+                this.getSolicitudNuevaPaseo();
+                this.habilitarBusqueda = true;
+              }
             }
             return false;
           }
@@ -182,11 +189,35 @@ export class Home2Component implements OnInit, OnDestroy {
     console.log(estado.currentTarget.checked);
     if(!estado.currentTarget.checked){
       console.log('Va ha mostrar las solicitudes');
-      this.getSolicitudNuevaPaseo();
+      // this.getSolicitudNuevaPaseo();
       this.btnSolicitudesVisibles = true
+      this.cliente.estadoPaseador = 'activo';
+      this.cambiarEstadoPaseador(this.cliente);
     }else{
       console.log('Va ha OCULTAR las solicitudes');
       this.btnSolicitudesVisibles = false;
+      this.cliente.estadoPaseador = 'inActivo';
+      this.cambiarEstadoPaseador(this.cliente);
+      this.suscriberSolicitud.unsubscribe();
     }
+  }
+
+  async cambiarEstadoPaseador(cliente: Cliente){
+    this.presentLoading();
+    const path = 'Cliente-dw/';
+    console.log(path);
+    console.log(cliente);
+    await this.firestoreService.createDoc(cliente, path, cliente.uid).then( ()=>{
+      console.log('!Cambio de estado Paseador exitoso!');
+      this.loading.dismiss();
+    });
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: '...',
+    });
+    await this.loading.present();
   }
 }

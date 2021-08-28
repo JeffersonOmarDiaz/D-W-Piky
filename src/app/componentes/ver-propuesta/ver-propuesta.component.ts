@@ -57,6 +57,7 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
     cedula: '',
     mascotas: [],
     role: 'duenio',
+    estadoPaseador: 'inActivo',
   }
   solicitudModificar: Solicitud = {
     id: '',
