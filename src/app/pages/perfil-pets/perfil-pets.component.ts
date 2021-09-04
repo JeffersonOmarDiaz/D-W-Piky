@@ -34,7 +34,6 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
     // observaciones: '',
     id: this.firestoreService.getId(), 
     fechaCreacionMas: new Date,
-    idDuenio: '',
   }
   //Para Limpiar los campos en un nuevo registro Fin
   uid = '';
@@ -334,7 +333,6 @@ export class PerfilPetsComponent implements OnInit, OnDestroy {
       // observaciones: '',
       id: this.firestoreService.getId(), 
       fechaCreacionMas: new Date,
-      idDuenio: '',
     }
     this.firestoreService.setItem(this.newMascota);
   }

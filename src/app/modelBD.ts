@@ -9,7 +9,7 @@ export interface Mascota {
     // observaciones: string;
     id: string;
     fechaCreacionMas: Date; 
-    idDuenio: string;
+    // idDuenio: string;
 }
 
 export interface Cliente{

@@ -54,15 +54,10 @@ export class Home1Component implements OnInit, OnDestroy {
               console.log('El rol actual es: ',res.role);
               if(res.role === 'paseador'){
                 this.rolDuenio = false;
-                //this.router.navigate(['/home-paseador']);
-                //window.location.assign('/home-paseador');
                 this.router.navigate([`/home-paseador`], { replaceUrl: true });
                 return true;
               }else{
                 this.rolDuenio = true;
-                //window.location.assign('/home');
-                //this.router.navigate(['/home']);
-                //this.router.navigate([`/home`], { replaceUrl: true });
                 return false;
               }
             });

@@ -75,7 +75,6 @@ export class TestComponent implements OnInit {
     agresivo: 'no',
     id: '1234',
     fechaCreacionMas: new Date,
-    idDuenio: '122345',
   },
   {
     foto: 'mimascota2.png',
@@ -86,7 +85,6 @@ export class TestComponent implements OnInit {
     agresivo: 'si',
     id: '12343',
     fechaCreacionMas: new Date,
-    idDuenio: '122345',
   }
 ];
 

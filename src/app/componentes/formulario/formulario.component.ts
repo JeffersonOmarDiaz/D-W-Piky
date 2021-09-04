@@ -28,7 +28,6 @@ export class FormularioComponent implements OnInit, OnDestroy {
     // observaciones: '',
     id: this.firestoreService.getId(), 
     fechaCreacionMas: new Date,
-    idDuenio: '',
   }
 
   mascotas: Mascota[]=[];
@@ -174,7 +173,6 @@ export class FormularioComponent implements OnInit, OnDestroy {
       // observaciones: '',
       id: this.firestoreService.getId(), 
       fechaCreacionMas: new Date,
-      idDuenio: '',
     }
   }
   cambiarImg : boolean;
