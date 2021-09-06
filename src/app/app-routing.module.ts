@@ -54,10 +54,10 @@ const routes: Routes = [
     path: 'registro-mascota',
     component: RegistroMascotaComponent, ...canActivate(redirectUnauthorizedToLogin)
   },
-  {
-    path: 'registro',
-    component: RegistroPepComponent, ...canActivate(redirectUnauthorizedToLogin),
-  },
+  // {
+  //   path: 'registro',
+  //   component: RegistroPepComponent, ...canActivate(redirectUnauthorizedToLogin),
+  // },
   {
     path: 'login',
     component: Login1Component, ...canActivate(isLogged),
