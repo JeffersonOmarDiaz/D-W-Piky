@@ -185,7 +185,7 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
   async crearProcesos(data: any, path: string, id: string){
     await this.firestoreService.createDoc(data, path, id).then(res => {
       console.log('Paseador aceptado');
-      this.presentToast('Paseador aceptado', 2500);
+      this.presentToast('Paseador aceptado. Espere que el paseador se ponga en contacto', 4500);
     }).catch(error => {
       console.log('Ocurrión un error');
       this.presentToast('No se pudo realizar el proceso', 2000);
