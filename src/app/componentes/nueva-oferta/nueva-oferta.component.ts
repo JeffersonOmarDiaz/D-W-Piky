@@ -99,6 +99,8 @@ export class NuevaOfertaComponent implements OnInit, OnDestroy {
   datosGuia : any;
   suscribtionOfertas: Subscription;
   idOferta: string;
+
+  verMascotasVariable = false;
   constructor(private renderer: Renderer2,
               @Inject(DOCUMENT) private document, 
               private googlemapsService: GooglemapsService, 
@@ -434,5 +436,9 @@ async aceptarOferta(valor: number){
     });
 
 
+  }
+
+  verMascotas(activar: boolean){
+    this.verMascotasVariable = activar;
   }
 }

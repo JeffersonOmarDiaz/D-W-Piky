@@ -12,9 +12,9 @@
             
           <ion-item (click)="verMascotasPaseo([solicitud])">
             <!-- <ion-grid> -->
-              <ion-row >
+              <ion-row>
 
-                <ion-col size="4">
+                <ion-col size="5">
                   <ion-row>
                     <ion-col size="12">
                       <img src={{solicitud.duenio.foto}} class="imgRedonda" onerror="this.src='../../../assets/images/icons/nofotoerfil.png'">
@@ -29,12 +29,13 @@
                   </ion-row>
                 </ion-col>
 
-                <ion-col>
-                  <ion-label class="normal">
+                <ion-col size="7">
+                  <ion-label class="ion-text-wrap">
                     Hora: {{solicitud.fecha.seconds*1000 | date:'shortTime'}}
                     <p>Fecha: {{solicitud.fecha.seconds*1000 | date}}</p>
                     <p>Mascotas: {{solicitud.numMascotas}}</p>
-                    <p>Tiempo: {{solicitud.tiempo}} horas  Pago$ {{solicitud.valor}} </p>
+                    <p>Tiempo: {{solicitud.tiempo}} horas </p>
+                    <p> Pago$ {{solicitud.valor}} </p>
                   </ion-label>
                 </ion-col>
 
