@@ -30,58 +30,56 @@
   <!-- <div> -->
     <!-- <ion-card> -->
       <ion-grid>
-        <ion-row>
-          <ion-col size="4">
-            <ion-item>
-              <!-- <ion-label class="ion-text-wrap">Solicitante</ion-label> -->
-              <img class="image" [src]="infoDuenio.duenio.foto" onerror="this.src='../../../assets/images/icons/nofotoerfil.png'">
-            </ion-item>
-            <ion-item >
-              <ion-label class="ion-text-wrap"><h4 style=" text-align: center"> {{infoDuenio.duenio.nombre}} {{infoDuenio.duenio.apellido}}</h4>
-                <p>Celular: {{infoDuenio.duenio.celular}}</p>
-                <p>Direccíon: {{infoDuenio.direccion}}</p>
-                <p>Referencia: {{infoDuenio.duenio.referncia}}</p>
-              </ion-label>
-            </ion-item>
-            <ion-item>
-              <ion-label class="ion-text-wrap">Tiempo: {{infoDuenio.tiempo}}
-              Pago$ {{infoDuenio.valor}}</ion-label>
-            </ion-item>
-            <!-- <ion-button routerLink="/perfil-persona" >Ir Pro ahí</ion-button> -->
-          </ion-col>
-          <ion-col size="8">
-            <ion-grid fixed>
-              <ion-row class="ion-justify-content-center">
-                <!-- <ion-label class="ion-text-wrap">Mascotas</ion-label> -->
-                <ion-item *ngFor="let mascota of infoDuenio.duenio.mascotas"  >
-                      <!-- <ion-col> -->
-                      <img src={{mascota.foto}} class="imgMascota" onerror="this.src='../../../assets/images/icons/perfil-dog.png'">
-                      <ion-label class="ion-text-wrap">
-                        {{mascota.nombre}}
-                      <p>Tamaño: {{mascota.tamanio}}</p>
-                      <p>Edad: {{mascota.edad}}</p>
-                      <p>Agresivo: {{mascota.agresivo}}</p>
-                      </ion-label>
-                    <!-- </ion-col> -->
-                    </ion-item>
-                <!-- <ion-col size="6"></ion-col> -->
-              </ion-row>
-            </ion-grid>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-item>
-              <ion-label class="ion-text-wrap">Observaciones: {{infoDuenio.observacion}}</ion-label>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    <!-- </ion-card> -->
-  <!-- </div> -->
-
-  <ion-card>
-    <ion-grid>
+        <ion-card>
+          <ion-row>
+            <ion-col size="12">
+              <ion-item>
+                <ion-row>
+                  <ion-col size="5">
+                    <img class="image" [src]="infoDuenio.duenio.foto"
+                      onerror="this.src='../../../assets/images/icons/nofotoerfil.png'">
+                    <p style=" text-align: center"> {{infoDuenio.duenio.nombre}} {{infoDuenio.duenio.apellido}}</p>
+                  </ion-col>
+                  <ion-col size="7">
+                    <ion-label class="ion-text-wrap">
+                      <p>Celular: {{infoDuenio.duenio.celular}}</p>
+                      <p>Direccíon: {{infoDuenio.direccion}}</p>
+                      <p>Referencia: {{infoDuenio.duenio.referncia}}</p>
+                    </ion-label>
+                    <p class="ion-text-wrap">Tiempo: {{infoDuenio.tiempo}}
+                      Pago$ {{infoDuenio.valor}}</p>
+                  </ion-col>
+                </ion-row>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col >
+              <!-- <ion-grid fixed> -->
+                <ion-row class="ion-justify-content-center">
+                  <ion-item *ngFor="let mascota of infoDuenio.duenio.mascotas"  >
+                        <img src={{mascota.foto}} class="imgMascota" onerror="this.src='../../../assets/images/icons/perfil-dog.png'">
+                        <ion-label class="ion-text-wrap">
+                          {{mascota.nombre}}
+                        <p>Tamaño: {{mascota.tamanio}}</p>
+                        <p>Edad: {{mascota.edad}}</p>
+                        <p>Agresivo: {{mascota.agresivo}}</p>
+                        </ion-label>
+                      </ion-item>
+                </ion-row>
+              <!-- </ion-grid> -->
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label class="ion-text-wrap">Recomendaciones para el paseo: {{infoDuenio.observacion}}</ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-card>
+        
+      <ion-card>
         <ion-row class="ion-justify-content-center">
           <ion-col size="6">
             <!-- <ion-button (click)="verInidicaciones(true)" class="aceptarValor" shape="round" *ngIf="!verGuia">
@@ -93,7 +91,7 @@
             <ion-button shape="round" class="aceptarValor" (click)="aceptarOferta(infoDuenio.valor)" >Aceptar por$ {{infoDuenio.valor}} </ion-button>
           </ion-col>
         </ion-row>
-        <ion-row>
+        <ion-row class="ion-justify-content-center">
           <ion-col>
             <ion-label>Ofrecer: $ 
           </ion-label>
@@ -102,8 +100,8 @@
             <ion-button class="aceptarValor" (click)="aceptarOferta(adcional3)">{{adcional3}}</ion-button>
           </ion-col>
         </ion-row>
+      </ion-card>
+      <h4 style="text-align: center;">¿Cómo llegar?</h4>
       </ion-grid>
-    </ion-card>
-<h4 style="text-align: center;">¿Cómo llegar?</h4>
   <div id="indicators" ></div>
 </ion-content>
