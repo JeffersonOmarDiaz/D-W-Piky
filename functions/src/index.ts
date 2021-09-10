@@ -142,7 +142,7 @@ exports.eventPedido = functions.firestore
     });
 
 // Para l solicitud http
-export const newNotification = functions.https.onRequest((request, response) => {
+export const newNotificationPersonalizada = functions.https.onRequest((request, response) => {
 
     return cors(request, response, async () => {
         // El request verifica si existe alguna información, en este caso se revisa el body 

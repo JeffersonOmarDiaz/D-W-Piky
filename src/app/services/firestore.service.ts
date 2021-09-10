@@ -115,6 +115,19 @@ getCollectionProcesoDuenio<tipo>(path: string, parametro:string, condicion:any, 
   return collection.valueChanges();  
 }
 
+
+//Notificaciones Masivas
+getCollectionDogWalker<tipo>(path: string, parametro:string, condicion:any, busqueda:string){
+  // if(startAt == null ){
+  //   startAt = new Date();
+  // }
+  //si deseo traer las coleciones de solicites de en diferentes ubicaciones seria collectionGroup
+  const collection = this.database.collection<tipo>(path, 
+    ref => ref.where(parametro, condicion, busqueda )
+    ); 
+  return collection.valueChanges();  
+}
+
 //las colecciones pueden estar alojadas en diferentes lugares
 getCollectionAllPlace<tipo>(path: string, parametro:string, condicion:any, busqueda:string, startAt: any){
   if(startAt == null ){

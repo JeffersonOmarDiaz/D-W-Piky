@@ -69,19 +69,19 @@ export class NotificationsService {
 
   addListeners(){
   PushNotifications.register();
-    LocalNotifications.schedule({
-      notifications: [
-        {
-          title: 'notificacion local',
-          body: 'Cuerpo de la notificación',
-          id: 1,
-          extra: {
-            data: 'Datos adicionales'
-          },
-          iconColor: '#EB9234'
-        }
-      ]
-    });
+    // LocalNotifications.schedule({
+    //   notifications: [
+    //     {
+    //       title: 'notificacion local',
+    //       body: 'Cuerpo de la notificación',
+    //       id: 1,
+    //       extra: {
+    //         data: 'Datos adicionales'
+    //       },
+    //       iconColor: '#EB9234'
+    //     }
+    //   ]
+    // });
     //eventos //cuando el usuario acepta las notificaciones
     PushNotifications.addListener('registration',
     (token: PushNotificationToken) =>{
@@ -122,16 +122,16 @@ export class NotificationsService {
     PushNotifications.addListener('pushNotificationActionPerformed',
     (notification: PushNotificationActionPerformed) => {
       console.log('Push acction performed en segundo plano: ', notification);
-      this.router.navigate(['/perfil-persona']);
-      // this.router.navigate([notification.notification.data.enlace]);
+      //this.router.navigate(['/perfil-persona']);
+      this.router.navigate([notification.notification.data.enlace]);
     });
 
     //cuando damos clic en una aplicación local
     LocalNotifications.addListener('localNotificationActionPerformed',
     (notification: LocalNotificationActionPerformed) =>{
       console.log();
-      this.router.navigate(['/perfil-persona']); //Creamos una ruta más dinámica
-      // this.router.navigate([notification.notification.extra.data.enlace]);
+      // this.router.navigate(['/perfil-persona']); //Creamos una ruta más dinámica
+      this.router.navigate([notification.notification.extra.data.enlace]);
     });
   }
 
@@ -174,7 +174,7 @@ export class NotificationsService {
           notification, //Cuerpo de la notificación "título y body"
         }
         //se hace una solicitud http atraves de una url 
-        const url = 'https://us-central1-tienda-7bd46.cloudfunctions.net/newNotification';
+        const url = 'https://us-central1-banca-2e58b.cloudfunctions.net/newNotificationPersonalizada';
         return this.http.post<Res>(url, { data }).subscribe(res => {
           console.log('respuesta newNotication() -> ', res);
 

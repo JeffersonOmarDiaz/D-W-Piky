@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
@@ -11,7 +12,7 @@ import { FirestoreService } from 'src/app/services/firestore.service';
   templateUrl: './pet-paseo.component.html',
   styleUrls: ['./pet-paseo.component.scss'],
 })
-export class PetPaseoComponent implements OnInit {
+export class PetPaseoComponent implements OnInit, OnDestroy {
  
   verMC = true;
 
@@ -70,14 +71,25 @@ export class PetPaseoComponent implements OnInit {
   solicitud: Solicitud; 
   //Para mostar mensaje si no hay mascotas
   listaMascotas = false;
+  //para enviar notificaciones
+  suscribreUserPasedores: Subscription;
+  dogWalkerDisponibles : any [];
+  arrayToken: any[] = [];
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
               public toastController: ToastController,
-              public loadingController: LoadingController,) { }
+              public loadingController: LoadingController,
+              private http: HttpClient) { }
 
   ngOnInit() {
     this.tipoRol();
+  }
+
+  ngOnDestroy(){
+    if(this.suscribreUserPasedores){
+      this.suscribreUserPasedores.unsubscribe();
+    }
   }
 
   tipoRol(){
@@ -110,10 +122,11 @@ export class PetPaseoComponent implements OnInit {
   getUserInfo(uid :string){
     if(uid !== undefined){
       console.log('el id de que llega al getUSerInfo es: ',uid);
+      this.mostrarPaseadoresDisponibles();
     }
     console.log('Suscrito a  la info');
     const path = "Cliente-dw";
-    this.suscribreUser = this.firestoreService.getDoc<Cliente>(path,uid).subscribe( res => {
+    this.suscribreUser = this.firestoreService.getDoc<any>(path,uid).subscribe( res => {
       this.cliente = res;
       this.clienteMascota = res.mascotas;
       console.log('La informacion del cliente es: ', this.cliente);
@@ -129,6 +142,63 @@ export class PetPaseoComponent implements OnInit {
     return;
   }
   
+  mostrarPaseadoresDisponibles(){
+    console.log('mostrarPaseadoresDisponibles()');
+    this.suscribreUserPasedores = this.firestoreService.getCollectionDogWalker<Cliente>('Cliente-dw', 'estadoPaseador', '==', 'activo').subscribe(res => {
+      this.dogWalkerDisponibles = res;
+      // console.log(this.dogWalkerDisponibles);
+      
+    if (this.dogWalkerDisponibles != undefined) {
+      this.cargarPaseadoresEncontrados();
+      }
+    });
+  }
+
+  cargarPaseadoresEncontrados(){
+    console.log('enviarNotificaciones()');
+    let paseadores= []; 
+      for (let index = 0; index < this.dogWalkerDisponibles.length; index++) {
+           const element = this.dogWalkerDisponibles[index];
+           console.log('Paseaodores individuales ==> ', element);
+           if(this.dogWalkerDisponibles[index].token != undefined){
+             paseadores.push(this.dogWalkerDisponibles[index].token);
+             this.arrayToken.push(this.dogWalkerDisponibles[index].token);
+           }
+          
+          }
+      console.log(paseadores);
+    
+  }
+
+  async enviarNotificacion(){
+    console.log('enviarNotificacion() Filtro 1 ===> ', this.arrayToken);
+    if(this.arrayToken != undefined){
+      console.log('enviarNotificacion() Filtro 2');
+      const dataNotification = {
+        enlace: '/home-paseador', //esto es a donde queremos que se vaya
+      }
+      const notification = {
+        //en la notificación tamien se puede añador una imgen 
+        title: 'Nueva solicitud',
+        body: 'De mi parte '
+      };
+      //esto esta coordinado con newNotification por lo que si no escribo data o cambio el nombre de las variables no funcionará
+      const data: INotification = {
+        data: dataNotification,
+        tokens: this.arrayToken, //Puede ser con diversos token [token1, token2, .....]
+        notification, //Cuerpo de la notificación "título y body"
+      }
+      //se hace una solicitud http atraves de una url 
+      const url = 'https://us-central1-banca-2e58b.cloudfunctions.net/newNotificationPersonalizada';
+      return this.http.post<Res>(url, { data }).subscribe(res => {
+        console.log('respuesta newNotication() -> ', res);
+  
+      });
+
+    }
+    
+  }
+
   estado(checked: any, informacion: any){
     console.log('Esta desmarcado: ',checked.currentTarget.checked);
     if(!checked.currentTarget.checked){
@@ -225,10 +295,12 @@ export class PetPaseoComponent implements OnInit {
         await this.firestoreService.createDoc(this.solicitud, path, idSolicitud).then ( ()=>{
           console.log('!Solicitud generada de forma exitosa!');
           this.presentToast('!Solicitud generada de forma exitosa!', 2500);
-          // url pendiente de revisar
           this.router.navigate([`/solicitudes`], { replaceUrl: true });
           this.dismissLoading();
-          });
+        }).finally(async ()=>{
+          await this.enviarNotificacion();
+        }
+        );
         }
       }else{
         console.log('Escoja un tiempo de paseo', this.tiempoPaseo);
@@ -278,4 +350,14 @@ export class PetPaseoComponent implements OnInit {
 
   }
   
+}
+
+interface INotification {
+  data: any;
+  tokens: string[];
+  notification: any
+}
+
+interface Res {
+  respuesta: string;
 }
