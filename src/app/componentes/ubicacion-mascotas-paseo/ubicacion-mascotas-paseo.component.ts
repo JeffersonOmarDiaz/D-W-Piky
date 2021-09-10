@@ -3,6 +3,7 @@ import { ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Calificacion, Cliente, Ofrecer, Solicitud } from 'src/app/modelBD';
 import { FirestoreService } from 'src/app/services/firestore.service';
+import { NotificationsService } from 'src/app/services/notifications.service';
 
 @Component({
   selector: 'app-ubicacion-mascotas-paseo',
@@ -37,9 +38,11 @@ export class UbicacionMascotasPaseoComponent implements OnInit, OnDestroy {
     comentario: '',
     valoracion: 5
 }
+arrayToken: any[] = [];
   constructor(public modalController: ModalController,
               public firestoreService: FirestoreService,
               public toastController: ToastController,
+              private notificationsService : NotificationsService,
             )
   { }
 
@@ -92,7 +95,7 @@ export class UbicacionMascotasPaseoComponent implements OnInit, OnDestroy {
     const uidDuenio = this.infoDuenio.duenio.uid;
     const idDocDuenio = this.infoDuenio.id;
     const pathDuenio = 'Cliente-dw/' + uidDuenio + '/proceso-duenio';
-    
+    this.enviarNotificacion();
     if(estado === 'Paseo Finalizado'){
       this.estadoProceso.estado = 'Paseo Finalizado'
       await this.obtenerDocDuenio();
@@ -101,6 +104,26 @@ export class UbicacionMascotasPaseoComponent implements OnInit, OnDestroy {
       await this.obtenerDocDuenio();
     }
     
+  }
+
+  async enviarNotificacion(){
+    const pathDw = 'Cliente-dw/';
+    const receptor = this.infoDuenio.duenio.uid;
+    let token: any[] = [];
+
+    
+    const titulo = 'Progreso de la solicitud'; 
+    const cuerpo= this.infoPaseador.nombre + ' '+ this.infoPaseador.apellido + '\n Estado de la solicitud '+ this.estadoProceso.estado;
+  
+    this.firestoreService.getDoc<any>(pathDw, receptor).subscribe( res =>{
+      token = res.token;
+      console.log(token);
+      this.arrayToken.push(res.token);
+      if(this.arrayToken != undefined){
+        this.notificationsService.newNotication('/progreso-duenio', this.arrayToken, titulo, cuerpo);
+      }
+    });
+  
   }
 
   async crearCalificacion(){
