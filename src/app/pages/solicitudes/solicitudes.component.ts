@@ -387,7 +387,8 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
       mode: 'ios',
       swipeToClose: true,
       componentProps: {position: positionInput, positionMascota: this.ubicacionMascota, infoPaseador: informacionPaseador, 
-        pathEditar: pathModificaEstado, idSolicitud: idSolicitudModificar, pathDuenioColec: pathDuenio} //pasa la ubicación a nuevaoferta
+        pathEditar: pathModificaEstado, idSolicitud: idSolicitudModificar, pathDuenioColec: pathDuenio,
+        infoDuenio: this.cliente} //pasa la ubicación a nuevaoferta
     });
     await modalAdd.present();
   }

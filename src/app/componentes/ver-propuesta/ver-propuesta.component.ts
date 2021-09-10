@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { GooglemapsService } from 'src/app/googlemaps/googlemaps.service';
 import { Cliente, Ofrecer, Solicitud } from 'src/app/modelBD';
 import { FirestoreService } from 'src/app/services/firestore.service';
+import { NotificationsService } from 'src/app/services/notifications.service';
 
 declare var google: any;
 @Component({
@@ -72,13 +73,16 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
     estado : 'nueva'
   };
   
+  arrayToken: any[] = [];
+  @Input () infoDuenio: Cliente;
   constructor(public modalController: ModalController,
               private renderer: Renderer2,
               @Inject(DOCUMENT) private document, 
               private googlemapsService: GooglemapsService,
               public firestoreService: FirestoreService,
               public toastController: ToastController,
-              private router: Router,) { }
+              private router: Router,
+              private notificationsService : NotificationsService,) { }
 
   ngOnInit(): void {
 
@@ -87,6 +91,7 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
     console.log('uid Dueño ==> ', this.pathEditar);
     // console.log('id solicitud ==> ', this.idSolicitud);
     console.log('pathDuenioColec ==> ', this.pathDuenioColec);
+    console.log(' Información del Dueño => ', this.infoDuenio);
     this.init();
   }
 
@@ -175,6 +180,7 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
     // });
     await this.crearProcesos(this.infoPaseador, pathDuenio, id).finally( ()=>{
       this.crearProcesos(this.solicitudModificar, pathDW, id);
+      this.enviarNotificacion();
       this.router.navigate([`/progreso-duenio`], { replaceUrl: true });
       this.modalController.dismiss();
     }
@@ -227,7 +233,23 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
     toast.present();
   }
 
-  // rechazar(){
-  //   console.log('rechazar()()');
-  // }
+  async enviarNotificacion(){
+    const pathDw = 'Cliente-dw/';
+    const receptor = this.infoPaseador.paseador.uid;
+    let token: any[] = [];
+
+    
+    const titulo = 'Oferta Aceptada'; 
+    const cuerpo= this.infoDuenio.nombre + ' '+ this.infoDuenio.apellido + ' aceptó tu solicitud'+' \n Ve por sus mascotas';
+  
+    this.firestoreService.getDoc<any>(pathDw, receptor).subscribe( res =>{
+      token = res.token;
+      console.log(token);
+      this.arrayToken.push(res.token);
+      if(this.arrayToken != undefined){
+        this.notificationsService.newNotication('/procesos-dw', this.arrayToken, titulo, cuerpo);
+      }
+    });
+  
+  }
 }
