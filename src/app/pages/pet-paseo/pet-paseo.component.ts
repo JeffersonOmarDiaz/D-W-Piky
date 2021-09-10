@@ -175,7 +175,7 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
   async enviarNotificacion(){
     const path = '/home-paseador';
     const titulo = 'Nueva Solicitud ';
-    const cuerpo = this.solicitud.duenio.nombre + ' ' + this.solicitud.duenio.apellido + '\n Tiempo:' + this.solicitud.tiempo + '\n Pago: $' + this.solicitud.valor;
+    const cuerpo = this.solicitud.duenio.nombre + ' ' + this.solicitud.duenio.apellido + '\n Tiempo: ' + this.solicitud.tiempo + ' H' +'\n Pago: $' + this.solicitud.valor;
     console.log('enviarNotificacion() Filtro 1 ===> ', this.arrayToken);
     if(this.arrayToken != undefined){
       console.log('enviarNotificacion() Filtro 2');

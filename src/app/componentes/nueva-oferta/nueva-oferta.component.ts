@@ -7,6 +7,7 @@ import { GooglemapsService } from './../../googlemaps/googlemaps.service';
 import { Cliente, Mascota, Ofrecer, Solicitud } from 'src/app/modelBD';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { Subscription } from 'rxjs';
+import { NotificationsService } from 'src/app/services/notifications.service';
 const {Geolocation} = Plugins;
 declare var google: any;
 
@@ -101,12 +102,15 @@ export class NuevaOfertaComponent implements OnInit, OnDestroy {
   idOferta: string;
 
   verMascotasVariable = false;
+
+  arrayToken: any[] = [];
   constructor(private renderer: Renderer2,
               @Inject(DOCUMENT) private document, 
               private googlemapsService: GooglemapsService, 
               public modalController: ModalController,
               public toastController: ToastController,
               public firestoreService: FirestoreService,
+              private notificationsService : NotificationsService,
 ) {
   this.obtenerUbicacionPaseador();
  }
@@ -397,12 +401,30 @@ async aceptarOferta(valor: number){
   this.ofertar.id = this.idOferta;
   await this.firestoreService.createDoc(this.ofertar, path, this.idOferta).then(() => {
     this.modalController.dismiss();
-    
+    this.enviarNotificacion();
     const smsExito = "!Ha ofertado con éxito¡";
     console.log(smsExito);
     this.presentToast(smsExito, 2500);
     
   });
+}
+
+enviarNotificacion(){
+  const pathDuenio = 'Cliente-dw/';
+  const receptor = this.infoDuenio.duenio.uid;
+  let token: any[] = [];
+  const titulo = 'Paseador Interesado'; 
+  const cuerpo= this.infoPaseador.nombre + ' '+ this.infoPaseador.apellido + ' \n Aceptará el paseo por: $'+ this.ofertar.valor;
+
+  this.firestoreService.getDoc<any>(pathDuenio, receptor).subscribe( res =>{
+    token = res.token;
+    console.log(token);
+    this.arrayToken.push(res.token);
+    if(this.arrayToken != undefined){
+      this.notificationsService.newNotication('/solicitudes', this.arrayToken, titulo, cuerpo);
+    }
+  });
+
 }
      //Verificar si la sentencia se comple del lado del dueño 
   validarSolicitudAnterior(uidDuenio: string, uidSolicitud: string) {

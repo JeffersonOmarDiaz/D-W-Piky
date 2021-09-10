@@ -6,6 +6,7 @@ import { VerPropuestaComponent } from 'src/app/componentes/ver-propuesta/ver-pro
 import { Cliente, Ofrecer, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
+import { NotificationsService } from 'src/app/services/notifications.service';
 
 @Component({
   selector: 'app-solicitudes',
@@ -54,13 +55,19 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     lat : null,
     lng : null,
   }
+
+  suscribreUserPasedores: Subscription;
+  dogWalkerDisponibles : any [];
+  arrayToken: any[] = [];
+
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
               public menuController:MenuController, 
               public alertController:AlertController,
               public toastController: ToastController,
-              private modalController: ModalController) {
+              private modalController: ModalController,
+              private notificationsService: NotificationsService) {
                }
 
   ngOnInit() {
@@ -103,6 +110,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
                 this.rolDuenio = true;
                 this.uid = res.uid;
                 this.getSolicitudNuevaPaseo();
+                this.mostrarPaseadoresDisponibles();
                 return false;
               }
             });
@@ -202,11 +210,53 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
             this.solicitudCancelar.valor = valor;
             this.solicitudCancelar.fecha = new Date;
             this.modificaEstadoSolicitud(this.solicitudCancelar, path, this.idSolicitud);
+            this.enviarNotificacion();
           }
         }
       ]
     });
     await alert.present();
+  }
+
+  mostrarPaseadoresDisponibles(){
+    console.log('mostrarPaseadoresDisponibles()');
+    this.suscribreUserPasedores = this.firestoreService.getCollectionDogWalker<Cliente>('Cliente-dw', 'estadoPaseador', '==', 'activo').subscribe(res => {
+      this.dogWalkerDisponibles = res;
+      // console.log(this.dogWalkerDisponibles);
+      
+    if (this.dogWalkerDisponibles != undefined) {
+      this.cargarPaseadoresEncontrados();
+      }
+    });
+  }
+
+  cargarPaseadoresEncontrados(){
+    console.log('enviarNotificaciones()');
+    let paseadores= []; 
+      for (let index = 0; index < this.dogWalkerDisponibles.length; index++) {
+           const element = this.dogWalkerDisponibles[index];
+           console.log('Paseaodores individuales ==> ', element);
+           if(this.dogWalkerDisponibles[index].token != undefined){
+             paseadores.push(this.dogWalkerDisponibles[index].token);
+             this.arrayToken.push(this.dogWalkerDisponibles[index].token);
+           }
+          
+          }
+      console.log(paseadores);
+    
+  }
+
+  async enviarNotificacion(){
+    const path = '/home-paseador';
+    const titulo = 'Valor De Solicitud Mejorada';
+    const cuerpo = this.cliente.nombre + ' ' + this.cliente.apellido + '\n Tiempo: ' + this.solicitudCancelar.tiempo + ' H' +'\n Pago: $' + this.solicitudCancelar.valor;
+    console.log('enviarNotificacion() Filtro 1 ===> ', this.arrayToken);
+    if(this.arrayToken != undefined){
+      console.log('enviarNotificacion() Filtro 2');
+      this.notificationsService.newNotication(path, this.arrayToken, titulo, cuerpo);
+      
+    }
+    
   }
 
   async cancelarSolicitud(){
