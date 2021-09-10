@@ -150,27 +150,27 @@ export class NotificationsService {
     }
   }
 
-  newNotication() {
+  newNotication(path: string, token: any, titulo: string, cuerpo: string) {
 
     //uid del usuario a quien deseo enviar una notificación, puede ser cualquiera
-    const receptor = 'KS9PWuyaMHNk6k3gUqOaWDI4lH62'
-    const path = 'Cliente/';
-    this.firestoreService.getDoc<any>(path, receptor).subscribe(res => {
+    // const receptor = 'KS9PWuyaMHNk6k3gUqOaWDI4lH62'
+    // const path = 'Cliente/';
+    // this.firestoreService.getDoc<any>(path, receptor).subscribe(res => {
       //valida que la información exista, caso contrario no hará nada 
-      if (res) {
-        const token = res.token; //se puede validar que si no se tiene un token no envie notificación
+      // if (res) {
+        // const token = res.token; //se puede validar que si no se tiene un token no envie notificación
         const dataNotification = {
-          enlace: '/mis-pedidos', //esto es a donde queremos que se vaya
+          enlace: path, //esto es a donde queremos que se vaya
         }
         const notification = {
           //en la notificación tamien se puede añador una imgen 
-          title: 'Mensaje enviado manuelmente',
-          body: 'Cómo estas?'
+          title: titulo,
+          body: cuerpo
         };
         //esto esta coordinado con newNotification por lo que si no escribo data o cambio el nombre de las variables no funcionará
         const data: INotification = {
           data: dataNotification,
-          tokens: [token], //Puede ser con diversos token [token1, token2, .....]
+          tokens: token, //Puede ser con diversos token [token1, token2, .....]
           notification, //Cuerpo de la notificación "título y body"
         }
         //se hace una solicitud http atraves de una url 
@@ -178,8 +178,8 @@ export class NotificationsService {
         return this.http.post<Res>(url, { data }).subscribe(res => {
           console.log('respuesta newNotication() -> ', res);
 
-        });
-      }
+      //   });
+      // }
 
     });
   }

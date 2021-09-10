@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { Cliente, Mascota, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
+import { NotificationsService } from 'src/app/services/notifications.service';
 
 @Component({
   selector: 'app-pet-paseo',
@@ -80,7 +81,8 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
               private router: Router,
               public toastController: ToastController,
               public loadingController: LoadingController,
-              private http: HttpClient) { }
+              private http: HttpClient,
+              private notificationsService: NotificationsService) { }
 
   ngOnInit() {
     this.tipoRol();
@@ -171,29 +173,33 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
   }
 
   async enviarNotificacion(){
+    const path = '/home-paseador';
+    const titulo = 'Nueva Solicitud ';
+    const cuerpo = this.solicitud.duenio.nombre + ' ' + this.solicitud.duenio.apellido + '\n Tiempo:' + this.solicitud.tiempo + '\n Pago: $' + this.solicitud.valor;
     console.log('enviarNotificacion() Filtro 1 ===> ', this.arrayToken);
     if(this.arrayToken != undefined){
       console.log('enviarNotificacion() Filtro 2');
-      const dataNotification = {
-        enlace: '/home-paseador', //esto es a donde queremos que se vaya
-      }
-      const notification = {
-        //en la notificación tamien se puede añador una imgen 
-        title: 'Nueva solicitud',
-        body: 'De mi parte '
-      };
-      //esto esta coordinado con newNotification por lo que si no escribo data o cambio el nombre de las variables no funcionará
-      const data: INotification = {
-        data: dataNotification,
-        tokens: this.arrayToken, //Puede ser con diversos token [token1, token2, .....]
-        notification, //Cuerpo de la notificación "título y body"
-      }
-      //se hace una solicitud http atraves de una url 
-      const url = 'https://us-central1-banca-2e58b.cloudfunctions.net/newNotificationPersonalizada';
-      return this.http.post<Res>(url, { data }).subscribe(res => {
-        console.log('respuesta newNotication() -> ', res);
+      this.notificationsService.newNotication(path, this.arrayToken, titulo, cuerpo);
+      // const dataNotification = {
+      //   enlace: '/home-paseador', //esto es a donde queremos que se vaya
+      // }
+      // const notification = {
+      //   //en la notificación tamien se puede añador una imgen 
+      //   title: 'Nueva solicitud',
+      //   body: 'De mi parte '
+      // };
+      // //esto esta coordinado con newNotification por lo que si no escribo data o cambio el nombre de las variables no funcionará
+      // const data: INotification = {
+      //   data: dataNotification,
+      //   tokens: this.arrayToken, //Puede ser con diversos token [token1, token2, .....]
+      //   notification, //Cuerpo de la notificación "título y body"
+      // }
+      // //se hace una solicitud http atraves de una url 
+      // const url = 'https://us-central1-banca-2e58b.cloudfunctions.net/newNotificationPersonalizada';
+      // return this.http.post<Res>(url, { data }).subscribe(res => {
+      //   console.log('respuesta newNotication() -> ', res);
   
-      });
+      // });
 
     }
     
@@ -352,12 +358,12 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
   
 }
 
-interface INotification {
-  data: any;
-  tokens: string[];
-  notification: any
-}
+// interface INotification {
+//   data: any;
+//   tokens: string[];
+//   notification: any
+// }
 
-interface Res {
-  respuesta: string;
-}
+// interface Res {
+//   respuesta: string;
+// }

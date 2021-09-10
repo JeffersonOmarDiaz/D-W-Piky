@@ -8,6 +8,7 @@ import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 //para capturar geoloccaclización apenas comience la aplicación
 import { Plugins } from '@capacitor/core';
+import { NotificationsService } from 'src/app/services/notifications.service';
 const {Geolocation} = Plugins;
 @Component({
   selector: 'app-home2',
@@ -47,7 +48,8 @@ export class Home2Component implements OnInit, OnDestroy {
               public firebaseauthService: FirebaseauthService,
               private router: Router,
               private modalController: ModalController,
-              public loadingController: LoadingController,) {
+              public loadingController: LoadingController,
+              private notificationsService: NotificationsService ) {
               //this.firestoreService.setLink(this.pathRetorno);
               
    }
