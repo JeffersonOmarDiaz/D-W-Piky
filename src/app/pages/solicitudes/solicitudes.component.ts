@@ -357,7 +357,6 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
         res.forEach( ofrecer =>{ 
           this.ofertas.push(ofrecer);
           this.idOferta =  this.ofertas[0].id;
-          // this.solicitudCancelar = this.ofertas[0];
         });
       }
       //console.log(this.solicitudes); líneas para test

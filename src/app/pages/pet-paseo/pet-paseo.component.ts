@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { Cliente, Mascota, Solicitud } from 'src/app/modelBD';
+import { Cliente, Mascota, Ofrecer, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { NotificationsService } from 'src/app/services/notifications.service';
@@ -76,13 +76,17 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
   suscribreUserPasedores: Subscription;
   dogWalkerDisponibles : any [];
   arrayToken: any[] = [];
+
+  suscribeSolicitudNueva: Subscription;
+  suscribeSolicitudProgreso: Subscription;
   constructor(public firebaseauthS: FirebaseauthService,
               public firestoreService: FirestoreService,
               private router: Router,
               public toastController: ToastController,
               public loadingController: LoadingController,
               private http: HttpClient,
-              private notificationsService: NotificationsService) { 
+              private notificationsService: NotificationsService,
+              public alertController: AlertController,) { 
                 this.notificationsService.stateUser();
               }
 
@@ -103,6 +107,14 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
     if(this.suscribreUserInfoRol){
       this.suscribreUserInfoRol.unsubscribe();
     }
+    if(this.suscribeSolicitudNueva){
+      console.log('OnDestroy ==> suscribeSolicitudNueva');
+      this.suscribeSolicitudNueva.unsubscribe();
+    }
+    if(this.suscribeSolicitudProgreso){
+      this.suscribeSolicitudProgreso.unsubscribe();
+      console.log('OnDestroy ==> suscribeSolicitudProgreso');
+    }
   }
 
   tipoRol(){
@@ -116,15 +128,15 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
             this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
               this.cliente = res;
               console.log('El rol actual es: ',res.role);
-              // if(res.role === 'paseador'){
-              //   this.rolDuenio = false;
-              //   this.router.navigate([`/home-paseador`], { replaceUrl: true });
-              //   return true;
-              // }else{
+              if(res.role === 'paseador'){
+                this.rolDuenio = false;
+                this.router.navigate([`/home-paseador`], { replaceUrl: true });
+                return true;
+              }else{
                 this.rolDuenio = true;
                 this.getUserInfo(this.uid);
-              //   return false;
-              // }
+              this.solicitudesPendientes();
+              }
             });
         return;
       }
@@ -367,6 +379,57 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
 
   }
   
+  solicitudesPendientes(){
+    console.log('solicitudesPendientes() ==>');
+    const path ='Cliente-dw/' + this.uid + '/solicitudes/';
+    let startAt = null;
+    this.suscribeSolicitudNueva = this.firestoreService.getCollectionAll<Solicitud>(path, 'estado', '==', 'nueva', startAt, 3 ).subscribe( res =>{
+      console.log(res);
+      console.log(res.length);
+      console.log('SOLICITUDES DUEÑO');
+      if(res.length > 0){
+        console.log('Tiene una solicitud esperando por respuesta, cancele la la solicitud para crear una nueva');
+        this.router.navigate([`/solicitudes`], { replaceUrl: true });
+        this.mensajeRetorno('Imposible tiene una solicitud pendiente');
+        this.suscribeSolicitudNueva.unsubscribe();
+      }
+    });
+
+    const pathProceso = 'Cliente-dw/' + this.uid + '/proceso-duenio/';
+    console.log('pathProceso = > ', pathProceso);
+    this.suscribeSolicitudProgreso = this.firestoreService.getCollectionProcesoDuenio<Ofrecer>(pathProceso, 'estado', '!=', 'culminada', startAt, 3 ).subscribe( res =>{
+      console.log(res);
+      console.log(res.length);
+      console.log('PROCESOS DUENIO');
+      if(res.length > 0){
+        console.log('Tiene una solicitud esperando por respuesta, cancele la la solicitud para crear una nueva');
+        this.router.navigate([`/progreso-duenio`], { replaceUrl: true });
+        this.mensajeRetorno('Imposible tiene una solicitud en progreso');
+        this.suscribeSolicitudProgreso.unsubscribe();
+      }
+    });
+  }
+
+  async mensajeRetorno(sms: string){
+    const alert = await this.alertController.create({
+      cssClass: 'normal',
+      header: sms,
+      message: '<strong> </strong>!!!',
+      buttons: [
+        {
+          text: 'Ok',
+          role: 'okay',
+          cssClass: 'normal',
+          // handler: (blah) => {
+          //   console.log('Cambio de ventana');
+          //   this.estadoCliente();
+          //   this.router.navigate([`/perfil-mascota`], { replaceUrl: true });
+          // }
+        }
+      ]
+    });
+    await alert.present();
+  }
 }
 
 // interface INotification {
