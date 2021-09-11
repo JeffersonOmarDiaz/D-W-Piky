@@ -39,6 +39,11 @@ export class UbicacionMascotasPaseoComponent implements OnInit, OnDestroy {
     valoracion: 5
 }
 arrayToken: any[] = [];
+btnLat = 0;
+btnLng = 0;
+url = '';
+numWhastapp = 0;
+urlWhastapp = '';
   constructor(public modalController: ModalController,
               public firestoreService: FirestoreService,
               public toastController: ToastController,
@@ -50,8 +55,15 @@ arrayToken: any[] = [];
     console.log('datosDuenio ->', this.infoDuenio);
     this.estadoProceso = this.infoDuenio;
     console.log('datos Paseador ->', this.infoPaseador);
-    
+    console.log('datosDuenio ->', this.infoDuenio.duenio.ubicacion.lat);
+    this.btnLat = this.infoDuenio.duenio.ubicacion.lat;
+    this.btnLng = this.infoDuenio.duenio.ubicacion.lng;
+    this.numWhastapp = Number(this.infoDuenio.duenio.celular);
     this.btnsEstados();
+    if(this.btnLat !=0 || this.btnLng !=0 || this.numWhastapp != 0){
+      this.verMapa();
+      this.whastapp();
+    };
   }
 
   ngOnDestroy(){
@@ -61,7 +73,13 @@ arrayToken: any[] = [];
     }
   }
 
+  async verMapa(){
+    this.url="https://maps.google.com/?q="+ this.btnLat +","+ this.btnLng +"&z=14";
+  }
 
+  async whastapp(){
+    this.urlWhastapp = 'https://wa.me/593' + this.numWhastapp + '?text=Hola%20'+ this.infoDuenio.duenio.nombre + ' ' + this.infoDuenio.duenio.apellido;
+  }
   async btnEstados(estado: string){
     // console.log('btnLlegoEn() ',estado);
     if(estado === 'Llego en 5 minutos'){

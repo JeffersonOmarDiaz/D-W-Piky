@@ -25,8 +25,9 @@
         <ion-label class="ion-text-wrap">Pago ha recibir$ {{estadoProceso.valor}}
           <p>Mascotas: {{estadoProceso.numMascotas}}</p>
           <p>Dirección: {{estadoProceso.direccion}}</p>
-          <p>Celular: {{estadoProceso.duenio.celular}}</p>
+          <p> <a href={{urlWhastapp}}> Celular: {{estadoProceso.duenio.celular}} </a></p>
         </ion-label>
+        <ion-button class="estados" (click)="verMapa()" href={{url}}; target="_blank" color="success" >Como llegar</ion-button>
         <ion-button class="estados" (click)="verMascotas(true)" *ngIf="!verMascotasList">Ver Mascotas</ion-button>
         <ion-button class="estados" (click)="verMascotas(false)" *ngIf="verMascotasList" >Ocultar Mascotas</ion-button>
       </ion-col>
@@ -47,8 +48,8 @@
     <ion-row>
       <ion-col>
         <ion-button class="estados" *ngIf="btnTiempo" (click)="btnEstados(estadoCincoMin)" >{{estadoCincoMin}}</ion-button>
-        <ion-button class="estados" *ngIf="btnTiempo" (click)="btnEstados(estadoDiezMin)">{{estadoDiezMin}}</ion-button>
-        <ion-button class="estados" *ngIf="btnFuera" (click)="btnEstados(estadoFuera)" >{{estadoFuera}}</ion-button>
+        <ion-button class="estados" *ngIf="btnTiempo" (click)="btnEstados(estadoDiezMin)" color="medium">{{estadoDiezMin}}</ion-button>
+        <ion-button class="estados" *ngIf="btnFuera" (click)="btnEstados(estadoFuera)" color="tertiary">{{estadoFuera}}</ion-button>
         <ion-button class="estados" *ngIf="btnPaseando" (click)="btnEstados(estadoPaseando)" >{{estadoPaseando}}</ion-button>
         <ion-button class="estados" *ngIf="btnPaseoFinalizado" (click)="btnEstados(estadoFinalizado)">{{estadoFinalizado}}</ion-button>
         <ion-button class="estados"  *ngIf="btnDisponible" color = "danger" (click)="btnEstados(estadoNoActivo)">{{estadoNoActivo}}</ion-button>

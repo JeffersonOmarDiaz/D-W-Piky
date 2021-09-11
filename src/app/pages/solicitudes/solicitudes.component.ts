@@ -88,7 +88,9 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     if(this.suscriberSolicitudCulminada){
       this.suscriberSolicitudCulminada.unsubscribe();
     }
-    
+    if(this.suscribreUserPasedores){
+      this.suscribreUserPasedores.unsubscribe();
+    }
   }
 
  tipoRol(){

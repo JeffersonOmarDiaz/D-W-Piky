@@ -82,7 +82,9 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
               public toastController: ToastController,
               public loadingController: LoadingController,
               private http: HttpClient,
-              private notificationsService: NotificationsService) { }
+              private notificationsService: NotificationsService) { 
+                this.notificationsService.stateUser();
+              }
 
   ngOnInit() {
     this.tipoRol();
@@ -91,6 +93,15 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
     if(this.suscribreUserPasedores){
       this.suscribreUserPasedores.unsubscribe();
+    }
+    if(this.suscribreUserInfo){
+      this.suscribreUserInfo.unsubscribe();
+    }
+    if(this.suscribreUser){
+      this.suscribreUser.unsubscribe();
+    }
+    if(this.suscribreUserInfoRol){
+      this.suscribreUserInfoRol.unsubscribe();
     }
   }
 

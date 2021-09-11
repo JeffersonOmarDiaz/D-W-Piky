@@ -84,6 +84,12 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
   colorBaseCalificacion5 = "none"
   btnCalificaPata = false;
   calificacionFinal = null;
+
+  btnLat = 0;
+  btnLng = 0;
+  url = '';
+  numWhastapp = 0;
+  urlWhastapp = '';
   constructor(public firebaseauthS: FirebaseauthService,
     public firestoreService: FirestoreService,
     private router: Router,
@@ -184,6 +190,11 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
       console.log(res);
       this.procesos = res;
       console.log(this.procesos.estado);
+      this.numWhastapp = Number(this.procesos.paseador.celular);
+      this.urlWhastapp = 'https://wa.me/593' + this.numWhastapp + '?text=Hola%20'+ this.procesos.paseador.nombre + ' ' + this.procesos.paseador.apellido;
+      this.btnLat = this.procesos.paseador.ubicacion.lat;
+      this.btnLng = this.procesos.paseador.ubicacion.lng;
+      this.url="https://maps.google.com/?q="+ this.btnLat +","+ this.btnLng +"&z=14";
       this.VisibilidadProgreso();
     });
   }

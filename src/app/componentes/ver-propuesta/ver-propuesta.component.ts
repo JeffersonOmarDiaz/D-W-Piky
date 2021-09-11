@@ -75,6 +75,8 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
   
   arrayToken: any[] = [];
   @Input () infoDuenio: Cliente;
+
+  suscribeNotificacion: Subscription;
   constructor(public modalController: ModalController,
               private renderer: Renderer2,
               @Inject(DOCUMENT) private document, 
@@ -96,8 +98,12 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(){
+    console.log('ngOnDestroy() ===> ver propuestas');
     if(this.suscribeSolicitud){
       this.suscribeSolicitud.unsubscribe();
+    }
+    if(this.suscribeNotificacion){
+      this.suscribeNotificacion.unsubscribe();
     }
   }
 
@@ -242,12 +248,13 @@ export class VerPropuestaComponent implements OnInit, OnDestroy {
     const titulo = 'Oferta Aceptada'; 
     const cuerpo= this.infoDuenio.nombre + ' '+ this.infoDuenio.apellido + ' aceptó tu solicitud'+' \n Ve por sus mascotas';
   
-    this.firestoreService.getDoc<any>(pathDw, receptor).subscribe( res =>{
+    this.suscribeNotificacion = this.firestoreService.getDoc<any>(pathDw, receptor).subscribe( res =>{
       token = res.token;
       console.log(token);
       this.arrayToken.push(res.token);
       if(this.arrayToken != undefined){
         this.notificationsService.newNotication('/procesos-dw', this.arrayToken, titulo, cuerpo);
+        this.suscribeNotificacion.unsubscribe();
       }
     });
   

@@ -51,7 +51,7 @@ export class Home2Component implements OnInit, OnDestroy {
               public loadingController: LoadingController,
               private notificationsService: NotificationsService ) {
               //this.firestoreService.setLink(this.pathRetorno);
-              
+              this.notificationsService.stateUser();
    }
  
   ngOnInit() {
