@@ -170,7 +170,7 @@ export class ProgresoDuenioComponent implements OnInit, OnDestroy {
         this.obtenerDocumento();
       } else {
         this.router.navigate([`/home`], { replaceUrl: true });
-        this.presentToast('Aún no ha generado solicitudes!!', 2000);
+        this.presentToast('No tiene pendientes!!', 3000);
       }
     });
   }
