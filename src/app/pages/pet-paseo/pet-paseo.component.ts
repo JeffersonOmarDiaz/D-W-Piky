@@ -390,7 +390,7 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
       if(res.length > 0){
         console.log('Tiene una solicitud esperando por respuesta, cancele la la solicitud para crear una nueva');
         this.router.navigate([`/solicitudes`], { replaceUrl: true });
-        this.mensajeRetorno('Imposible tiene una solicitud pendiente');
+        this.mensajeRetorno('Tiene una solicitud pendiente');
         this.suscribeSolicitudNueva.unsubscribe();
       }
     });

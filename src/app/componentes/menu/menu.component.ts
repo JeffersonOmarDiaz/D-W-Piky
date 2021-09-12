@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, MenuController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { Cliente } from 'src/app/modelBD';
+import { Cliente, Ofrecer, Solicitud } from 'src/app/modelBD';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 
@@ -37,6 +37,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   };
 
   loading: any;
+
+  suscribeSolicitudNueva: Subscription;
+  suscribeSolicitudProgreso: Subscription;
+  sinProcesosDuenio = true;
   constructor(public menuController:MenuController,
               public  firebaseAuthS: FirebaseauthService,
               public  firestoreService: FirestoreService,
@@ -63,6 +67,15 @@ export class MenuComponent implements OnInit, OnDestroy {
     if (this.suscribreUserInfo) {
       this.suscribreUserInfo.unsubscribe();
     }
+    if(this.suscribeSolicitudNueva){
+      console.log('MENÚ OnDestroy ==> suscribeSolicitudNueva');
+      this.suscribeSolicitudNueva.unsubscribe();
+    }
+    if(this.suscribeSolicitudProgreso){
+      this.suscribeSolicitudProgreso.unsubscribe();
+      console.log('MENÚ OnDestroy ==> suscribeSolicitudProgreso');
+    }
+    this.menuController.close('principal');
   }
 
   async cambiarRol(rol: string){
@@ -117,6 +130,35 @@ export class MenuComponent implements OnInit, OnDestroy {
     await alert.present();
   }
 
+  solicitudesPendientes(){
+    console.log('solicitudesPendientes() ==>');
+    const path ='Cliente-dw/' + this.uid + '/solicitudes/';
+    let startAt = null;
+    this.suscribeSolicitudNueva = this.firestoreService.getCollectionAll<Solicitud>(path, 'estado', '==', 'nueva', startAt, 3 ).subscribe( res =>{
+      console.log(res);
+      console.log(res.length);
+      console.log('SOLICITUDES DUEÑO');
+      if(res.length > 0){
+        console.log('Tiene una solicitud pendiente');
+        this.suscribeSolicitudNueva.unsubscribe();
+        return this.sinProcesosDuenio = false;
+      }
+    });
+
+    const pathProceso = 'Cliente-dw/' + this.uid + '/proceso-duenio/';
+    console.log('pathProceso = > ', pathProceso);
+    this.suscribeSolicitudProgreso = this.firestoreService.getCollectionProcesoDuenio<Ofrecer>(pathProceso, 'estado', '!=', 'culminada', startAt, 3 ).subscribe( res =>{
+      console.log(res);
+      console.log(res.length);
+      console.log('PROCESOS DUENIO');
+      if(res.length > 0){
+        console.log('Tiene un proceso de paseo');
+        this.suscribeSolicitudProgreso.unsubscribe();
+        return this.sinProcesosDuenio = false;
+      }
+    });
+  }
+
   async presentToast(mensaje: string, tiempo: number) {
     const toast = await this.toastController.create({
       message: mensaje,
@@ -139,6 +181,8 @@ export class MenuComponent implements OnInit, OnDestroy {
   async openMenu(){
     await this.menuController.toggle('principal');
     console.log('Cargó el menú');
+    this.sinProcesosDuenio = true;
+    this.solicitudesPendientes();
   }
 
   async openMenu1(){

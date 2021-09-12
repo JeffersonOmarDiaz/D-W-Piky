@@ -49,8 +49,8 @@
       </ion-list>
     </ion-content>
     <ion-footer style=" text-align:center; margin-block: 30px;">
-      <ion-button shape="round" (click)="cambiarRol('paseador')">Cambiar a Paseador</ion-button>
-      <ion-item button=true (click)="salir()">
+      <ion-button shape="round" (click)="cambiarRol('paseador')" *ngIf="sinProcesosDuenio" >Cambiar a Paseador</ion-button>
+      <ion-item button=true (click)="salir()" *ngIf="sinProcesosDuenio">
         <ion-label class="normal">Cerrar Sesión</ion-label>
         <ion-icon slot="end" name="log-out-outline"></ion-icon>
       </ion-item>
