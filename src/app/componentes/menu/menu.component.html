@@ -110,9 +110,9 @@
       </ion-list>
     </ion-content>
     <ion-footer  style=" text-align:center; margin-block: 30px;">
-      <ion-button shape="round" (click)="cambiarRol('duenio')">Cambiar a Dueño</ion-button>
-      <ion-item button=true  (click)="salir()">
-        <ion-label class="normal">Cerrar Sesión</ion-label>
+      <ion-button shape="round" (click)="cambiarRol('duenio')" *ngIf="btnsinProcesosdw">Cambiar a Dueño</ion-button>
+      <ion-item button=true  (click)="salir()" *ngIf="btnsinProcesosdw">
+        <ion-label class="normal"  >Cerrar Sesión</ion-label>
         <ion-icon slot="end" name="log-out-outline"></ion-icon>
       </ion-item>
     </ion-footer>

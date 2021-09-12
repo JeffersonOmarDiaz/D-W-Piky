@@ -41,6 +41,9 @@ export class MenuComponent implements OnInit, OnDestroy {
   suscribeSolicitudNueva: Subscription;
   suscribeSolicitudProgreso: Subscription;
   sinProcesosDuenio = true;
+
+  suscriberProceso: Subscription;
+  btnsinProcesosdw = true;
   constructor(public menuController:MenuController,
               public  firebaseAuthS: FirebaseauthService,
               public  firestoreService: FirestoreService,
@@ -86,6 +89,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         this.cliente.role = 'duenio';
       }else if (rol === 'paseador'){
         this.cliente.role = 'paseador';
+        this.cliente.estadoPaseador = 'inActivo';
       }
       console.log('La informacion del cliente es: ', this.cliente);
       //this.guardarCliente(this.cliente, path, this.cliente.uid);
@@ -159,6 +163,19 @@ export class MenuComponent implements OnInit, OnDestroy {
     });
   }
 
+  paseosProcesosDw(){
+    console.log(' paseosProceso()');
+    const path = 'Cliente-dw/' + this.uid + '/procesos-dw';
+    console.log(' path() =>> ', path);
+    let startAt = null;
+    this.suscriberProceso = this.firestoreService.getCollectionProcesoDuenio<Solicitud>(path, 'estado', '!=', 'Paseo Finalizado', startAt, 10).subscribe(res => {
+      console.log(res);
+      if(res.length > 0){
+        this.btnsinProcesosdw = false;
+      }
+    });
+  }
+
   async presentToast(mensaje: string, tiempo: number) {
     const toast = await this.toastController.create({
       message: mensaje,
@@ -181,8 +198,12 @@ export class MenuComponent implements OnInit, OnDestroy {
   async openMenu(){
     await this.menuController.toggle('principal');
     console.log('Cargó el menú');
+
     this.sinProcesosDuenio = true;
     this.solicitudesPendientes();
+
+    this.btnsinProcesosdw = true;
+    this.paseosProcesosDw();
   }
 
   async openMenu1(){
