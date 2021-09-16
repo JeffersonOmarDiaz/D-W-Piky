@@ -108,11 +108,11 @@ export class NotificationsService {
           //y mostrará un sms "puede ser personalizado" pasa de push a local
           {
             title: notification.title,
-          body: notification.body,
-          id: 1,
-          extra:{
-            data: notification.data
-          }
+            body: notification.body,
+            id: 1,
+            extra: {
+              data: notification.data
+            }
           }
         ]
       });
@@ -129,7 +129,7 @@ export class NotificationsService {
     //cuando damos clic en una aplicación local
     LocalNotifications.addListener('localNotificationActionPerformed',
     (notification: LocalNotificationActionPerformed) =>{
-      console.log();
+      console.log('Push acction performed en primer plano: ');
       // this.router.navigate(['/perfil-persona']); //Creamos una ruta más dinámica
       this.router.navigate([notification.notification.extra.data.enlace]);
     });
@@ -151,7 +151,7 @@ export class NotificationsService {
   }
 
   newNotication(path: string, token: any, titulo: string, cuerpo: string) {
-
+    console.log('La notificación envia al numero de usuairos ==> ', token.length );
     //uid del usuario a quien deseo enviar una notificación, puede ser cualquiera
     // const receptor = 'KS9PWuyaMHNk6k3gUqOaWDI4lH62'
     // const path = 'Cliente/';

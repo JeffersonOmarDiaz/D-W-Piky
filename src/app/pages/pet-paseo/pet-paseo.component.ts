@@ -95,6 +95,7 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(){
+    console.log('ngOnDestroy() ==> pet-Paseo.ts');
     if(this.suscribreUserPasedores){
       this.suscribreUserPasedores.unsubscribe();
     }
@@ -125,17 +126,20 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
         //comprobar TIPO de ROL
           console.log('tipoRol =>');
             const path = "Cliente-dw";
-            this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
+            this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(async res => {
               this.cliente = res;
               console.log('El rol actual es: ',res.role);
-              if(res.role === 'paseador'){
-                this.rolDuenio = false;
-                this.router.navigate([`/home-paseador`], { replaceUrl: true });
-                return true;
-              }else{
-                this.rolDuenio = true;
-                this.getUserInfo(this.uid);
-              this.solicitudesPendientes();
+              if(res){
+                console.log('verifica el rol ==>',res);
+                if(res.role === 'paseador'){
+                  console.log('Regresa a paseador por que no es dueño');
+                  this.rolDuenio = false;
+                  this.router.navigate([`/home-paseador`], { replaceUrl: true });
+                  return true;
+                }else{
+                  this.rolDuenio = true;
+                  this.getUserInfo(this.uid);
+                }
               }
             });
         return;
@@ -147,6 +151,7 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
   getUserInfo(uid :string){
     if(uid !== undefined){
       console.log('el id de que llega al getUSerInfo es: ',uid);
+      this.solicitudesPendientesPetPaseo();
       this.mostrarPaseadoresDisponibles();
     }
     console.log('Suscrito a  la info');
@@ -159,7 +164,7 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
         this.direccionSolicitud = this.cliente.ubicacion.direccion;
       }
       if(this.clienteMascota.length > 0){
-        console.log('No esta recistrada ninguna mascota');
+        console.log('Mascotas registradas: ', this.clienteMascota.length );
         this.listaMascotas = true;
       }
       console.log('La informacion de las mascotas cliente es: ', this.clienteMascota.sort(((unaMascota, otraMascota) => unaMascota.nombre.localeCompare( otraMascota.nombre))) );
@@ -203,27 +208,6 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
     if(this.arrayToken != undefined){
       console.log('enviarNotificacion() Filtro 2');
       this.notificationsService.newNotication(path, this.arrayToken, titulo, cuerpo);
-      // const dataNotification = {
-      //   enlace: '/home-paseador', //esto es a donde queremos que se vaya
-      // }
-      // const notification = {
-      //   //en la notificación tamien se puede añador una imgen 
-      //   title: 'Nueva solicitud',
-      //   body: 'De mi parte '
-      // };
-      // //esto esta coordinado con newNotification por lo que si no escribo data o cambio el nombre de las variables no funcionará
-      // const data: INotification = {
-      //   data: dataNotification,
-      //   tokens: this.arrayToken, //Puede ser con diversos token [token1, token2, .....]
-      //   notification, //Cuerpo de la notificación "título y body"
-      // }
-      // //se hace una solicitud http atraves de una url 
-      // const url = 'https://us-central1-banca-2e58b.cloudfunctions.net/newNotificationPersonalizada';
-      // return this.http.post<Res>(url, { data }).subscribe(res => {
-      //   console.log('respuesta newNotication() -> ', res);
-  
-      // });
-
     }
     
   }
@@ -324,10 +308,11 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
         await this.firestoreService.createDoc(this.solicitud, path, idSolicitud).then ( ()=>{
           console.log('!Solicitud generada de forma exitosa!');
           this.presentToast('!Solicitud generada de forma exitosa!', 2500);
-          this.router.navigate([`/solicitudes`], { replaceUrl: true });
+          // this.router.navigate([`/solicitudes`], { replaceUrl: true });
           this.dismissLoading();
         }).finally(async ()=>{
           await this.enviarNotificacion();
+          this.router.navigate([`/solicitudes`], { replaceUrl: true });
         }
         );
         }
@@ -379,65 +364,41 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
 
   }
   
-  solicitudesPendientes(){
+  solicitudesPendientesPetPaseo(){
     console.log('solicitudesPendientes() ==>');
     const path ='Cliente-dw/' + this.uid + '/solicitudes/';
     let startAt = null;
-    this.suscribeSolicitudNueva = this.firestoreService.getCollectionAll<Solicitud>(path, 'estado', '==', 'nueva', startAt, 3 ).subscribe( res =>{
+    this.suscribeSolicitudNueva = this.firestoreService.getCollectionAll<Solicitud>(path, 'estado', '==', 'nueva', startAt, 3 ).subscribe( async res =>{
       console.log(res);
       console.log(res.length);
-      console.log('SOLICITUDES DUEÑO');
-      if(res.length > 0){
-        console.log('Tiene una solicitud esperando por respuesta, cancele la la solicitud para crear una nueva');
+      console.log('SOLICITUDES DUEÑO desde pet-paseo.ts');
+      if (res.length > 0) {
+        console.log('petPaseo.ts(392) Tiene una solicitud esperando por respuesta, cancele la la solicitud para crear una nueva');
         this.router.navigate([`/solicitudes`], { replaceUrl: true });
-        this.mensajeRetorno('Tiene una solicitud pendiente');
         this.suscribeSolicitudNueva.unsubscribe();
+        this.ngOnDestroy();
+      } else {
+        const pathProceso = 'Cliente-dw/' + this.uid + '/proceso-duenio/';
+        console.log('pathProceso = > ', pathProceso);
+        this.suscribeSolicitudProgreso = this.firestoreService.getCollectionProcesoDuenio<Ofrecer>(pathProceso, 'estado', '!=', 'culminada', startAt, 3).subscribe(res => {
+          console.log(res);
+          console.log(res.length);
+          console.log('PROCESOS DUENIO desde pet-paseo.ts');
+          if (res.length > 0) {
+            console.log('petPaseo.ts(405)Tiene una solicitud esperando por respuesta, cancele la la solicitud para crear una nueva');
+            this.router.navigate([`/progreso-duenio`], { replaceUrl: true });
+            this.suscribeSolicitudProgreso.unsubscribe();
+            this.ngOnDestroy();
+          }else{
+            this.suscribeSolicitudNueva.unsubscribe();
+            this.suscribeSolicitudProgreso.unsubscribe();
+          }
+        });
       }
     });
 
-    const pathProceso = 'Cliente-dw/' + this.uid + '/proceso-duenio/';
-    console.log('pathProceso = > ', pathProceso);
-    this.suscribeSolicitudProgreso = this.firestoreService.getCollectionProcesoDuenio<Ofrecer>(pathProceso, 'estado', '!=', 'culminada', startAt, 3 ).subscribe( res =>{
-      console.log(res);
-      console.log(res.length);
-      console.log('PROCESOS DUENIO');
-      if(res.length > 0){
-        console.log('Tiene una solicitud esperando por respuesta, cancele la la solicitud para crear una nueva');
-        this.router.navigate([`/progreso-duenio`], { replaceUrl: true });
-        this.mensajeRetorno('Imposible tiene una solicitud en progreso');
-        this.suscribeSolicitudProgreso.unsubscribe();
-      }
-    });
+    
   }
 
-  async mensajeRetorno(sms: string){
-    const alert = await this.alertController.create({
-      cssClass: 'normal',
-      header: sms,
-      message: '<strong> </strong>!!!',
-      buttons: [
-        {
-          text: 'Ok',
-          role: 'okay',
-          cssClass: 'normal',
-          // handler: (blah) => {
-          //   console.log('Cambio de ventana');
-          //   this.estadoCliente();
-          //   this.router.navigate([`/perfil-mascota`], { replaceUrl: true });
-          // }
-        }
-      ]
-    });
-    await alert.present();
-  }
+  
 }
-
-// interface INotification {
-//   data: any;
-//   tokens: string[];
-//   notification: any
-// }
-
-// interface Res {
-//   respuesta: string;
-// }

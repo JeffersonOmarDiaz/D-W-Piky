@@ -44,6 +44,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   suscriberProceso: Subscription;
   btnsinProcesosdw = true;
+  btnSeguirProgreso = true;
   constructor(public menuController:MenuController,
               public  firebaseAuthS: FirebaseauthService,
               public  firestoreService: FirestoreService,
@@ -110,9 +111,9 @@ export class MenuComponent implements OnInit, OnDestroy {
         {
           text: 'Ok',
           role: 'okay',
-          handler: () => {
+          handler: async () => {
             console.log('GuardarCliente ==> ', this.cliente);
-             this.firestoreService.createDoc(this.cliente, path, this.cliente.uid).then(res => {
+             await this.firestoreService.createDoc(this.cliente, path, this.cliente.uid).then(res => {
               if(this.cliente.role === 'duenio'){
                 this.menuController.close('principal');
                 this.router.navigate([`/home`], { replaceUrl: true });
@@ -141,7 +142,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.suscribeSolicitudNueva = this.firestoreService.getCollectionAll<Solicitud>(path, 'estado', '==', 'nueva', startAt, 3 ).subscribe( res =>{
       console.log(res);
       console.log(res.length);
-      console.log('SOLICITUDES DUEÑO');
+      console.log('SOLICITUDES DUEÑO visto desde el menú');
       if(res.length > 0){
         console.log('Tiene una solicitud pendiente');
         this.suscribeSolicitudNueva.unsubscribe();
@@ -154,10 +155,11 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.suscribeSolicitudProgreso = this.firestoreService.getCollectionProcesoDuenio<Ofrecer>(pathProceso, 'estado', '!=', 'culminada', startAt, 3 ).subscribe( res =>{
       console.log(res);
       console.log(res.length);
-      console.log('PROCESOS DUENIO');
+      console.log('PROCESOS DUENIO visto desde el menú');
       if(res.length > 0){
         console.log('Tiene un proceso de paseo');
         this.suscribeSolicitudProgreso.unsubscribe();
+        this.btnSeguirProgreso = true;
         return this.sinProcesosDuenio = false;
       }
     });
@@ -200,6 +202,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     console.log('Cargó el menú');
 
     this.sinProcesosDuenio = true;
+    this.btnSeguirProgreso = false;
     this.solicitudesPendientes();
 
     this.btnsinProcesosdw = true;

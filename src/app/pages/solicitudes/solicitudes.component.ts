@@ -91,6 +91,7 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     if(this.suscribreUserPasedores){
       this.suscribreUserPasedores.unsubscribe();
     }
+    this.limpiarVariales();
   }
 
  tipoRol(){
@@ -101,19 +102,22 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
         //comprobar TIPO de ROL
           console.log('tipoRol =>');
             const path = "Cliente-dw";
-            this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(res => {
+            this.suscribreUserInfoRol = this.firestoreService.getDoc<Cliente>(path, this.uid).subscribe(async res => {
               this.cliente = res;
               console.log('El rol actual es: ',res.role);
-              if(res.role === 'paseador'){
-                this.rolDuenio = false;
-                this.router.navigate([`/home-paseador`], { replaceUrl: true });
-                return true;
-              }else{
-                this.rolDuenio = true;
-                this.uid = res.uid;
-                this.getSolicitudNuevaPaseo();
-                this.mostrarPaseadoresDisponibles();
-                return false;
+              if(res){
+                if(res.role === 'paseador'){
+                  console.log('Cambia porque es paseador');
+                  this.rolDuenio = false;
+                  this.router.navigate([`/home-paseador`], { replaceUrl: true });
+                  return true;
+                }else{
+                  this.rolDuenio = true;
+                  this.uid = res.uid;
+                  this.getSolicitudNuevaPaseo();
+                  this.mostrarPaseadoresDisponibles();
+                  return false;
+                }
               }
             });
         return;
@@ -122,31 +126,6 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  // Comentado para la idea de segmentación el historial 
-  /* changeSegment(ev: any){
-    console.log(' changeSegment()', ev.detail.value);
-    const opc = ev.detail.value;
-    if(opc === 'nuevos'){
-      //this.getSolicitudNuevaPaseo();
-      //this.navCtrl.setRoot(this.navCtrl.getActive().component);
-      if(this.suscriberSolicitudCulminada){
-        console.log('Estaba suscrito a Culminados');
-        this.suscriberSolicitudCulminada.unsubscribe();
-        this.getSolicitudesCulminadaPaseo();
-      }
-      this.nuevos=true;
-      console.log('nueva');
-    }
-    if(opc === 'culminados'){
-      this.getSolicitudesCulminadaPaseo();
-      if(this.suscriberSolicitud){
-        console.log('Estaba suscrito a Nuevos');
-        this.suscriberSolicitud.unsubscribe();
-      }
-      this.nuevos=false;
-      console.log('culminados');
-    }
-  } */
 
   async getSolicitudNuevaPaseo(){
     console.log(' getPedidosNuevos()');
@@ -211,8 +190,10 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
             const path = 'Cliente-dw/' + this.cliente.uid + '/solicitudes';
             this.solicitudCancelar.valor = valor;
             this.solicitudCancelar.fecha = new Date;
-            this.modificaEstadoSolicitud(this.solicitudCancelar, path, this.idSolicitud);
-            this.enviarNotificacion();
+            this.modificaEstadoSolicitud(this.solicitudCancelar, path, this.idSolicitud).finally( async ()=>
+            {
+              await this.enviarNotificacion();
+            });
           }
         }
       ]
@@ -224,10 +205,12 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
     console.log('mostrarPaseadoresDisponibles()');
     this.suscribreUserPasedores = this.firestoreService.getCollectionDogWalker<Cliente>('Cliente-dw', 'estadoPaseador', '==', 'activo').subscribe(res => {
       this.dogWalkerDisponibles = res;
-      // console.log(this.dogWalkerDisponibles);
+      console.log(this.dogWalkerDisponibles.length);
       
-    if (this.dogWalkerDisponibles != undefined) {
-      this.cargarPaseadoresEncontrados();
+      if (this.dogWalkerDisponibles != undefined) {
+        if (this.dogWalkerDisponibles.length > 0) {
+          this.cargarPaseadoresEncontrados();
+        }
       }
     });
   }
@@ -235,30 +218,51 @@ export class SolicitudesComponent implements OnInit, OnDestroy {
   cargarPaseadoresEncontrados(){
     console.log('enviarNotificaciones()');
     let paseadores= []; 
-      for (let index = 0; index < this.dogWalkerDisponibles.length; index++) {
-           const element = this.dogWalkerDisponibles[index];
-           console.log('Paseaodores individuales ==> ', element);
-           if(this.dogWalkerDisponibles[index].token != undefined){
-             paseadores.push(this.dogWalkerDisponibles[index].token);
-             this.arrayToken.push(this.dogWalkerDisponibles[index].token);
-           }
-          
-          }
-      console.log(paseadores);
-    
+    console.log('Total de paeadores que presentan sus datos ',this.dogWalkerDisponibles.length);
+    this.arrayToken=[];
+    for (let index = 0; index < this.dogWalkerDisponibles.length; index++) {
+      const element = this.dogWalkerDisponibles[index];
+      console.log('Paseaodores individuales ==> ', element);
+      console.log('this.dogWalkerDisponibles[index].token ==> ',this.dogWalkerDisponibles[index].token);
+      if (this.dogWalkerDisponibles[index].token != undefined) {
+        paseadores.push(this.dogWalkerDisponibles[index].token);
+        this.arrayToken.push(this.dogWalkerDisponibles[index].token);
+      }
+
+    }
+    console.log('cargarPaseadoresEncontrados ==>', paseadores.length);
+    console.log('Los toquen que se enviarán son:', this.arrayToken.length);
+    console.log('Los toquen que se enviarán son:', this.arrayToken);
   }
 
-  async enviarNotificacion(){
-    const path = '/home-paseador';
-    const titulo = 'Valor De Solicitud Mejorada';
-    const cuerpo = this.cliente.nombre + ' ' + this.cliente.apellido + '\n Tiempo: ' + this.solicitudCancelar.tiempo + ' H' +'\n Pago: $' + this.solicitudCancelar.valor;
-    console.log('enviarNotificacion() Filtro 1 ===> ', this.arrayToken);
-    if(this.arrayToken != undefined){
-      console.log('enviarNotificacion() Filtro 2');
-      this.notificationsService.newNotication(path, this.arrayToken, titulo, cuerpo);
+  async enviarNotificacion() {
+
+    if (this.dogWalkerDisponibles != undefined) {
+      if (this.dogWalkerDisponibles.length > 0) {
+        const path = '/home-paseador';
+        const titulo = 'Valor De Solicitud Mejorada';
+        const cuerpo = this.cliente.nombre + ' ' + this.cliente.apellido + '\n Tiempo: ' + this.solicitudCancelar.tiempo + ' H' + '\n Pago: $' + this.solicitudCancelar.valor;
+        console.log('enviarNotificacion() Filtro 1 ===> ', this.arrayToken);
+        if (this.arrayToken != undefined) {
+          console.log('enviarNotificacion() Filtro 2');
+          this.notificationsService.newNotication(path, this.arrayToken, titulo, cuerpo);
+          console.log('enviarNotificacion() redirije a las solicitudes ');
+          // this.router.navigate([`/solicitudes`], { replaceUrl: true });
+          this.arrayToken = [];
+        }
+      }
       
     }
-    
+
+  }
+
+  limpiarVariales() {
+    this.dogWalkerDisponibles =[];
+    this.arrayToken= [];
+    this.adcional1 = 0;
+    this.adcional2 = 0;
+    this.adcional3 = 0;
+    this.valorInicial = 0;
   }
 
   async cancelarSolicitud(){
