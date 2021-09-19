@@ -116,6 +116,7 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
       this.suscribeSolicitudProgreso.unsubscribe();
       console.log('OnDestroy ==> suscribeSolicitudProgreso');
     }
+    this.limpiarVariales();
   }
 
   tipoRol(){
@@ -139,6 +140,7 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
                 }else{
                   this.rolDuenio = true;
                   this.getUserInfo(this.uid);
+                  this.mostrarPaseadoresDisponibles();
                 }
               }
             });
@@ -152,7 +154,6 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
     if(uid !== undefined){
       console.log('el id de que llega al getUSerInfo es: ',uid);
       this.solicitudesPendientesPetPaseo();
-      this.mostrarPaseadoresDisponibles();
     }
     console.log('Suscrito a  la info');
     const path = "Cliente-dw";
@@ -178,15 +179,18 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
       this.dogWalkerDisponibles = res;
       // console.log(this.dogWalkerDisponibles);
       
-    if (this.dogWalkerDisponibles != undefined) {
-      this.cargarPaseadoresEncontrados();
+      if (this.dogWalkerDisponibles != undefined) {
+        if (this.dogWalkerDisponibles.length > 0) {
+          this.cargarPaseadoresEncontrados();
+        }
       }
     });
   }
 
   cargarPaseadoresEncontrados(){
     console.log('enviarNotificaciones()');
-    let paseadores= []; 
+    let paseadores= [];
+    this.arrayToken=[]; 
       for (let index = 0; index < this.dogWalkerDisponibles.length; index++) {
            const element = this.dogWalkerDisponibles[index];
            console.log('Paseaodores individuales ==> ', element);
@@ -196,7 +200,7 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
            }
           
           }
-      console.log(paseadores);
+          console.log('cargarPaseadoresEncontrados ==>', paseadores.length);
     
   }
 
@@ -208,10 +212,15 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
     if(this.arrayToken != undefined){
       console.log('enviarNotificacion() Filtro 2');
       this.notificationsService.newNotication(path, this.arrayToken, titulo, cuerpo);
+      this.arrayToken=[];
     }
     
   }
 
+  limpiarVariales() {
+    this.dogWalkerDisponibles =[];
+    this.arrayToken= [];
+  }
   estado(checked: any, informacion: any){
     console.log('Esta desmarcado: ',checked.currentTarget.checked);
     if(!checked.currentTarget.checked){
@@ -309,6 +318,7 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
           console.log('!Solicitud generada de forma exitosa!');
           this.presentToast('!Solicitud generada de forma exitosa!', 2500);
           // this.router.navigate([`/solicitudes`], { replaceUrl: true });
+          this.cancelarSolicitud();
           this.dismissLoading();
         }).finally(async ()=>{
           await this.enviarNotificacion();
@@ -335,7 +345,7 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
   }
 
   cancelarSolicitud(){
-    console.log('cancelarSolicitud()');
+    console.log('cancelarSolicitud()  y Limpiar campos ');
     this.numMascotaPaseo =0; 
     this.valorPagoRef =0;
     this.tiempoPaseo = 0;
