@@ -1,6 +1,6 @@
 {
   "appId": "com.dogwalkerpiky.login",
-  "appName": "DWO2",
+  "appName": "Dog Walker",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

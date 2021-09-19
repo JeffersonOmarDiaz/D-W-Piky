@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { GooglemapsComponent } from './googlemaps.component';
+import { RouterModule } from '@angular/router';
+import { AppRoutingModule } from '../app-routing.module';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -10,7 +13,10 @@ import { GooglemapsComponent } from './googlemaps.component';
   ],
   imports: [
     CommonModule,
-    IonicModule
+    IonicModule,
+    RouterModule,
+    AppRoutingModule, 
+    FormsModule,
   ], exports: [
     GooglemapsComponent
   ]
