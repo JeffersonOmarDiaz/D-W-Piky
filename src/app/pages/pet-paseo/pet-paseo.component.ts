@@ -61,7 +61,7 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
   rolDuenio:boolean;
   llenarSolicitudPaseo: boolean;
   mascotasNotificacionTemp : Mascota []=[];
-  tarifaMinima = 2;
+  tarifaMinima = 3.50;
   tiempoPaseo : number;
   observacionesPaseo: '';
   valorPagoRef= 0;
