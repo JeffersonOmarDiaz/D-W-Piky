@@ -116,7 +116,7 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
       this.suscribeSolicitudProgreso.unsubscribe();
       console.log('OnDestroy ==> suscribeSolicitudProgreso');
     }
-    this.limpiarVariales();
+    
   }
 
   tipoRol(){
@@ -220,6 +220,8 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
   limpiarVariales() {
     this.dogWalkerDisponibles =[];
     this.arrayToken= [];
+    this.numMascotaPaseo =0; 
+    this.tiempoPaseo = 0;
   }
   estado(checked: any, informacion: any){
     console.log('Esta desmarcado: ',checked.currentTarget.checked);
@@ -318,11 +320,14 @@ export class PetPaseoComponent implements OnInit, OnDestroy {
           console.log('!Solicitud generada de forma exitosa!');
           this.presentToast('!Solicitud generada de forma exitosa!', 2500);
           // this.router.navigate([`/solicitudes`], { replaceUrl: true });
-          this.cancelarSolicitud();
+          // this.cancelarSolicitud();
           this.dismissLoading();
         }).finally(async ()=>{
-          await this.enviarNotificacion();
-          this.router.navigate([`/solicitudes`], { replaceUrl: true });
+          await this.enviarNotificacion().finally( async ()=>{
+
+            await this.router.navigate([`/solicitudes`], { replaceUrl: true });
+            this.limpiarVariales();
+          });
         }
         );
         }
