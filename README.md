@@ -51,12 +51,9 @@ Sus herramientas son variadas y de fácil uso, considerando que su agrupación s
 
 
 
-![image](https://user-images.githubusercontent.com/32933851/133986585-66af5c17-fd27-4a7f-b2d9-0ebb11c35d85.png)    ![image](https://user-images.githubusercontent.com/32933851/133986468-15186d8e-5fa5-490f-94eb-c4952028a254.png)
+![image](https://user-images.githubusercontent.com/32933851/133986585-66af5c17-fd27-4a7f-b2d9-0ebb11c35d85.png)     ![image](https://user-images.githubusercontent.com/32933851/133986871-77eb8350-b483-4a33-811a-b09c77eb67d9.png)     ![image](https://user-images.githubusercontent.com/32933851/133986905-f7228cfb-a3fc-44d7-9721-7dcc89382511.png)
 
-
-![image](https://user-images.githubusercontent.com/32933851/133986871-77eb8350-b483-4a33-811a-b09c77eb67d9.png)     ![image](https://user-images.githubusercontent.com/32933851/133986905-f7228cfb-a3fc-44d7-9721-7dcc89382511.png)
-
-
+![image](https://user-images.githubusercontent.com/32933851/133986468-15186d8e-5fa5-490f-94eb-c4952028a254.png)
 ![1251ef31-d249-49e3-9bc3-2d5177d8278c](https://user-images.githubusercontent.com/32933851/133986971-3dd18c2f-1972-489c-9266-0bb84d393bbc.jpg)
 
 
