@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">DWO2</string>
-    <string name="title_activity_main">DWO2</string>
+    <string name="app_name">Dog Walker</string>
+    <string name="title_activity_main">Dog Walker</string>
     <string name="package_name">com.dogwalkerpiky.login</string>
     <string name="custom_url_scheme">com.dogwalkerpiky.login</string>
     <string name="server_client_id">37046319801-acfiha3cr04fpbheeun8jad3pj7f5bta.apps.googleusercontent.com</string>
